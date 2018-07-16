@@ -1,0 +1,14 @@
+galaxy_info:
+  author: Robert Wimmer
+  description: Installs Wireguard incl. systemd integration
+  license: GPLv3
+  min_ansible_version: 2.5
+  platforms:
+  - name: Ubuntu
+    versions:
+    - bionic
+  galaxy_tags:
+    - networking
+    - security
+    - linux
+    - vpn

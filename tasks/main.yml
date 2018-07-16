@@ -1,0 +1,120 @@
+---
+- name: Determine kernel release
+  shell: "uname -r"
+  register: kernel_release
+
+- name: Install required packages
+  package:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - software-properties-common
+    - linux-headers-{{kernel_release}}
+
+- name : Add WireGuard repository
+  apt_repository:
+    repo: "ppa:wireguard/wireguard"
+    state: present
+    update_cache: yes
+
+- name: Install WireGuard
+  package:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - wireguard-dkms
+    - wireguard-tools
+
+- name: Enable WireGuard kernel module
+  modprobe:
+    name: wireguard
+    state: present
+  register: wireguard_module_enabled
+  until:  wireguard_module_enabled is succeeded
+  retries: 10
+  delay: 10
+  failed_when: wireguard_module_enabled is failure
+
+- name: Create WireGuard certificates directory
+  file:
+    dest: "{{wireguard_cert_directory}}"
+    state: directory
+    mode: 0700
+  run_once: true
+  delegate_to: localhost
+
+- name: Register if private key already exists
+  local_action:
+    module: stat
+    path: "{{wireguard_cert_directory}}/{{inventory_hostname}}.private.key"
+  register: private_key_file
+  tags:
+    - wg-generate-keys
+
+- name: Generate WireGuard private key
+  shell: "wg genkey"
+  register: wg_private_key_result
+  with_inventory_hostnames:
+    - vpn
+  when: private_key_file.stat.exists == False
+  tags:
+    - wg-generate-keys
+
+- name: Set private key fact
+  set_fact:
+    wg_private_key: "{{wg_private_key_result.results[0].stdout}}"
+  when: private_key_file.stat.exists == False
+  tags:
+    - wg-generate-keys
+
+- name: Generate WireGuard public key
+  shell: "echo '{{wg_private_key}}' | wg pubkey"
+  register: wg_public_key_result
+  when: private_key_file.stat.exists == False
+  with_inventory_hostnames:
+    - vpn
+  tags:
+    - wg-generate-keys
+
+- name: Set public key fact
+  set_fact:
+    wg_public_key: "{{wg_public_key_result.results[0].stdout}}"
+  when: private_key_file.stat.exists == False
+  tags:
+    - wg-generate-keys
+
+- name: Store hosts private key locally
+  local_action:
+    module: template
+    src: "wg-privatekey.j2"
+    dest: "{{wireguard_cert_directory}}/{{inventory_hostname}}.private.key"
+    mode: 0600
+  when: private_key_file.stat.exists == False
+  tags:
+    - wg-generate-keys
+
+- name: Store hosts public key locally
+  local_action:
+    module: template
+    src: "wg-publickey.j2"
+    dest: "{{wireguard_cert_directory}}/{{inventory_hostname}}.public.key"
+    mode: 0600
+  when: private_key_file.stat.exists == False
+  tags:
+    - wg-generate-keys
+
+  #- name: Generate WireGuard configuration file
+  #  template:
+  #    src: wireguard.conf.j2
+  #    dest: /etc/wireguard/wg0.conf
+  #    owner: root
+  #    group: root
+  #    mode: 0600
+  #    force: no
+  #
+  #
+  #- name: Start and enable WireGuard service
+  #  service:
+  #    name: wg-quick@wg0
+  #    state: started
+  #    enabled: yes

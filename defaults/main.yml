@@ -1,0 +1,26 @@
+---
+# The LOCAL directory where the Wireguard certificate is stored after it was
+# generated. By default this will expand to user's LOCAL ${HOME}
+# (the user that run's "ansible-playbook" command) plus
+# "/wireguard/certs". That means if the user's ${HOME} directory is e.g.
+# "/home/da_user" then "wireguard_cert_directory" will have a value of
+# "/home/da_user/wireguard/certs". If you change this make sure that
+# the parent directory is writable by the user that runs "ansible-playbook"
+# command.
+wireguard_cert_directory: "{{ '~/wireguard/certs' | expanduser }}"
+
+# Directory to store Wireguard configuration on the remote hosts
+wireguard_remote_directory: "/etc/wireguard"
+
+# The port Wireguard will listen on.
+wireguard_port: "51820"
+
+# The interface name that wireguard should use.
+wireguard_interface: "wg0"
+
+wireguard_server_conf: |
+  [Interface]
+  PrivateKey = {{wg_server_privatekey }}
+  Address = {{wireguard_ip}}
+  ListenPort = {{wireguard_port}}
+  SaveConfig = true 
