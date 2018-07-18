@@ -18,9 +18,7 @@ wireguard_port: "51820"
 # The interface name that wireguard should use.
 wireguard_interface: "wg0"
 
-wireguard_server_conf: |
-  [Interface]
-  PrivateKey = {{wg_server_privatekey }}
-  Address = {{wireguard_ip}}
-  ListenPort = {{wireguard_port}}
-  SaveConfig = true 
+# TODO: Currently the role only supports full mesh network. But there
+# should also be the possibility to have only one server and many
+# peers. Needs to be implemented so this variable isn't used yet.
+# wireguard_server: ""
