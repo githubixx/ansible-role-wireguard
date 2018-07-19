@@ -138,11 +138,13 @@
     owner: root
     group: root
     mode: 0600
+  notify:
+    - restart wireguard
   tags:
     - wg-config
 
 - name: Start and enable WireGuard service
   service:
-    name: wg-quick@wg0
+    name: "wg-quick@{{wireguard_interface}}"
     state: started
     enabled: yes
