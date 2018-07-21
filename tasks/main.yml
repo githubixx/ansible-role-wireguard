@@ -1,17 +1,5 @@
 ---
-- name: Install required packages
-  package:
-    name: "{{item}}"
-    state: present
-  with_items:
-    - software-properties-common
-    - linux-headers-{{ansible_kernel}}
-
-- name : Add WireGuard repository
-  apt_repository:
-    repo: "ppa:wireguard/wireguard"
-    state: present
-    update_cache: yes
+- include_tasks: "setup-{{ansible_os_family|lower}}.yml"
 
 - name: Install WireGuard
   package:
@@ -20,6 +8,8 @@
   with_items:
     - wireguard-dkms
     - wireguard-tools
+  tags:
+    - wg-install
 
 - name: Enable WireGuard kernel module
   modprobe:
@@ -30,6 +20,8 @@
   retries: 10
   delay: 10
   failed_when: wireguard_module_enabled is failure
+  tags:
+    - wg-install
 
 - name: Create WireGuard certificates directory
   file:
@@ -38,18 +30,20 @@
     mode: 0700
   run_once: true
   delegate_to: localhost
+  tags:
+    wg-generate-keys
 
 - name: Set path to private key file
   set_fact:
     private_key_file_path: "{{wireguard_cert_directory}}/{{inventory_hostname}}.private.key"
   tags:
-    wg-config
+    wg-generate-keys
 
 - name: Set path to public key file
   set_fact:
     public_key_file_path: "{{wireguard_cert_directory}}/{{inventory_hostname}}.public.key"
   tags:
-    wg-config
+    wg-generate-keys
 
 - name: Register if private key already exists
   local_action:
