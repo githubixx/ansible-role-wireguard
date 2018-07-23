@@ -1,4 +1,7 @@
 ---
+- name: Gather instance facts
+  setup:
+
 - include_tasks: "setup-{{ansible_os_family|lower}}.yml"
 
 - name: Install WireGuard
@@ -90,7 +93,7 @@
     module: template
     src: "wg-privatekey.j2"
     dest: "{{private_key_file_path}}"
-    mode: 0600
+    mode: 0644
   when: private_key_file_stat.stat.exists == False
   tags:
     - wg-generate-keys
@@ -100,18 +103,18 @@
     module: template
     src: "wg-publickey.j2"
     dest: "{{public_key_file_path}}"
-    mode: 0600
+    mode: 0644
   when: private_key_file_stat.stat.exists == False
   tags:
     - wg-generate-keys
 
-- name: Read private key from local filesystem
+- name: Read private key
   set_fact:
     private_key: "{{lookup('file', private_key_file_path)}}"
   tags:
     wg-config
 
-- name: Read public key from local filesystem
+- name: Read public key
   set_fact:
     public_key: "{{lookup('file', public_key_file_path)}}"
   tags:
@@ -128,14 +131,14 @@
 - name: Generate WireGuard configuration file
   template:
     src: wg-fullmesh.conf.j2
-    dest: "{{wireguard_remote_directory}}/wg0.conf"
+    dest: "{{wireguard_remote_directory}}/{{wireguard_interface}}.conf"
     owner: root
     group: root
     mode: 0600
-  notify:
-    - restart wireguard
   tags:
     - wg-config
+  notify:
+    - restart wireguard
 
 - name: Start and enable WireGuard service
   service:

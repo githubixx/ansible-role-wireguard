@@ -1,14 +1,19 @@
-#jinja2: trim_blocks:False
+#jinja2: lstrip_blocks:"True",trim_blocks:"True"
 [Interface]
-Address = {{vpn_ip}}
+Address = {{hostvars[inventory_hostname].wireguard_ip}}
 PrivateKey = {{private_key}}
 ListenPort = {{wireguard_port}}
 
 {% for host in groups["vpn"] %}
-  {%- if host != inventory_hostname -%}
+  {% if host != inventory_hostname %}
     [Peer]
-    PublicKey = {{hostvars[host]['public_key']}}
-    AllowedIPs = {{hostvars[host]['vpn_ip']}}/32
+    PublicKey = {{hostvars[host].public_key}}
+    AllowedIPs = {{hostvars[host].wireguard_ip}}/32
+    {% if hostvars[host].wireguard_endpoint is not defined %}
     Endpoint = {{host}}:{{wireguard_port}}
-  {%- endif -%}
+    {% elif hostvars[host].wireguard_endpoint != "" %}
+    Endpoint = {{hostvars[host].wireguard_endpoint}}:{{wireguard_port}}
+    {% endif %}
+
+  {% endif %}
 {% endfor %}
