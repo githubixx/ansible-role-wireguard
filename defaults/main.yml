@@ -1,6 +1,6 @@
 ---
-# The LOCAL directory where the Wireguard certificate is stored after it was
-# generated. By default this will expand to user's LOCAL ${HOME}
+# The LOCAL directory where the Wireguard certificates are stored after they
+# were generated. By default this will expand to user's LOCAL ${HOME}
 # (the user that run's "ansible-playbook" command) plus
 # "/wireguard/certs". That means if the user's ${HOME} directory is e.g.
 # "/home/da_user" then "wireguard_cert_directory" will have a value of
@@ -19,8 +19,3 @@ wireguard_port: "51820"
 
 # The interface name that wireguard should use.
 wireguard_interface: "wg0"
-
-# TODO: Currently the role only supports full mesh network. But there
-# should also be the possibility to have only one server and many
-# peers. Needs to be implemented so this variable isn't used yet.
-# wireguard_server: ""

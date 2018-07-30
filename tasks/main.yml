@@ -30,6 +30,8 @@
   file:
     dest: "{{wireguard_cert_directory}}"
     state: directory
+    owner: "{{wireguard_cert_owner}}"
+    group: "{{wireguard_cert_group}}"
     mode: 0700
   run_once: true
   delegate_to: localhost
