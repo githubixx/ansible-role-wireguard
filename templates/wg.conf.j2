@@ -1,0 +1,34 @@
+#jinja2: lstrip_blocks:"True",trim_blocks:"True"
+[Interface]
+Address = {{hostvars[inventory_hostname].wireguard_ip}}
+PrivateKey = {{private_key}}
+ListenPort = {{wireguard_port}}
+{% if hostvars[inventory_hostname].wireguard_dns is defined %}
+DNS = {{hostvars[inventory_hostname].wireguard_dns}}
+{% endif %}
+{% if hostvars[inventory_hostname].wireguard_postup is defined %}
+PostUp = {{hostvars[inventory_hostname].wireguard_postup}}
+{% endif %}
+{% if hostvars[inventory_hostname].wireguard_postdown is defined %}
+PostDown = {{hostvars[inventory_hostname].wireguard_postdown}}
+{% endif %}
+{% if hostvars[inventory_hostname].wireguard_save_config is defined %}
+SaveConfig = true
+{% endif %}
+
+{% for host in groups["vpn"] %}
+  {% if host != inventory_hostname %}
+    [Peer]
+    PublicKey = {{hostvars[host].public_key}}
+    AllowedIPs = {{hostvars[host].wireguard_ip}}/32
+    {% if hostvars[host].wireguard_persistent_keepalive is defined %}
+    PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
+    {% endif %}
+    {% if hostvars[host].wireguard_endpoint is not defined %}
+    Endpoint = {{host}}:{{wireguard_port}}
+    {% elif hostvars[host].wireguard_endpoint != "" %}
+    Endpoint = {{hostvars[host].wireguard_endpoint}}:{{wireguard_port}}
+    {% endif %}
+
+  {% endif %}
+{% endfor %}
