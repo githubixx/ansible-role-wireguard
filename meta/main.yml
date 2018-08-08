@@ -12,3 +12,4 @@ galaxy_info:
     - security
     - linux
     - vpn
+    - wireguard
