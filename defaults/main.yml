@@ -1,5 +1,5 @@
 ---
-# The LOCAL directory where the Wireguard certificates are stored after they
+# The LOCAL directory where the WireGuard certificates are stored after they
 # were generated. By default this will expand to user's LOCAL ${HOME}
 # (the user that run's "ansible-playbook" command) plus
 # "/wireguard/certs". That means if the user's ${HOME} directory is e.g.
@@ -11,10 +11,10 @@ wireguard_cert_directory: "{{ '~/wireguard/certs' | expanduser }}"
 wireguard_cert_owner: "root"
 wireguard_cert_group: "root"
 
-# Directory to store Wireguard configuration on the remote hosts
+# Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "/etc/wireguard"
 
-# The port Wireguard will listen on.
+# The port WireGuard will listen on.
 wireguard_port: "51820"
 
 # The interface name that wireguard should use.
