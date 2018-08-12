@@ -1,6 +1,6 @@
 #jinja2: lstrip_blocks:"True",trim_blocks:"True"
 [Interface]
-Address = {{hostvars[inventory_hostname].wireguard_ip}}
+Address = {{hostvars[inventory_hostname].wireguard_address}}
 PrivateKey = {{private_key}}
 ListenPort = {{wireguard_port}}
 {% if hostvars[inventory_hostname].wireguard_dns is defined %}
@@ -20,7 +20,11 @@ SaveConfig = true
   {% if host != inventory_hostname %}
     [Peer]
     PublicKey = {{hostvars[host].public_key}}
+    {% if hostvars[host].wireguard_allowed_ips is defined %}
+    AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
+    {% else %}
     AllowedIPs = {{hostvars[host].wireguard_ip}}/32
+    {% endif %}
     {% if hostvars[host].wireguard_persistent_keepalive is defined %}
     PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
     {% endif %}

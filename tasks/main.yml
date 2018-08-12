@@ -38,6 +38,10 @@
   tags:
     wg-generate-keys
 
+- name: Set WireGuard IP (without mask)
+  set_fact:
+    wireguard_ip: "{{wireguard_address.split('/')[0]}}"
+
 - name: Set path to private key file
   set_fact:
     private_key_file_path: "{{wireguard_cert_directory}}/{{inventory_hostname}}.private.key"
@@ -95,6 +99,8 @@
     module: template
     src: "wg-privatekey.j2"
     dest: "{{private_key_file_path}}"
+    owner: "{{wireguard_cert_owner}}"
+    group: "{{wireguard_cert_group}}"
     mode: 0644
   when: private_key_file_stat.stat.exists == False
   tags:
@@ -105,6 +111,8 @@
     module: template
     src: "wg-publickey.j2"
     dest: "{{public_key_file_path}}"
+    owner: "{{wireguard_cert_owner}}"
+    group: "{{wireguard_cert_group}}"
     mode: 0644
   when: private_key_file_stat.stat.exists == False
   tags:
