@@ -1,9 +1,9 @@
 ansible-role-wireguard
 ======================
 
-This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-at-scaleway-part-1/) but can be used standalone of course. I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster. This VPN also includes two clients so that I can communicate securly with the Kubernetes API server. Also my Postfix mailserver running as K8s DaemonSet forwards mails to my internal Postfix through WireGuard VPN.
+This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster. This VPN also includes two clients so that I can communicate securly with the Kubernetes API server. Also my Postfix mailserver running as K8s DaemonSet forwards mails to my internal Postfix through WireGuard VPN.
 
-I used [PeerVPN](https://peervpn.net/) before but that wasn't updated for a while. As I moved my cloud hosts from Scaleway to Hetzner cloud it was a good time to switch the VPN solution ;-) In general PeerVPN still works perfectly fine esp. if you need a fully meshed network (where every node is able to talk to all other nodes and even if node `A` should be able to talk to Node `C` via node `B` ;-) ). But PeerVPN needs also lot of CPU resources and throuhput could be better. That's solved with [WireGuard](https://www.wireguard.io/).
+I used [PeerVPN](https://peervpn.net/) before but that wasn't updated for a while. As I moved my cloud hosts from Scaleway to Hetzner cloud it was a good time to switch the VPN solution ;-) In general PeerVPN still works perfectly fine esp. if you need a easy to setup fully meshed network (where every node is able to talk to all other nodes and even if node `A` should be able to talk to Node `C` via node `B` ;-) ). But PeerVPN needs also lot of CPU resources and throuhput could be better. That's solved with [WireGuard](https://www.wireguard.io/).
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
@@ -21,6 +21,10 @@ By default port `51820` (protocol UDP) should be accessable from the outside. Bu
 
 Changelog
 ---------
+
+**v1.0.1**
+
+- update README
 
 **v1.0.0**
 
@@ -212,34 +216,34 @@ ListenPort = 51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.101/32
+AllowedIPs = 10.8.0.101/24
 Endpoint = controller01.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.102/32
+AllowedIPs = 10.8.0.102/24
 Endpoint = controller02.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.103/32
+AllowedIPs = 10.8.0.103/24
 Endpoint = controller03.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.111/32
+AllowedIPs = 10.8.0.111/24
 PersistentKeepalive = 30
 Endpoint = worker01.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.112/32
+AllowedIPs = 10.8.0.112/24
 PersistentKeepalive = 30
 Endpoint = worker02.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.1/32
+AllowedIPs = 10.8.0.1/24
 PersistentKeepalive = 30
 Endpoint = server.at.home.p.domain.tld:51820
 ```
