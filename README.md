@@ -22,6 +22,10 @@ By default port `51820` (protocol UDP) should be accessable from the outside. Bu
 Changelog
 ---------
 
+**v1.0.2**
+
+- update README
+
 **v1.0.1**
 
 - update README
@@ -62,10 +66,10 @@ wireguard_interface: "wg0"
 The following variable is mandatory and needs to be configured for every host in `host_vars/`:
 
 ```
-wireguard_address: "10.3.0.101"
+wireguard_address: "10.3.0.101/24"
 ```
 
-If `wireguard_allowed_ips` is not set the the default value is the value from `wireguard_address` without the CIDR but instead with `/32` which is basically a host route (have a look `templates/wg.conf.j2`). Let's see this example and let's assume you don't set `wireguard_allowed_ips` explicitly:
+Of course all IP's should be in the same subnet like `/24` we see in the example above. If `wireguard_allowed_ips` is not set then the default value is the value from `wireguard_address` without the CIDR but instead with `/32` which is basically a host route (have a look `templates/wg.conf.j2`). Let's see this example and let's assume you don't set `wireguard_allowed_ips` explicitly:
 
 ```
 [Interface]
@@ -210,40 +214,40 @@ As you can see `wireguard_endpoint: ""` is a empty string here. That means the A
 
 ```
 [Interface]
-Address = 10.8.0.2
+Address = 10.8.0.2/24
 PrivateKey = ....
 ListenPort = 51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.101/24
+AllowedIPs = 10.8.0.101/32
 Endpoint = controller01.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.102/24
+AllowedIPs = 10.8.0.102/32
 Endpoint = controller02.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.103/24
+AllowedIPs = 10.8.0.103/32
 Endpoint = controller03.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.111/24
+AllowedIPs = 10.8.0.111/32
 PersistentKeepalive = 30
 Endpoint = worker01.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.112/24
+AllowedIPs = 10.8.0.112/32
 PersistentKeepalive = 30
 Endpoint = worker02.p.domain.tld:51820
 
 [Peer]
 PrivateKey = ....
-AllowedIPs = 10.8.0.1/24
+AllowedIPs = 10.8.0.1/32
 PersistentKeepalive = 30
 Endpoint = server.at.home.p.domain.tld:51820
 ```
