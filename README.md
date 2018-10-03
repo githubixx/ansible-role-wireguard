@@ -166,7 +166,7 @@ I've specified `ansible_python_interpreter` here for every node as the controlle
 
 For the Kubernetes worker I've defined the following variables:
 
-Ansible host file: `host_vars/controller01.i.domain.tld`
+Ansible host file: `host_vars/worker01.i.domain.tld`
 ```
 ---
 wireguard_address: "10.8.0.111/24"
