@@ -13,6 +13,7 @@
     - wireguard-tools
   tags:
     - wg-install
+    - skip_ansible_lint
 
 - name: Enable WireGuard kernel module
   modprobe:
@@ -70,6 +71,7 @@
   when: not private_key_file_stat.stat.exists
   tags:
     - wg-generate-keys
+    - skip_ansible_lint
 
 - name: Set private key fact
   set_fact:
