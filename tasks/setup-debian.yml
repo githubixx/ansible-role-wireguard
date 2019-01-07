@@ -4,23 +4,23 @@
     update_cache: true
     cache_valid_time: 3600
   when: ansible_distribution == "Ubuntu"
-  tags: 
+  tags:
     - wg-install
 
 - name: Install required packages
   package:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
   with_items:
     - software-properties-common
-    - linux-headers-{{ansible_kernel}}
-  tags: 
+    - linux-headers-{{ ansible_kernel }}
+  tags:
     - wg-install
 
-- name : Add WireGuard repository
+- name: Add WireGuard repository
   apt_repository:
     repo: "ppa:wireguard/wireguard"
     state: present
     update_cache: yes
-  tags: 
+  tags:
     - wg-install

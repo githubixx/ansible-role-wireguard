@@ -1,7 +1,7 @@
 ---
 - name: Install required packages
   pacman:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
   become: yes
   with_items:
