@@ -22,18 +22,7 @@ By default port `51820` (protocol UDP) should be accessable from the outside. Bu
 Changelog
 ---------
 
-**v1.0.2**
-
-- update README
-
-**v1.0.1**
-
-- update README
-
-**v1.0.0**
-
-- initial implementation
-
+see [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob/master/CHANGELOG.md)
 
 Role Variables
 --------------
