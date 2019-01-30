@@ -14,7 +14,6 @@
     keyserver: "keyserver.ubuntu.com"
     id: "8B48AD6246925553"
     state: present
-  run_once: true
   tags:
     - wg-install
 
@@ -23,6 +22,5 @@
     repo: "deb http://deb.debian.org/debian/ unstable main"
     state: present
     update_cache: yes
-  run_once: true
   tags:
     - wg-install
