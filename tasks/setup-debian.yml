@@ -24,3 +24,14 @@
     update_cache: yes
   tags:
     - wg-install
+
+- name: Get architecture
+  shell: dpkg --print-architecture
+  register: dpkg_arch
+  changed_when: "0 != 0"
+
+- name: Install kernel headers to compile wireguard with DKMS
+  apt:
+    name:
+      - "linux-headers-{{ dpkg_arch.stdout }}"
+    state: present
