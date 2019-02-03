@@ -2,10 +2,7 @@
 - name: Gather instance facts
   setup:
 
-- include_tasks: "setup-{{ ansible_os_family|lower }}.yml"
-  when: ansible_os_family.lower() == 'archlinux'
 - include_tasks: "setup-{{ ansible_distribution|lower }}.yml"
-  when: ansible_os_family.lower() != 'archlinux'
 
 - name: Install WireGuard
   package:
