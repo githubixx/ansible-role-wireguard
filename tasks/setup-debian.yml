@@ -1,7 +1,7 @@
 ---
 - name: Setup WireGuard preference
   copy:
-    src: etc/apt/preferences.d/limit-unstable
+    src: debian/etc/apt/preferences.d/limit-unstable
     dest: /etc/apt/preferences.d/limit-unstable
     owner: root
     group: root
@@ -28,7 +28,7 @@
 - name: Get architecture
   shell: dpkg --print-architecture
   register: dpkg_arch
-  changed_when: "0 != 0"
+  changed_when: False
 
 - name: Install kernel headers to compile wireguard with DKMS
   apt:
