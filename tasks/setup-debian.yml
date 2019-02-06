@@ -1,26 +1,37 @@
 ---
-- name: Update APT package cache
-  apt:
-    update_cache: true
-    cache_valid_time: 3600
-  when: ansible_distribution == "Ubuntu"
+- name: Setup WireGuard preference
+  copy:
+    src: debian/etc/apt/preferences.d/limit-unstable
+    dest: /etc/apt/preferences.d/limit-unstable
+    owner: root
+    group: root
+    mode: 0644
   tags:
     - wg-install
 
-- name: Install required packages
-  package:
-    name: "{{ item }}"
+- name: Add WireGuard key
+  apt_key:
+    keyserver: "keyserver.ubuntu.com"
+    id: "8B48AD6246925553"
     state: present
-  with_items:
-    - software-properties-common
-    - linux-headers-{{ ansible_kernel }}
   tags:
     - wg-install
 
 - name: Add WireGuard repository
   apt_repository:
-    repo: "ppa:wireguard/wireguard"
+    repo: "deb http://deb.debian.org/debian/ unstable main"
     state: present
     update_cache: yes
   tags:
     - wg-install
+
+- name: Get architecture
+  shell: dpkg --print-architecture
+  register: dpkg_arch
+  changed_when: False
+
+- name: Install kernel headers to compile wireguard with DKMS
+  apt:
+    name:
+      - "linux-headers-{{ dpkg_arch.stdout }}"
+    state: present
