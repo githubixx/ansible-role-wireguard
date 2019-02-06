@@ -8,6 +8,9 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - bionic
+  - name: Debian
+    versions:
+    - stretch
   galaxy_tags:
     - networking
     - security
