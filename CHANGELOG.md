@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**3.0.0**
+
+- support for Debian added (contribution by ties)
+
 **2.0.1**
 
 - make Ansible linter happy
