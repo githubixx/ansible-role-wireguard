@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**3.0.1**
+
+- fix address in README
+
 **3.0.0**
 
 - support for Debian added (contribution by ties)
