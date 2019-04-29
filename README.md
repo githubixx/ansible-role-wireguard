@@ -55,7 +55,7 @@ wireguard_interface: "wg0"
 The following variable is mandatory and needs to be configured for every host in `host_vars/`:
 
 ```
-wireguard_address: "10.3.0.101/24"
+wireguard_address: "10.8.0.101/24"
 ```
 
 Of course all IP's should be in the same subnet like `/24` we see in the example above. If `wireguard_allowed_ips` is not set then the default value is the value from `wireguard_address` without the CIDR but instead with `/32` which is basically a host route (have a look `templates/wg.conf.j2`). Let's see this example and let's assume you don't set `wireguard_allowed_ips` explicitly:
