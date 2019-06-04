@@ -6,9 +6,10 @@
 
 - name: Install WireGuard
   package:
-    name: "{{ item }}"
+    name: "{{ packages }}"
     state: present
-  with_items:
+  vars:
+    packages:
     - wireguard-dkms
     - wireguard-tools
   tags:

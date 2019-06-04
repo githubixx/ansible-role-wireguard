@@ -8,9 +8,10 @@
 
 - name: Install required packages
   package:
-    name: "{{ item }}"
+    name: "{{ packages }}"
     state: present
-  with_items:
+  vars:
+    packages:
     - software-properties-common
     - linux-headers-{{ ansible_kernel }}
   tags:
