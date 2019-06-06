@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**3.2.0**
+
+- add support for RHEL/CentOS (contribution by ahanselka)
+
 **3.1.0**
 
 - pass package list directly to some modules by using the new and prefered syntax instead `loop` or `with_items` (contribution by ahanselka)
