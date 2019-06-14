@@ -31,7 +31,7 @@ SaveConfig = true
     {% if hostvars[host].wireguard_endpoint is not defined %}
     Endpoint = {{host}}:{{wireguard_port}}
     {% elif hostvars[host].wireguard_endpoint != "" %}
-    Endpoint = {{hostvars[host].wireguard_endpoint}}:{{wireguard_port}}
+    Endpoint = {{hostvars[host].wireguard_endpoint}}:{{hostvars[host].wireguard_port}}
     {% endif %}
 
   {% endif %}
