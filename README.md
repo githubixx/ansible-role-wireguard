@@ -252,6 +252,31 @@ Example Playbook
     - wireguard
 ```
 
+Run tests
+---------
+
+Make sure to have vagrant and VirtualBox installed (we could also do with libvirt, feel free to PR).
+Then you need the following pip:
+
+```
+pip install molecule python-vagrant
+```
+
+Then to run the full test suite:
+
+```
+molecule test
+```
+
+Or if you prefer to run things separately:
+
+```
+molecule create # to create the VMs
+molecule converge # to run the playbook, and so the role you are developing
+molecule verify # to run the test suite
+molecule destroy # to delete the VMs
+molecule login --host instance-1 # to login into instance-1
+
 License
 -------
 

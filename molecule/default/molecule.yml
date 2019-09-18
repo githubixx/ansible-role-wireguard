@@ -1,0 +1,61 @@
+---
+scenario:
+  name: default
+
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  - name: instance-1
+    box: ubuntu/bionic64
+    memory: 512
+    cpus: 1
+    interfaces:
+      - network_name: private_network
+        type: static
+        ip: 192.168.11.3
+        auto_config: true
+    groups:
+      - vpn
+  - name: instance-2
+    box: ubuntu/bionic64
+    memory: 512
+    cpus: 1
+    interfaces:
+      - network_name: private_network
+        type: static
+        ip: 192.168.11.4
+        auto_config: true
+    groups:
+      - vpn
+
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      instance-1:
+        wireguard_address: "10.8.0.101/24"
+      instance-2:
+        wireguard_address: "10.8.0.102/24"
+  log: true
+  lint:
+    name: ansible-lint
+    enabled: false
+  playbooks:
+    test: playbook.yml
+
+lint:
+  name: yamllint
+  enabled: false
+
+verifier:
+  name: testinfra
+  directory: tests
+  lint:
+    name: flake8
+  options:
+    # show which tests where executed in test output
+    v: 1
+    s: true
+

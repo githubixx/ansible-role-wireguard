@@ -1,0 +1,20 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  tasks:
+  - name: Add the inventory into /etc/hosts
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '.*{{ item }}$'
+      line: "{{ hostvars[item]['ansible_enp0s8']['ipv4']['address'] }} {{item}}"
+      state: present
+    when: hostvars[item]['ansible_enp0s8']['ipv4']['address'] is defined
+    with_items:
+      - "{{ groups['all'] }}"
+
+- name: Test
+  hosts: all
+  become: true
+  roles:
+    - role: ansible-role-wireguard
