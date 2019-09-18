@@ -10,8 +10,8 @@
     state: present
   vars:
     packages:
-    - wireguard-dkms
-    - wireguard-tools
+      - wireguard-dkms
+      - wireguard-tools
   tags:
     - wg-install
     - skip_ansible_lint
@@ -21,7 +21,7 @@
     name: wireguard
     state: present
   register: wireguard_module_enabled
-  until:  wireguard_module_enabled is succeeded
+  until: wireguard_module_enabled is succeeded
   retries: 10
   delay: 10
   failed_when: wireguard_module_enabled is failure
@@ -68,6 +68,7 @@
   shell: "wg genkey"
   register: wg_private_key_result
   when: not private_key_file_stat.stat.exists
+  changed_when: false
   tags:
     - wg-generate-keys
     - skip_ansible_lint
@@ -83,6 +84,7 @@
   shell: "echo '{{ wg_private_key }}' | wg pubkey"
   register: wg_public_key_result
   when: not private_key_file_stat.stat.exists
+  changed_when: false
   tags:
     - wg-generate-keys
 
@@ -153,4 +155,4 @@
   service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: started
-    enabled: yes
+    enabled: true

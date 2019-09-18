@@ -21,14 +21,14 @@
   apt_repository:
     repo: "deb http://deb.debian.org/debian/ unstable main"
     state: present
-    update_cache: yes
+    update_cache: true
   tags:
     - wg-install
 
 - name: Get architecture
   shell: dpkg --print-architecture
   register: dpkg_arch
-  changed_when: False
+  changed_when: false
 
 - name: Install kernel headers to compile wireguard with DKMS
   apt:

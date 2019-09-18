@@ -8,4 +8,4 @@
 - name: Install EPEL repository
   yum:
     name: epel-release
-    update_cache: yes
+    update_cache: true
