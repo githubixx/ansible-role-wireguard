@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**3.2.1**
+
+- remove unecessary files (contribution by pierreozoux)
+
 **3.2.0**
 
 - add support for RHEL/CentOS (contribution by ahanselka)
