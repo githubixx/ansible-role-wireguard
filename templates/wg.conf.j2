@@ -1,7 +1,7 @@
 #jinja2: lstrip_blocks:"True",trim_blocks:"True"
 [Interface]
 Address = {{hostvars[inventory_hostname].wireguard_address}}
-PrivateKey = {{private_key}}
+PrivateKey = {{wg_private_key}}
 ListenPort = {{wireguard_port}}
 {% if hostvars[inventory_hostname].wireguard_dns is defined %}
 DNS = {{hostvars[inventory_hostname].wireguard_dns}}
@@ -19,7 +19,7 @@ SaveConfig = true
 {% for host in groups["vpn"] %}
   {% if host != inventory_hostname %}
     [Peer]
-    PublicKey = {{hostvars[host].public_key}}
+    PublicKey = {{hostvars[host].wg_public_key}}
     {% if hostvars[host].wireguard_allowed_ips is defined %}
     AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
     {% else %}

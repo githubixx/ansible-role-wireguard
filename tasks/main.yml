@@ -28,46 +28,35 @@
   tags:
     - wg-install
 
-- name: Create WireGuard certificates directory
-  file:
-    dest: "{{ wireguard_cert_directory }}"
-    state: directory
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0700
-  run_once: true
-  delegate_to: localhost
-  tags:
-    wg-generate-keys
-
 - name: Set WireGuard IP (without mask)
   set_fact:
     wireguard_ip: "{{ wireguard_address.split('/')[0] }}"
 
-- name: Set path to private key file
-  set_fact:
-    private_key_file_path: "{{ wireguard_cert_directory }}/{{ inventory_hostname }}.private.key"
-  tags:
-    wg-generate-keys
-
-- name: Set path to public key file
-  set_fact:
-    public_key_file_path: "{{ wireguard_cert_directory }}/{{ inventory_hostname }}.public.key"
-  tags:
-    wg-generate-keys
-
-- name: Register if private key already exists
+# lookup ini plugin doesn't work on remote hosts...
+- name: Check if WireGuard file exists
   stat:
-    path: "{{ private_key_file_path }}"
-  register: private_key_file_stat
-  delegate_to: localhost
+    path: "{{ wg_conf_path }}"
+  register: wg_conf
+
+- name: Read WireGuard private key
+  shell: "cat {{ wg_conf_path }} | grep PrivateKey | cut -d= -f2- | tr -d [:space:]"
+  register: wg_private_key_result
+  changed_when: false
+  when: wg_conf.stat.exists
+  tags:
+    - wg-generate-keys
+
+- name: Set private key fact
+  set_fact:
+    wg_private_key: "{{ wg_private_key_result.stdout }}"
+  when: wg_conf.stat.exists
   tags:
     - wg-generate-keys
 
 - name: Generate WireGuard private key
   shell: "wg genkey"
   register: wg_private_key_result
-  when: not private_key_file_stat.stat.exists
+  when: not wg_conf.stat.exists
   changed_when: false
   tags:
     - wg-generate-keys
@@ -76,11 +65,11 @@
 - name: Set private key fact
   set_fact:
     wg_private_key: "{{ wg_private_key_result.stdout }}"
-  when: not private_key_file_stat.stat.exists
+  when: not wg_conf.stat.exists
   tags:
     - wg-generate-keys
 
-- name: Generate WireGuard public key
+- name: Derive WireGuard public key
   shell: "echo '{{ wg_private_key }}' | wg pubkey"
   register: wg_public_key_result
   when: not private_key_file_stat.stat.exists
@@ -91,45 +80,8 @@
 - name: Set public key fact
   set_fact:
     wg_public_key: "{{ wg_public_key_result.stdout }}"
-  when: not private_key_file_stat.stat.exists
   tags:
     - wg-generate-keys
-
-- name: Store hosts private key locally
-  template:
-    src: "wg-privatekey.j2"
-    dest: "{{ private_key_file_path }}"
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0644
-  when: not private_key_file_stat.stat.exists
-  delegate_to: localhost
-  tags:
-    - wg-generate-keys
-
-- name: Store hosts public key locally
-  template:
-    src: "wg-publickey.j2"
-    dest: "{{ public_key_file_path }}"
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0644
-  when: not private_key_file_stat.stat.exists
-  delegate_to: localhost
-  tags:
-    - wg-generate-keys
-
-- name: Read private key
-  set_fact:
-    private_key: "{{ lookup('file', private_key_file_path) }}"
-  tags:
-    wg-config
-
-- name: Read public key
-  set_fact:
-    public_key: "{{ lookup('file', public_key_file_path) }}"
-  tags:
-    wg-config
 
 - name: Create WireGuard configuration directory
   file:
@@ -142,7 +94,7 @@
 - name: Generate WireGuard configuration file
   template:
     src: wg.conf.j2
-    dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    dest: "{{ wg_conf_path }}"
     owner: root
     group: root
     mode: 0600
