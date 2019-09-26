@@ -67,8 +67,6 @@
 - name: Generate WireGuard private key
   shell: "wg genkey"
   register: wg_private_key_result
-  with_inventory_hostnames:
-    - vpn
   when: not private_key_file_stat.stat.exists
   tags:
     - wg-generate-keys
@@ -76,7 +74,7 @@
 
 - name: Set private key fact
   set_fact:
-    wg_private_key: "{{ wg_private_key_result.results[0].stdout }}"
+    wg_private_key: "{{ wg_private_key_result.stdout }}"
   when: not private_key_file_stat.stat.exists
   tags:
     - wg-generate-keys
@@ -85,14 +83,12 @@
   shell: "echo '{{ wg_private_key }}' | wg pubkey"
   register: wg_public_key_result
   when: not private_key_file_stat.stat.exists
-  with_inventory_hostnames:
-    - vpn
   tags:
     - wg-generate-keys
 
 - name: Set public key fact
   set_fact:
-    wg_public_key: "{{ wg_public_key_result.results[0].stdout }}"
+    wg_public_key: "{{ wg_public_key_result.stdout }}"
   when: not private_key_file_stat.stat.exists
   tags:
     - wg-generate-keys
