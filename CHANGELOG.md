@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**3.2.2**
+
+- remove unneeded `with_inventory_hostnames` loops (thanks to pierreozoux for initial PR)
+
 **3.2.1**
 
 - remove unecessary files (contribution by pierreozoux)
