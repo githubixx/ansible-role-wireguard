@@ -11,6 +11,9 @@ galaxy_info:
   - name: Debian
     versions:
     - stretch
+  - name: EL
+    versions:
+    - 7
   galaxy_tags:
     - networking
     - security
