@@ -30,17 +30,14 @@ Role Variables
 This variables can be changed in `group_vars/`:
 
 ```
-# The LOCAL directory where the WireGuard certificates are stored after they
-# were generated. By default this will expand to user's LOCAL ${HOME}
-# (the user that run's "ansible-playbook" command) plus
-# "/wireguard/certs". That means if the user's ${HOME} directory is e.g.
-# "/home/da_user" then "wireguard_cert_directory" will have a value of
-# "/home/da_user/wireguard/certs". If you change this make sure that
-# the parent directory is writable by the user that runs "ansible-playbook"
-# command.
+# LOCAL directory where the WireGuard certificates used to be stored 
+# in older version of this role.
+# Private keys are now read from the remote host, public key are derived 
+# from private key
+#
+# This config is kept to be able to delete the old folder, as having 
+# all the private keys locally is not a security best practice.
 wireguard_cert_directory: "{{ '~/wireguard/certs' | expanduser }}"
-wireguard_cert_owner: "root"
-wireguard_cert_group: "root"
 
 # Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "/etc/wireguard"
@@ -248,6 +245,53 @@ Example Playbook
 
 ```
 - hosts: vpn
+  roles:
+    - wireguard
+```
+
+Example Inventory usint 2 different WireGuard interfaces on host multi
+----------------------------------------------------------------------
+
+This is a complex example using yaml inventory format
+
+```
+vpn1:
+  hosts:
+    multi:
+      wireguard_address: 10.9.0.1/32
+      wireguard_allowed_ips: "10.9.0.1/32, 192.168.2.0/24"
+      wireguard_endpoint: multi.exemple.com
+    nated:
+      wireguard_address: 10.9.0.2/32
+      wireguard_allowed_ips: "10.9.0.2/32, 192.168.3.0/24"
+      wireguard_persistent_keepalive: 15
+      wireguard_endpoint: nated.exemple.com
+      wireguard_postup: "iptables -t nat -A POSTROUTING -o ens12 -j MASQUERADE"
+      wireguard_postdown: "iptables -t nat -D POSTROUTING -o ens12 -j MASQUERADE"
+vpn2:
+  hosts:
+    multi-wg1:
+      ansible_host: multi
+      wireguard_interface: wg1
+      wireguard_port: 51821 # when using several interface on one host, we must use different ports
+      wireguard_address: 10.9.1.1/32
+      wireguard_endpoint: multi.exemple.com
+    another:
+      wireguard_address: 10.9.1.2/32
+      wireguard_endpoint: another.exemple.com
+```
+
+Playbooks
+---------
+
+```
+- hosts: vpn1
+  roles:
+    - wireguard
+```
+
+```
+- hosts: vpn2
   roles:
     - wireguard
 ```
