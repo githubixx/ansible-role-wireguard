@@ -125,9 +125,25 @@
     - wg-config
   notify:
     - restart wireguard
-
+ 
 - name: Start and enable WireGuard service
   service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: started
     enabled: yes
+
+- name: Look for local private key
+  find:
+    paths: "{{ wireguard_cert_directory }}"
+    patterns: "*.private.key"
+  register: local_private_key_to_delete
+  delegate_to: localhost
+  run_once: true
+
+- name: Delete local private key
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ local_private_key_to_delete.files }}"
+  delegate_to: localhost
+  run_once: true
