@@ -158,6 +158,17 @@
   notify:
     - restart wireguard
 
+- name: check if reload-module-on-update file exists
+  stat: 
+    path: "{{ wireguard_remote_directory }}/.reload-module-on-update"
+  register: reload_module_on_update
+
+- name: WireGuard reload-module-on-update
+  file:
+    dest: "{{ wireguard_remote_directory }}/.reload-module-on-update"
+    state: touch
+  when: not reload_module_on_update.stat.exists
+  
 - name: Start and enable WireGuard service
   service:
     name: "wg-quick@{{ wireguard_interface }}"
