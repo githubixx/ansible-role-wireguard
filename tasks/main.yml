@@ -38,25 +38,34 @@
   tags:
     - wg-generate-keys
 
-- name: Generate WireGuard private key
-  shell: "wg genkey"
-  register: wg_private_key_result
+- block:
+  - name: Generate WireGuard private key
+    shell: "wg genkey"
+    register: wg_private_key_result
+    tags:
+      - wg-generate-keys
+
+  - name: Set private key fact
+    set_fact:
+      private_key: "{{ wg_private_key_result.stdout }}"
+    tags:
+      - wg-generate-keys
   when: not config_file_stat.stat.exists
-  tags:
-    - wg-generate-keys
 
-- name: Read WireGuard config file
-  slurp:
-    src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
-  register: wg_config
-  tags:
-    - wg-config
+- block:
+  - name: Read WireGuard config file
+    slurp:
+      src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    register: wg_config
+    tags:
+      - wg-config
 
-- name: Set private key fact
-  set_fact:
-    private_key: "{{ wg_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
-  tags:
-    - wg-config
+  - name: Set private key fact
+    set_fact:
+      private_key: "{{ wg_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+    tags:
+      - wg-config
+  when: config_file_stat.stat.exists
 
 - name: Derive WireGuard public key
   shell: "echo '{{ private_key }}' | wg pubkey"
