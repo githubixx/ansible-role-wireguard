@@ -28,27 +28,9 @@
   tags:
     - wg-install
 
-- name: Create WireGuard public key directory locally
-  file:
-    dest: "{{ wireguard_cert_directory }}"
-    state: directory
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0755
-  run_once: true
-  delegate_to: localhost
-  tags:
-    wg-generate-keys
-
 - name: Set WireGuard IP (without mask)
   set_fact:
     wireguard_ip: "{{ wireguard_address.split('/')[0] }}"
-
-- name: Set path to public key file
-  set_fact:
-    public_key_file_path: "{{ wireguard_cert_directory }}/{{ inventory_hostname }}.public.key"
-  tags:
-    wg-generate-keys
 
 - name: Register if config/private key already exists on target host
   stat:
@@ -57,36 +39,12 @@
   tags:
     - wg-generate-keys
 
-- block:
-  - name: Generate WireGuard private key
-    shell: "wg genkey"
-    register: wg_private_key_result
-    tags:
-      - wg-generate-keys
-      - skip_ansible_lint
-
-  - name: Generate WireGuard public key
-    shell: "echo '{{ wg_private_key }}' | wg pubkey"
-    register: wg_public_key_result
-    tags:
-      - wg-generate-keys
-
-  - name: Set public key fact
-    set_fact:
-      wg_public_key: "{{ wg_public_key_result.results[0].stdout }}"
-    tags:
-      - wg-generate-keys
-
-  - name: Store hosts public key locally
-    template:
-      src: "wg-publickey.j2"
-      dest: "{{ public_key_file_path }}"
-      owner: "{{ wireguard_cert_owner }}"
-      group: "{{ wireguard_cert_group }}"
-      mode: 0644
-    delegate_to: localhost
-    tags:
-      - wg-generate-keys
+- name: Generate WireGuard private key
+  shell: "wg genkey"
+  register: wg_private_key_result
+  tags:
+    - wg-generate-keys
+    - skip_ansible_lint
   when: not config_file_stat.stat.exists
 
 - name: Read WireGuard config file
@@ -100,9 +58,16 @@
   tags:
     wg-config
 
-- name: Read public key
+- name: Derive WireGuard public key
+  shell: "echo '{{ private_key }}' | wg pubkey"
+  register: wg_public_key_result
+  changed_when: false
+  tags:
+    - wg-config
+
+- name: Set public key fact
   set_fact:
-    public_key: "{{ lookup('file', public_key_file_path) }}"
+    public_key: "{{ wg_public_key_result.stdout }}"
   tags:
     wg-config
 
@@ -143,18 +108,9 @@
     state: started
     enabled: yes
 
-- name: Look for local private key
-  find:
-    paths: "{{ wireguard_cert_directory }}"
-    patterns: "*.private.key"
-  register: local_private_key_to_delete
-  delegate_to: localhost
-  run_once: true
-
-- name: Delete local private key
+- name: Delete local cert directory
   file:
-    path: "{{ item.path }}"
+    path: "{{ wireguard_cert_directory }}"
     state: absent
-  with_items: "{{ local_private_key_to_delete.files }}"
   delegate_to: localhost
   run_once: true
