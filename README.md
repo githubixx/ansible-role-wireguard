@@ -249,7 +249,7 @@ Example Playbook
     - wireguard
 ```
 
-Example Inventory usint 2 different WireGuard interfaces on host multi
+Example Inventory using 2 different WireGuard interfaces on host multi
 ----------------------------------------------------------------------
 
 This is a complex example using yaml inventory format
@@ -270,7 +270,7 @@ vpn1:
       wireguard_postdown: "iptables -t nat -D POSTROUTING -o ens12 -j MASQUERADE"
 vpn2:
   hosts:
-    multi-wg1:
+    multi-wg1: # use a different name, and define ansible_host, to avoid mixing of vars without needing to prefix vars with interface name
       ansible_host: multi
       wireguard_interface: wg1
       wireguard_port: 51821 # when using several interface on one host, we must use different ports
