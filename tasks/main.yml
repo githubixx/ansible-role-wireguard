@@ -35,6 +35,14 @@
     owner: "{{ wireguard_cert_owner }}"
     group: "{{ wireguard_cert_group }}"
     mode: 0700
+
+- name: Create WireGuard public key directory locally
+  file:
+    dest: "{{ wireguard_cert_directory }}"
+    state: directory
+    owner: "{{ wireguard_cert_owner }}"
+    group: "{{ wireguard_cert_group }}"
+    mode: 0755
   run_once: true
   delegate_to: localhost
   tags:
@@ -56,70 +64,71 @@
   tags:
     wg-generate-keys
 
-- name: Register if private key already exists
+- name: Register if private key already exists on target host
   stat:
     path: "{{ private_key_file_path }}"
   register: private_key_file_stat
-  delegate_to: localhost
   tags:
     - wg-generate-keys
 
-- name: Generate WireGuard private key
-  shell: "wg genkey"
-  register: wg_private_key_result
-  when: not private_key_file_stat.stat.exists
-  tags:
-    - wg-generate-keys
-    - skip_ansible_lint
+- block:
+  - name: Generate WireGuard private key
+    shell: "wg genkey"
+    register: wg_private_key_result
+    tags:
+      - wg-generate-keys
+      - skip_ansible_lint
 
-- name: Set private key fact
-  set_fact:
-    wg_private_key: "{{ wg_private_key_result.stdout }}"
-  when: not private_key_file_stat.stat.exists
-  tags:
-    - wg-generate-keys
+  - name: Set private key fact
+    set_fact:
+      wg_private_key: "{{ wg_private_key_result.results[0].stdout }}"
+  
+    tags:
+      - wg-generate-keys
 
-- name: Generate WireGuard public key
-  shell: "echo '{{ wg_private_key }}' | wg pubkey"
-  register: wg_public_key_result
-  when: not private_key_file_stat.stat.exists
-  tags:
-    - wg-generate-keys
+  - name: Generate WireGuard public key
+    shell: "echo '{{ wg_private_key }}' | wg pubkey"
+    register: wg_public_key_result
+    tags:
+      - wg-generate-keys
 
-- name: Set public key fact
-  set_fact:
-    wg_public_key: "{{ wg_public_key_result.stdout }}"
-  when: not private_key_file_stat.stat.exists
-  tags:
-    - wg-generate-keys
+  - name: Set public key fact
+    set_fact:
+      wg_public_key: "{{ wg_public_key_result.results[0].stdout }}"
+    tags:
+      - wg-generate-keys
 
-- name: Store hosts private key locally
-  template:
-    src: "wg-privatekey.j2"
-    dest: "{{ private_key_file_path }}"
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0644
-  when: not private_key_file_stat.stat.exists
-  delegate_to: localhost
-  tags:
-    - wg-generate-keys
+  - name: Store hosts private key
+    template:
+      src: "wg-privatekey.j2"
+      dest: "{{ private_key_file_path }}"
+      owner: "{{ wireguard_cert_owner }}"
+      group: "{{ wireguard_cert_group }}"
+      mode: 0600
+    tags:
+      - wg-generate-keys
 
-- name: Store hosts public key locally
-  template:
-    src: "wg-publickey.j2"
-    dest: "{{ public_key_file_path }}"
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0644
+  - name: Store hosts public key locally
+    template:
+      src: "wg-publickey.j2"
+      dest: "{{ public_key_file_path }}"
+      owner: "{{ wireguard_cert_owner }}"
+      group: "{{ wireguard_cert_group }}"
+      mode: 0644
+    delegate_to: localhost
+    tags:
+      - wg-generate-keys
   when: not private_key_file_stat.stat.exists
-  delegate_to: localhost
-  tags:
-    - wg-generate-keys
+
+- name: importing private key to variable
+  slurp:
+    src: "{{ private_key_file_path }}"
+  register: wg_privatekey_b64
+  become: true
 
 - name: Read private key
   set_fact:
-    private_key: "{{ lookup('file', private_key_file_path) }}"
+    private_key: "{{ wg_privatekey_b64.content | b64decode }}"
   tags:
     wg-config
 
