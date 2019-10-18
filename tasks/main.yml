@@ -52,7 +52,7 @@
     src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
   register: wg_config
 
-- name: Read private key
+- name: Set private key fact
   set_fact:
     private_key: "{{ wg_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
   tags:
@@ -91,12 +91,12 @@
   notify:
     - restart wireguard
 
-- name: check if reload-module-on-update file exists
+- name: Check if reload-module-on-update is set
   stat: 
     path: "{{ wireguard_remote_directory }}/.reload-module-on-update"
   register: reload_module_on_update
 
-- name: WireGuard reload-module-on-update
+- name: Set WireGuard reload-module-on-update
   file:
     dest: "{{ wireguard_remote_directory }}/.reload-module-on-update"
     state: touch
