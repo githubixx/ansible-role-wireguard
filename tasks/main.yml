@@ -37,6 +37,7 @@
   register: config_file_stat
   tags:
     - wg-generate-keys
+    - wg-config
 
 - block:
   - name: Generate WireGuard private key
