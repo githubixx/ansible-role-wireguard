@@ -69,7 +69,7 @@
   when: config_file_stat.stat.exists
 
 - name: Derive WireGuard public key
-  shell: "echo '{{ private_key }}' | wg pubkey"
+  shell: "echo '{{ private_key }}' | wg pubkey" # noqa 306
   register: wg_public_key_result
   changed_when: false
   tags:
