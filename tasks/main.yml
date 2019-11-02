@@ -14,7 +14,6 @@
     - wireguard-tools
   tags:
     - wg-install
-    - skip_ansible_lint
 
 - name: Enable WireGuard kernel module
   modprobe:
@@ -28,106 +27,59 @@
   tags:
     - wg-install
 
-- name: Create WireGuard certificates directory
-  file:
-    dest: "{{ wireguard_cert_directory }}"
-    state: directory
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0700
-  run_once: true
-  delegate_to: localhost
-  tags:
-    wg-generate-keys
-
 - name: Set WireGuard IP (without mask)
   set_fact:
     wireguard_ip: "{{ wireguard_address.split('/')[0] }}"
 
-- name: Set path to private key file
-  set_fact:
-    private_key_file_path: "{{ wireguard_cert_directory }}/{{ inventory_hostname }}.private.key"
-  tags:
-    wg-generate-keys
-
-- name: Set path to public key file
-  set_fact:
-    public_key_file_path: "{{ wireguard_cert_directory }}/{{ inventory_hostname }}.public.key"
-  tags:
-    wg-generate-keys
-
-- name: Register if private key already exists
+- name: Register if config/private key already exists on target host
   stat:
-    path: "{{ private_key_file_path }}"
-  register: private_key_file_stat
-  delegate_to: localhost
+    path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+  register: config_file_stat
   tags:
     - wg-generate-keys
+    - wg-config
 
-- name: Generate WireGuard private key
-  shell: "wg genkey"
-  register: wg_private_key_result
-  when: not private_key_file_stat.stat.exists
-  tags:
-    - wg-generate-keys
-    - skip_ansible_lint
+- block:
+  - name: Generate WireGuard private key
+    shell: "wg genkey"
+    register: wg_private_key_result
+    tags:
+      - wg-generate-keys
 
-- name: Set private key fact
-  set_fact:
-    wg_private_key: "{{ wg_private_key_result.stdout }}"
-  when: not private_key_file_stat.stat.exists
-  tags:
-    - wg-generate-keys
+  - name: Set private key fact
+    set_fact:
+      private_key: "{{ wg_private_key_result.stdout }}"
+    tags:
+      - wg-generate-keys
+  when: not config_file_stat.stat.exists
 
-- name: Generate WireGuard public key
-  shell: "echo '{{ wg_private_key }}' | wg pubkey"
+- block:
+  - name: Read WireGuard config file
+    slurp:
+      src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    register: wg_config
+    tags:
+      - wg-config
+
+  - name: Set private key fact
+    set_fact:
+      private_key: "{{ wg_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+    tags:
+      - wg-config
+  when: config_file_stat.stat.exists
+
+- name: Derive WireGuard public key
+  shell: "echo '{{ private_key }}' | wg pubkey" # noqa 306
   register: wg_public_key_result
-  when: not private_key_file_stat.stat.exists
+  changed_when: false
   tags:
-    - wg-generate-keys
+    - wg-config
 
 - name: Set public key fact
   set_fact:
-    wg_public_key: "{{ wg_public_key_result.stdout }}"
-  when: not private_key_file_stat.stat.exists
+    public_key: "{{ wg_public_key_result.stdout }}"
   tags:
-    - wg-generate-keys
-
-- name: Store hosts private key locally
-  template:
-    src: "wg-privatekey.j2"
-    dest: "{{ private_key_file_path }}"
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0644
-  when: not private_key_file_stat.stat.exists
-  delegate_to: localhost
-  tags:
-    - wg-generate-keys
-
-- name: Store hosts public key locally
-  template:
-    src: "wg-publickey.j2"
-    dest: "{{ public_key_file_path }}"
-    owner: "{{ wireguard_cert_owner }}"
-    group: "{{ wireguard_cert_group }}"
-    mode: 0644
-  when: not private_key_file_stat.stat.exists
-  delegate_to: localhost
-  tags:
-    - wg-generate-keys
-
-- name: Read private key
-  set_fact:
-    private_key: "{{ lookup('file', private_key_file_path) }}"
-  tags:
-    wg-config
-
-- name: Read public key
-  set_fact:
-    public_key: "{{ lookup('file', public_key_file_path) }}"
-  tags:
-    wg-config
+    - wg-config
 
 - name: Create WireGuard configuration directory
   file:
@@ -148,6 +100,21 @@
     - wg-config
   notify:
     - restart wireguard
+
+- name: Check if reload-module-on-update is set
+  stat:
+    path: "{{ wireguard_remote_directory }}/.reload-module-on-update"
+  register: reload_module_on_update
+  tags:
+    - wg-config
+
+- name: Set WireGuard reload-module-on-update
+  file:
+    dest: "{{ wireguard_remote_directory }}/.reload-module-on-update"
+    state: touch
+  when: not reload_module_on_update.stat.exists
+  tags:
+    - wg-config
 
 - name: Start and enable WireGuard service
   service:
