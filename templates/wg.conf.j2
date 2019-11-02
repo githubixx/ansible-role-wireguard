@@ -15,9 +15,9 @@ PostDown = {{hostvars[inventory_hostname].wireguard_postdown}}
 {% if hostvars[inventory_hostname].wireguard_save_config is defined %}
 SaveConfig = true
 {% endif %}
-
 {% for host in ansible_play_hosts %}
   {% if host != inventory_hostname %}
+  
     [Peer]
     PublicKey = {{hostvars[host].public_key}}
     {% if hostvars[host].wireguard_allowed_ips is defined %}
