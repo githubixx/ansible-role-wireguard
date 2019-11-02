@@ -1,18 +1,9 @@
 ---
-# LOCAL directory where the WireGuard certificates used to be stored 
-# in older version of this role.
-# Private keys are now read from the remote host, public key are derived 
-# from private key
-#
-# This config is kept to be able to delete the old folder, as having 
-# all the private keys locally is not a security best practice.
-wireguard_cert_directory: "{{ '~/wireguard/certs' | expanduser }}"
-
 # Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "/etc/wireguard"
 
-# The port WireGuard will listen on.
+# The default port WireGuard will listen if not specified otherwise.
 wireguard_port: "51820"
 
-# The interface name that wireguard should use.
+# The default interface name that wireguard should use if not specified otherwise.
 wireguard_interface: "wg0"
