@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+**4.1.0**
+
+- Allow to specifiy additional Wireguard interface options: `fwmark`, `mtu`, `table`, `preup` and `predown` (for more information and examples see [wg-quick.8](https://git.zx2c4.com/WireGuard/about/src/tools/man/wg-quick.8))
+- Add host comments in Wireguard config file
+
 **4.0.0**
 
 - While the changes introduced are backwards compatible in general if you stay with your current settings some variables are no longer needed. So this is partly a breaking change and therefore justifies a new major version.
