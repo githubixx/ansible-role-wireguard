@@ -17,7 +17,7 @@ I tag every release and try to stay with [semantic versioning](http://semver.org
 Requirements
 ------------
 
-By default port `51820` (protocol UDP) should be accessable from the outside. But you can adjust the port by changing the variable `wireguard_port`. Also IP forwarding needs to be enabled. This can be done by setting `wireguard_ip_forward: true`. But IMHO that should be handled elsewhere in a dedicated role that handles all security related things (but that's maybe a philosophical question ;-) ). You can use my [ansible-role-harden-linux](https://github.com/githubixx/ansible-role-harden-linux) e.g. Besides changing `sysctl` entries (which you need to enable IP forwarding) it also manages firewall settings among other things.
+By default port `51820` (protocol UDP) should be accessable from the outside. But you can adjust the port by changing the variable `wireguard_port`. Also IP forwarding needs to be enabled e.g. via `echo 1 > /proc/sys/net/ipv4/ip_forward `. I decided not to implement this task in this Ansible role. IMHO that should be handled elsewhere. You can use my [ansible-role-harden-linux](https://github.com/githubixx/ansible-role-harden-linux) e.g. Besides changing sysctl entries (which you need to enable IP forwarding) it also manages firewall settings among other things.
 
 Changelog
 ---------
@@ -38,13 +38,6 @@ wireguard_port: "51820"
 
 # The default interface name that wireguard should use if not specified otherwise.
 wireguard_interface: "wg0"
-
-# Enable IP forwarding between hosts. Set to "false" by default to keep
-# the role backwards compatible. Also this may not be the right place
-# to enable IP forwarding if you have a dedicated role that manages 
-# security related settings like this or firewalls in general e.g. But it
-# may be useful for some people.
-wireguard_ip_forward: false
 ```
 
 The following variable is mandatory and needs to be configured for every host in `host_vars/`:
