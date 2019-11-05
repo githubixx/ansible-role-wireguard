@@ -27,7 +27,7 @@ see [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob/mast
 Role Variables
 --------------
 
-Those variables can be changed in `group_vars/`:
+These variables can be changed in `group_vars/`:
 
 ```
 # Directory to store WireGuard configuration on the remote hosts
