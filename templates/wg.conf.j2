@@ -1,10 +1,26 @@
 #jinja2: lstrip_blocks:"True",trim_blocks:"True"
 [Interface]
+# {{ inventory_hostname }}
 Address = {{hostvars[inventory_hostname].wireguard_address}}
 PrivateKey = {{private_key}}
 ListenPort = {{wireguard_port}}
 {% if hostvars[inventory_hostname].wireguard_dns is defined %}
 DNS = {{hostvars[inventory_hostname].wireguard_dns}}
+{% endif %}
+{% if hostvars[inventory_hostname].wireguard_fwmark is defined %}
+FwMark = {{hostvars[inventory_hostname].wireguard_fwmark}}
+{% endif %}
+{% if hostvars[inventory_hostname].wireguard_mtu is defined %}
+MTU = {{hostvars[inventory_hostname].wireguard_mtu}}
+{% endif %}
+{% if hostvars[inventory_hostname].wireguard_table is defined %}
+Table = {{hostvars[inventory_hostname].wireguard_table}}
+{% endif %}
+{% if hostvars[inventory_hostname].wireguard_preup is defined %}
+PreUp = {{hostvars[inventory_hostname].wireguard_preup}}
+{% endif %}
+{% if hostvars[inventory_hostname].wireguard_predown is defined %}
+PreDown = {{hostvars[inventory_hostname].wireguard_predown}}
 {% endif %}
 {% if hostvars[inventory_hostname].wireguard_postup is defined %}
 PostUp = {{hostvars[inventory_hostname].wireguard_postup}}
@@ -19,6 +35,7 @@ SaveConfig = true
   {% if host != inventory_hostname %}
   
     [Peer]
+    # {{ host }}
     PublicKey = {{hostvars[host].public_key}}
     {% if hostvars[host].wireguard_allowed_ips is defined %}
     AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
@@ -37,7 +54,7 @@ SaveConfig = true
     {% elif hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "" %}
     Endpoint = {{hostvars[host].wireguard_endpoint}}:{{wireguard_port}}
     {% elif hostvars[host].wireguard_endpoint == "" %}
-    # No endpoint defined
+    # No endpoint defined for this peer
     {% else %}
     Endpoint = {{host}}:{{wireguard_port}}
     {% endif %}

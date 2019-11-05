@@ -27,7 +27,7 @@ see [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob/mast
 Role Variables
 --------------
 
-Those variables can be changed in `group_vars/`:
+These variables can be changed in `group_vars/`:
 
 ```
 # Directory to store WireGuard configuration on the remote hosts
@@ -76,13 +76,18 @@ Endpoint = controller01.p.domain.tld:51820
 
 Now this is basically the same as above BUT now the config says: I want to route EVERY traffic originating from my workstation to the endpoint `controller01.p.domain.tld:51820`. If that endpoint can handle the traffic is of course another thing and it's up to you how you configure the endpoint routing ;-)
 
-You can specify further optional settings (they don't have a default and won't be set if not specified besides `wireguard_allowed_ips` as already mentioned) also per host in `host_vars/` (or in your Ansible hosts file if you like):
+You can specify further optional settings (they don't have a default and won't be set if not specified besides `wireguard_allowed_ips` as already mentioned) also per host in `host_vars/` (or in your Ansible hosts file if you like). The values for the following variables are just examples and no defaults (for more information and examples see [wg-quick.8](https://git.zx2c4.com/WireGuard/about/src/tools/man/wg-quick.8)):
 
 ```
 wireguard_allowed_ips: ""
 wireguard_endpoint: "host1.domain.tld"
 wireguard_persistent_keepalive: "30"
 wireguard_dns: "1.1.1.1"
+wireguard_fwmark: "1234"
+wireguard_mtu: "1492"
+wireguard_table: "5000"
+wireguard_preup: "..."
+wireguard_predown: "..."
 wireguard_postup: "..."
 wireguard_postdown: "..."
 wireguard_save_config: "true"
@@ -259,6 +264,7 @@ vpn1:
       wireguard_endpoint: nated.exemple.com
       wireguard_postup: "iptables -t nat -A POSTROUTING -o ens12 -j MASQUERADE"
       wireguard_postdown: "iptables -t nat -D POSTROUTING -o ens12 -j MASQUERADE"
+
 vpn2:
   hosts:
     multi-wg1: # use a different name, and define ansible_host, to avoid mixing of vars without needing to prefix vars with interface name
