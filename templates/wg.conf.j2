@@ -1,5 +1,6 @@
 #jinja2: lstrip_blocks:"True",trim_blocks:"True"
 [Interface]
+# {{ inventory_hostname }}
 Address = {{hostvars[inventory_hostname].wireguard_address}}
 PrivateKey = {{private_key}}
 ListenPort = {{wireguard_port}}
@@ -34,6 +35,7 @@ SaveConfig = true
   {% if host != inventory_hostname %}
   
     [Peer]
+    # {{ host }}
     PublicKey = {{hostvars[host].public_key}}
     {% if hostvars[host].wireguard_allowed_ips is defined %}
     AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
@@ -52,7 +54,7 @@ SaveConfig = true
     {% elif hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "" %}
     Endpoint = {{hostvars[host].wireguard_endpoint}}:{{wireguard_port}}
     {% elif hostvars[host].wireguard_endpoint == "" %}
-    # No endpoint defined
+    # No endpoint defined for this peer
     {% else %}
     Endpoint = {{host}}:{{wireguard_port}}
     {% endif %}
