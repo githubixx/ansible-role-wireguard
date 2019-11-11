@@ -9,6 +9,11 @@
   tags:
     - wg-install
 
+- name: Install GPG - required to add wireguard key
+  apt:
+    name: gpg
+    state: present
+
 - name: Add WireGuard key
   apt_key:
     keyserver: "keyserver.ubuntu.com"
