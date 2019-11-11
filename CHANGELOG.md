@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**4.1.1**
+
+- Install GPG to be able to import WireGuard key (Debian)
+
 **4.1.0**
 
 - Allow to specifiy additional Wireguard interface options: `fwmark`, `mtu`, `table`, `preup` and `predown` (for more information and examples see [wg-quick.8](https://git.zx2c4.com/WireGuard/about/src/tools/man/wg-quick.8))
