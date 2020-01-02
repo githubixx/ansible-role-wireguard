@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+**4.2.0**
+
+- Add support for Fedora (contribution by @ties)
+
+
 **4.1.1**
 
 - Install GPG to be able to import WireGuard key (Debian)
