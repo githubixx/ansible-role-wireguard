@@ -3,3 +3,5 @@
   service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: restarted
+- name: start/reload wireguard
+  command: "bash -c 'systemctl start wg-quick@{{ wireguard_interface }}; wg syncconf {{ wireguard_interface}} <(wg-quick strip /etc/wireguard/{{ wireguard_interface }}.conf)'"

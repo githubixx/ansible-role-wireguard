@@ -99,7 +99,7 @@
   tags:
     - wg-config
   notify:
-    - restart wireguard
+    - start/reload wireguard
 
 - name: Check if reload-module-on-update is set
   stat:
