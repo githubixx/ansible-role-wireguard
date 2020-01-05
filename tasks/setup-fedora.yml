@@ -1,0 +1,8 @@
+---
+  - name: Add wireguard COPR
+    yum_repository:
+      name: "jdoss-wireguard"
+      description: "Copr repo for wireguard owned by jdoss"
+      baseurl: "https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/fedora-$releasever-$basearch/"
+      gpgkey: "https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/pubkey.gpg"
+      gpgcheck: yes
