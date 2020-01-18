@@ -262,8 +262,14 @@ vpn1:
       wireguard_allowed_ips: "10.9.0.2/32, 192.168.3.0/24"
       wireguard_persistent_keepalive: 15
       wireguard_endpoint: nated.exemple.com
-      wireguard_postup: "iptables -t nat -A POSTROUTING -o ens12 -j MASQUERADE"
-      wireguard_postdown: "iptables -t nat -D POSTROUTING -o ens12 -j MASQUERADE"
+      wireguard_postup:
+        - iptables -t nat -A POSTROUTING -o ens12 -j MASQUERADE
+        - iptables -A FORWARD -i %i -j ACCEPT
+        - iptables -A FORWARD -o %i -j ACCEPT
+      wireguard_postdown:
+        - iptables -t nat -D POSTROUTING -o ens12 -j MASQUERADE
+        - iptables -D FORWARD -i %i -j ACCEPT
+        - iptables -D FORWARD -o %i -j ACCEPT
 
 vpn2:
   hosts:
