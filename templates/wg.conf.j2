@@ -17,16 +17,24 @@ MTU = {{hostvars[inventory_hostname].wireguard_mtu}}
 Table = {{hostvars[inventory_hostname].wireguard_table}}
 {% endif %}
 {% if hostvars[inventory_hostname].wireguard_preup is defined %}
-PreUp = {{hostvars[inventory_hostname].wireguard_preup}}
+{% for wg_preup in hostvars[inventory_hostname].wireguard_preup %}
+PreUp = {{ wg_preup }}
+{% endfor %}
 {% endif %}
 {% if hostvars[inventory_hostname].wireguard_predown is defined %}
-PreDown = {{hostvars[inventory_hostname].wireguard_predown}}
+{% for wg_predown in hostvars[inventory_hostname].wireguard_predown %}
+PreDown = {{ wg_predown }}
+{% endfor %}
 {% endif %}
 {% if hostvars[inventory_hostname].wireguard_postup is defined %}
-PostUp = {{hostvars[inventory_hostname].wireguard_postup}}
+{% for wg_postup in hostvars[inventory_hostname].wireguard_postup %}
+PostUp = {{ wg_postup }}
+{% endfor %}
 {% endif %}
 {% if hostvars[inventory_hostname].wireguard_postdown is defined %}
-PostDown = {{hostvars[inventory_hostname].wireguard_postdown}}
+{% for wg_postdown in hostvars[inventory_hostname].wireguard_postdown %}
+PostDown = {{ wg_postdown }}
+{% endfor %}
 {% endif %}
 {% if hostvars[inventory_hostname].wireguard_save_config is defined %}
 SaveConfig = true
