@@ -3,7 +3,7 @@ Changelog
 
 **5.0.0**
 
-- `wireguard_(preup|postdown|preup|predown)` settings are now a list. If more `iptables` commands needs to be specified e.g. then this changes makes it more readable. The commands are executed in order as described in [wg-quick.8](https://git.zx2c4.com/wireguard-tools/about/src/man/wg-quick.8). Also see README for more examples.
+- `wireguard_(preup|postdown|preup|predown)` settings are now a list. If more `iptables` commands needs to be specified e.g. then this changes makes it more readable. The commands are executed in order as described in [wg-quick.8](https://git.zx2c4.com/wireguard-tools/about/src/man/wg-quick.8). Also see README for more examples. (contribution by @Madic-)
 
 **4.2.0**
 
