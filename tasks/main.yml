@@ -39,6 +39,19 @@
     - wg-generate-keys
     - wg-config
 
+- name: Get wg subcommands
+  command: "wg --help"
+  register: wg_subcommands
+
+- name: Set default value for wg_syncconf variable
+  set_fact:
+    wg_syncconf: "false"
+
+- name: Check if wg syncconf subcommand is available
+  set_fact:
+    wg_syncconf: "true"
+  when: wg_subcommands.stdout | regex_search('syncconf:')
+
 - block:
   - name: Generate WireGuard private key
     shell: "wg genkey"
@@ -99,7 +112,7 @@
   tags:
     - wg-config
   notify:
-    - restart wireguard
+    - reconfigure wireguard
 
 - name: Check if reload-module-on-update is set
   stat:
