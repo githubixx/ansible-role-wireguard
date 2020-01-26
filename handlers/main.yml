@@ -3,7 +3,7 @@
   service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: restarted
-  when: wg_syncconf == "false"
+  when: not wg_syncconf
   listen: "reconfigure wireguard"
 
 - name: syncconf wireguard
@@ -13,5 +13,5 @@
       exit 0
   args:
     executable: "/bin/bash"
-  when: wg_syncconf == "true"
+  when: wg_syncconf
   listen: "reconfigure wireguard"

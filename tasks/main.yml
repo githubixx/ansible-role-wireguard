@@ -43,14 +43,18 @@
   command: "wg --help"
   register: wg_subcommands
 
-- name: Set default value for wg_syncconf variable
+- name: Set default value for wg_syncconf variable (assume wg syncconf subcommand not available)
   set_fact:
-    wg_syncconf: "false"
+    wg_syncconf: false
 
 - name: Check if wg syncconf subcommand is available
   set_fact:
-    wg_syncconf: "true"
+    wg_syncconf: true
   when: wg_subcommands.stdout | regex_search('syncconf:')
+
+- name: Show syncconf subcommand status
+  debug:
+    var: wg_syncconf
 
 - block:
   - name: Generate WireGuard private key
