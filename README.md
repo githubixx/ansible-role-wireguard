@@ -7,7 +7,7 @@ I used [PeerVPN](https://peervpn.net/) before but that wasn't updated for a whil
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
-This role was tested with Ubuntu 18.04 (Bionic Beaver), Debian 9 (Stretch), Archlinux, Fedora 31 and CentOS. It might also work with Ubuntu 16.04 (Xenial Xerus) and Debian 10 (Buster) but haven't tested it. If someone tested it let me please know if it works ;-)
+This role was tested with Ubuntu 18.04 (Bionic Beaver), Debian 9 (Stretch), Archlinux, Fedora 31 and CentOS. It might also work with Ubuntu 16.04 (Xenial Xerus), Debian 10 (Buster) or other distributions but haven't tested it. If someone tested it let me please know if it works or send a pull request to make it work ;-)
 
 Versions
 --------
@@ -97,7 +97,7 @@ wireguard_postdown:
 wireguard_save_config: "true"
 ```
 
-`wireguard_(preup|predown|postup|postdown)` are specified as lists e.g.:
+`wireguard_(preup|predown|postup|postdown)` are specified as lists. Here are two examples:
 
 ```
 wireguard_postup:
@@ -106,7 +106,13 @@ wireguard_postup:
   - iptables -A FORWARD -o %i -j ACCEPT
 ```
 
-If more `iptables` commands needs to be specified e.g. then a list makes it more readable. The commands are executed in order as described in [wg-quick.8](https://git.zx2c4.com/wireguard-tools/about/src/man/wg-quick.8).
+```
+wireguard_preup:
+  - echo 1 > /proc/sys/net/ipv4/ip_forward
+  - ufw allow 51820/udp
+```
+
+The commands are executed in order as described in [wg-quick.8](https://git.zx2c4.com/wireguard-tools/about/src/man/wg-quick.8).
 
 `wireguard_address` is required as already mentioned. It's the IP of the interface name defined with `wireguard_interface` variable (`wg0` by default). Every host needs a unique VPN IP of course. If you don't set `wireguard_endpoint` the playbook will use the hostname defined in the `vpn` hosts group (the Ansible inventory hostname). If you set `wireguard_endpoint` to `""` (empty string) that peer won't have a endpoint. That means that this host can only access hosts that have a `wireguard_endpoint`. That's useful for clients that don't expose any services to the VPN and only want to access services on other hosts. So if you only define one host with `wireguard_endpoint` set and all other hosts have `wireguard_endpoint` set to `""` (empty string) that basically means you've only clients besides one which in that case is the WireGuard server. The third possibility is to set `wireguard_endpoint` to some hostname. E.g. if you have different hostnames for the private and public DNS of that host and need different DNS entries for that case setting `wireguard_endpoint` becomes handy. Take for example the IP above: `wireguard_address: "10.8.0.101"`. That's a private IP and I've created a DNS entry for that private IP like `host01.i.domain.tld` (`i` for internal in that case). For the public IP I've created a DNS entry like `host01.p.domain.tld` (`p` for public). The `wireguard_endpoint` needs to be a interface that the other members in the `vpn` group can connect to. So in that case I would set `wireguard_endpoint` to `host01.p.domain.tld` because WireGuard normally needs to be able to connect to the public IP of the other host(s).
 
