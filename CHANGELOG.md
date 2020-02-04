@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**6.0.1**
+
+- add shell options to syncconf handler to fail fast in case of error
+
 **6.0.0**
 
 - Newer versions of WireGuard (around November 2019) introduced `wg syncconf` subcommand. This has the advantage that changes to the WireGuard configuration can be applied without disturbing existing connections. With this change this role tries to use `wg syncconf` subcommand when available. This even works if you have hosts with older and newer WireGuard versions.
