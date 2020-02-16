@@ -68,3 +68,11 @@ SaveConfig = true
     {% endif %}
   {% endif %}
 {% endfor %}
+{# unmanaged hosts #}
+{% for hostdata in uh_pubkey.results %}
+
+    [Peer]
+    # {{ hostdata.item.host }}
+    PublicKey = {{ hostdata.stdout }}
+    AllowedIPs = {{ hostdata.item.allowed_ips}}
+{% endfor %}
