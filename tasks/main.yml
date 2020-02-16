@@ -151,7 +151,6 @@
   notify:
     - reconfigure wireguard
 
-- debug: var=uh_privkey
 - name: Generate WireGuard configuration file for unmanaged systems
   template:
     src: wg-unmanaged.conf.j2
