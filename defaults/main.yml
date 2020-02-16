@@ -7,3 +7,11 @@ wireguard_port: "51820"
 
 # The default interface name that wireguard should use if not specified otherwise.
 wireguard_interface: "wg0"
+
+#wireguard_unmanaged_hosts:
+#  - host: 'test'
+#    allowed_ips: 10.200.10.10/32
+#    dns: 10.200.10.1
+#  - host: 'test2'
+#    allowed_ips: 10.200.10.11/32
+#    dns: 10.200.10.1

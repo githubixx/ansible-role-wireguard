@@ -257,6 +257,19 @@ Endpoint = server.at.home.p.domain.tld:51820
 
 The other WireGuard config files (`wg0.conf` by default) looks similar but of course `[Interface]` includes the config of that specific host and the `[Peer]` entries lists the config of the other hosts.
 
+Following variable allows to configure unmanaged hosts which are not configured by Ansible, typically smartphones and tablets.
+In this case, private key and client configuration are generated on wireguard hub.
+They can be shared through qrcode.
+```
+wireguard_unmanaged_hosts:
+  - host: 'test'
+    allowed_ips: 10.200.10.10/32
+    dns: 10.200.10.1
+  - host: 'test2'
+    allowed_ips: 10.200.10.11/32
+    dns: 10.200.10.1
+```
+
 Example Playbook
 ----------------
 
