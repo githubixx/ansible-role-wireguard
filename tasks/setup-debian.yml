@@ -11,7 +11,7 @@
 
 - name: Install GPG - required to add wireguard key
   apt:
-    name: gpg
+    name: gnupg
     state: present
 
 - name: Add WireGuard key
