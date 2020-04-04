@@ -68,7 +68,7 @@ SaveConfig = true
     {% endif %}
   {% endif %}
 {% endfor %}
-{# unmanaged hosts #}
+{% if wireguard_unmanaged_hosts is defined %}
 {% for hostdata in uh_public_key.results %}
 
     [Peer]
@@ -76,3 +76,4 @@ SaveConfig = true
     PublicKey = {{ hostdata.stdout }}
     AllowedIPs = {{ hostdata.item.allowed_ips}}
 {% endfor %}
+{% endif %}
