@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+**6.0.3**
+
+- If `wg syncconf` command is not available do stop/start service instead of restart (contribution by @cristichiru)
+
+**6.0.2**
+
+- Debian: install `gnupg` package instead of `gpg`. (contribution by @zinefer)
+
 **6.0.1**
 
 - add shell options to syncconf handler to fail fast in case of error
