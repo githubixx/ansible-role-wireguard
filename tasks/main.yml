@@ -135,6 +135,7 @@
       shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-privatekey | wg pubkey | tee {{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
       args:
         creates: "{{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
+        executable: "/bin/bash"
       register: uh_public_key
       with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
 
