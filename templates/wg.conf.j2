@@ -69,7 +69,7 @@ SaveConfig = true
   {% endif %}
 {% endfor %}
 {# unmanaged hosts #}
-{% for hostdata in uh_pubkey.results %}
+{% for hostdata in uh_public_key.results %}
 
     [Peer]
     # {{ hostdata.item.host }}
