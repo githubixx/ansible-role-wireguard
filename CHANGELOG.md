@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**Unreleased**
+
+- Allow to generate keys and configuration for non-ansible hosts like smartphones with `wireguard_unmanaged_hosts` (contribution by @juju4)
+
 **6.0.3**
 
 - If `wg syncconf` command is not available do stop/start service instead of restart (contribution by @cristichiru)
