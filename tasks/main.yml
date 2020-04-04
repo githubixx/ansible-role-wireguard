@@ -107,37 +107,43 @@
   tags:
     - wg-config
 
-- name: Create private key for unmanaged hosts
-  shell: "wg genkey | tee {{ wireguard_remote_directory }}/{{ item.host }}-privatekey"
-  args:
-    creates: "{{ wireguard_remote_directory }}/{{ item.host }}-privatekey"
-  register: uh_privkey
-  with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
+- block:
+    - name: Create private key for unmanaged hosts
+      shell: |
+        set -o errexit
+        set -o pipefail
+        wg genkey | tee {{ wireguard_remote_directory }}/{{ item.host }}-privatekey
+        exit 0
+      args:
+        creates: "{{ wireguard_remote_directory }}/{{ item.host }}-privatekey"
+      register: uh_private_key
+      with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
 
-- name: Validate permissions of unmanaged hosts' private keys
-  file:
-    path: "{{ wireguard_remote_directory }}/{{ item.host }}-privatekey"
-    mode: '0400'
-  with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
+    - name: Validate permissions of unmanaged hosts' private keys
+      file:
+        path: "{{ wireguard_remote_directory }}/{{ item.host }}-privatekey"
+        mode: '0400'
+      with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
 
-- name: Recover existing private key for unmanaged hosts
-  shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-privatekey"
-  register: uh_privkey
-  changed_when: false
-  with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
+    - name: Recover existing private key for unmanaged hosts
+      shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-privatekey"
+      register: uh_private_key
+      changed_when: false
+      with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
 
-- name: Derive WireGuard public key for unmanaged hosts
-  shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-privatekey | wg pubkey | tee {{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
-  args:
-    creates: "{{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
-  register: uh_pubkey
-  with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
+    - name: Derive WireGuard public key for unmanaged hosts
+      shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-privatekey | wg pubkey | tee {{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
+      args:
+        creates: "{{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
+      register: uh_pubkey
+      with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
 
-- name: Recover existing public key for unmanaged hosts
-  shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
-  register: uh_pubkey
-  changed_when: false
-  with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
+    - name: Recover existing public key for unmanaged hosts
+      shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
+      register: uh_pubkey
+      changed_when: false
+      with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
+  when: wireguard_unmanaged_hosts is defined and wireguard_unmanaged_hosts
 
 - name: Generate WireGuard configuration file
   template:
@@ -158,7 +164,7 @@
     owner: root
     group: root
     mode: 0600
-  with_items: "{{ uh_privkey.results }}"
+  with_items: "{{ uh_private_key.results }}"
 
 - name: Check if reload-module-on-update is set
   stat:
