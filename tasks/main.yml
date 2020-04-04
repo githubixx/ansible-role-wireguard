@@ -135,12 +135,12 @@
       shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-privatekey | wg pubkey | tee {{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
       args:
         creates: "{{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
-      register: uh_pubkey
+      register: uh_public_key
       with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
 
     - name: Recover existing public key for unmanaged hosts
       shell: "cat {{ wireguard_remote_directory }}/{{ item.host }}-pubkey"
-      register: uh_pubkey
+      register: uh_public_key
       changed_when: false
       with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
   when: wireguard_unmanaged_hosts is defined and wireguard_unmanaged_hosts
