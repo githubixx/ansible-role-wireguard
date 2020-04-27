@@ -1,11 +1,23 @@
 ---
-- name: Install required packages
+- name: Install wireguard-lts package
   pacman:
-    name: "{{ packages }}"
-    state: present
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { name: wireguard-dkms, state: absent }
+    - { name: wireguard-lts, state: present }
   become: yes
-  vars:
-    packages:
-      - linux-headers
   tags:
     - wg-install
+  when:
+    - ansible_kernel is match(".*-lts$")
+    - ansible_kernel is version('5.6', '<')
+- name: Install wireguard-dksm package
+  pacman:
+    name: wireguard-dkms
+  become: yes
+  tags:
+    - wg-install
+  when:
+    - not ansible_kernel is match(".*-lts$")
+    - ansible_kernel is version('5.6', '<')
