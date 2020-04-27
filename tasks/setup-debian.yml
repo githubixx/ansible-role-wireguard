@@ -1,14 +1,4 @@
 ---
-- name: Setup WireGuard preference
-  copy:
-    src: debian/etc/apt/preferences.d/limit-unstable
-    dest: /etc/apt/preferences.d/limit-unstable
-    owner: root
-    group: root
-    mode: 0644
-  tags:
-    - wg-install
-
 - name: Install GPG - required to add wireguard key
   apt:
     name: gnupg
