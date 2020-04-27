@@ -14,17 +14,9 @@
     name: gnupg
     state: present
 
-- name: Add WireGuard key
-  apt_key:
-    keyserver: "keyserver.ubuntu.com"
-    id: "8B48AD6246925553"
-    state: present
-  tags:
-    - wg-install
-
 - name: Add WireGuard repository
   apt_repository:
-    repo: "deb http://deb.debian.org/debian/ unstable main"
+    repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
     update_cache: yes
   tags:
