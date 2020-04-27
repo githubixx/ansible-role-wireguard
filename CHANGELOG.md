@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+*6.0.4*
+
+- Use the buster-backports repository on Debian Buster (or older), use package
+  standard repositories on sid/bullseye.
+
 **6.0.3**
 
 - If `wg syncconf` command is not available do stop/start service instead of restart (contribution by @cristichiru)

@@ -14,11 +14,12 @@
     name: gnupg
     state: present
 
-- name: Add WireGuard repository
+- name: Add WireGuard repository on buster or earlier
   apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
     update_cache: yes
+  when: ansible_distribution_version | int <= 10
   tags:
     - wg-install
 
