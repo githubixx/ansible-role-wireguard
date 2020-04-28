@@ -1,6 +1,25 @@
 Changelog
 ---------
 
+**6.0.4**
+
+- Use the buster-backports repository on Debian Buster (or older), use package
+  standard repositories on sid/bullseye.
+
+  The role no longer adds the unstable _repo_ nor the _apt preference_ for that repo.
+  There is no need to clean the preference and unstable repository, since packages
+  from your release have a higher priority.
+
+  If you remove the apt preference (`/etc/apt/preferences.d/limit-unstable`)
+  updates from `unstable` are accepted by apt. This likely is not what you want
+  and may lead to an unstable state.
+
+  If you want to clean up:
+    * remove `/etc/apt/preferences.d/limit-unstable` and
+    * remove `deb http://deb.debian.org/debian/ unstable main` from `/etc/apt/sources.list.d/deb_debian_org_debian.list`.
+
+  The backports repository has a lower priority and does not need an apt preference.
+
 **6.0.3**
 
 - If `wg syncconf` command is not available do stop/start service instead of restart (contribution by @cristichiru)

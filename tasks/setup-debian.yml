@@ -1,32 +1,15 @@
 ---
-- name: Setup WireGuard preference
-  copy:
-    src: debian/etc/apt/preferences.d/limit-unstable
-    dest: /etc/apt/preferences.d/limit-unstable
-    owner: root
-    group: root
-    mode: 0644
-  tags:
-    - wg-install
-
 - name: Install GPG - required to add wireguard key
   apt:
     name: gnupg
     state: present
 
-- name: Add WireGuard key
-  apt_key:
-    keyserver: "keyserver.ubuntu.com"
-    id: "8B48AD6246925553"
-    state: present
-  tags:
-    - wg-install
-
-- name: Add WireGuard repository
+- name: Add WireGuard repository on buster or earlier
   apt_repository:
-    repo: "deb http://deb.debian.org/debian/ unstable main"
+    repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
     update_cache: yes
+  when: ansible_distribution_version | int <= 10
   tags:
     - wg-install
 
