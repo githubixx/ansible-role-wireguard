@@ -1,0 +1,3 @@
+packages:
+  - wireguard-dkms
+  - wireguard-tools
