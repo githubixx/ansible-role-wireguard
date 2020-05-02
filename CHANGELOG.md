@@ -1,9 +1,9 @@
 Changelog
 ---------
 
-**6.0.5**
+**6.1.0**
 
-- Kernel >= 5.6 contains `wireguard` module now. No need to install `wireguard-dkms` anymore in this case.
+- Archlinux: Linux kernel >= 5.6 contains `wireguard` module now. No need to install `wireguard-dkms` anymore in this case. Installations with LTS kernel installs `wireguard-lts` package now instead of `wireguard-dkms`. Installations with kernel <= 5.6 will still install `wireguard-dkms` package.
 
 **6.0.4**
 
