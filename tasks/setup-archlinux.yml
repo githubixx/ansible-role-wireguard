@@ -12,7 +12,8 @@
   when:
     - ansible_kernel is match(".*-lts$")
     - ansible_kernel is version('5.6', '<')
-- name: Install wireguard-dksm package
+
+- name: Install wireguard-dkms package
   pacman:
     name: wireguard-dkms
   become: yes
