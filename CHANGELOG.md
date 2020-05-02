@@ -1,18 +1,18 @@
 Changelog
 ---------
 
+**6.1.0**
+
+- Archlinux: Linux kernel >= 5.6 contains `wireguard` module now. No need to install `wireguard-dkms` anymore in this case. Installations with LTS kernel installs `wireguard-lts` package now instead of `wireguard-dkms`. Installations with kernel <= 5.6 will still install `wireguard-dkms` package.
+
 **6.0.4**
 
-- Use the buster-backports repository on Debian Buster (or older), use package
+- Use the buster-backports repository on Debian Buster (or older), use package standard repositories on sid/bullseye.
   standard repositories on sid/bullseye.
 
-  The role no longer adds the unstable _repo_ nor the _apt preference_ for that repo.
-  There is no need to clean the preference and unstable repository, since packages
-  from your release have a higher priority.
+  The role no longer adds the unstable _repo_ nor the _apt preference_ for that repo. There is no need to clean the preference and unstable repository, since packages from your release have a higher priority.
 
-  If you remove the apt preference (`/etc/apt/preferences.d/limit-unstable`)
-  updates from `unstable` are accepted by apt. This likely is not what you want
-  and may lead to an unstable state.
+  If you remove the apt preference (`/etc/apt/preferences.d/limit-unstable`) updates from `unstable` are accepted by apt. This likely is not what you want and may lead to an unstable state.
 
   If you want to clean up:
     * remove `/etc/apt/preferences.d/limit-unstable` and
