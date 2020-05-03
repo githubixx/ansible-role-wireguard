@@ -4,23 +4,6 @@
 
 - include_tasks: "setup-{{ ansible_distribution|lower }}.yml"
 
-- name: Load packages variable file based on the OS type, or a default if not found
-  include_vars: "{{ lookup('first_found', params) }}"
-  vars:
-    params:
-      files:
-        - "packages-{{ ansible_distribution | lower }}.yml"
-        - "packages.yml"
-      paths:
-        - "vars"
-
-- name: Install WireGuard
-  package:
-    name: "{{ packages }}"
-    state: present
-  tags:
-    - wg-install
-
 - name: Enable WireGuard kernel module
   modprobe:
     name: wireguard
@@ -48,6 +31,7 @@
 - name: Get wg subcommands
   command: "wg --help"
   register: wg_subcommands
+  changed_when: false
 
 - name: Set default value for wg_syncconf variable (assume wg syncconf subcommand not available)
   set_fact:
@@ -64,8 +48,9 @@
 
 - block:
   - name: Generate WireGuard private key
-    shell: "wg genkey"
+    command: "wg genkey"
     register: wg_private_key_result
+    changed_when: false
     tags:
       - wg-generate-keys
 
