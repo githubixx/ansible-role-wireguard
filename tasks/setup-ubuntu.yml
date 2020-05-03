@@ -1,8 +1,8 @@
 ---
 - name: Update APT package cache
   apt:
-    update_cache: true
-    cache_valid_time: 3600
+    update_cache: "{{ wireguard_ubuntu_update_cache }}"
+    cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
   tags:
     - wg-install
 

@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+**6.2.0**
+
+- Support Ubuntu 20.04 (Focal Fossa)
+- Introduce `wireguard_ubuntu_update_cache` and `wireguard_ubuntu_cache_valid_time` variables to specifiy individual Ubuntu package cache settings. Default values are the same as before.
+
 **6.1.0**
 
 - Archlinux: Linux kernel >= 5.6 contains `wireguard` module now. No need to install `wireguard-dkms` anymore in this case. Installations with LTS kernel installs `wireguard-lts` package now instead of `wireguard-dkms`. Installations with kernel <= 5.6 will still install `wireguard-dkms` package.
