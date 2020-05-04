@@ -1,5 +1,5 @@
 ---
-- name: Install wireguard-lts package
+- name: (Archlinux) Install wireguard-lts package
   pacman:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
@@ -13,12 +13,20 @@
     - ansible_kernel is match(".*-lts$")
     - ansible_kernel is version('5.6', '<')
 
-- name: Install wireguard-dkms package
+- name: (Archlinux) Install wireguard-dkms package
   pacman:
     name: wireguard-dkms
+    state: present
   become: yes
   tags:
     - wg-install
   when:
     - not ansible_kernel is match(".*-lts$")
     - ansible_kernel is version('5.6', '<')
+
+- name: (Archlinux) Install wireguard-tools package
+  pacman:
+    name: wireguard-tools
+    state: present
+  tags:
+    - wg-install

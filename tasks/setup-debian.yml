@@ -1,10 +1,10 @@
 ---
-- name: Install GPG - required to add wireguard key
+- name: (Debian) Install GPG - required to add wireguard key
   apt:
     name: gnupg
     state: present
 
-- name: Add WireGuard repository on buster or earlier
+- name: (Debian) Add WireGuard repository on buster or earlier
   apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
@@ -13,13 +13,22 @@
   tags:
     - wg-install
 
-- name: Get architecture
-  shell: dpkg --print-architecture
+- name: (Debian) Get architecture
+  command: "dpkg --print-architecture"
   register: dpkg_arch
   changed_when: False
 
-- name: Install kernel headers to compile wireguard with DKMS
+- name: (Debian) Install kernel headers to compile Wireguard with DKMS
   apt:
     name:
       - "linux-headers-{{ dpkg_arch.stdout }}"
     state: present
+
+- name: (Debian) Install wireguard packages
+  apt:
+    name:
+      - "wireguard-dkms"
+      - "wireguard-tools"
+    state: present
+  tags:
+    - wg-install
