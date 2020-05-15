@@ -1,42 +1,34 @@
 ---
-- name: Setup WireGuard preference
-  copy:
-    src: debian/etc/apt/preferences.d/limit-unstable
-    dest: /etc/apt/preferences.d/limit-unstable
-    owner: root
-    group: root
-    mode: 0644
-  tags:
-    - wg-install
-
-- name: Install GPG - required to add wireguard key
+- name: (Debian) Install GPG - required to add wireguard key
   apt:
     name: gnupg
     state: present
 
-- name: Add WireGuard key
-  apt_key:
-    keyserver: "keyserver.ubuntu.com"
-    id: "8B48AD6246925553"
-    state: present
-  tags:
-    - wg-install
-
-- name: Add WireGuard repository
+- name: (Debian) Add WireGuard repository on buster or earlier
   apt_repository:
-    repo: "deb http://deb.debian.org/debian/ unstable main"
+    repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
     update_cache: yes
+  when: ansible_distribution_version | int <= 10
   tags:
     - wg-install
 
-- name: Get architecture
-  shell: dpkg --print-architecture
+- name: (Debian) Get architecture
+  command: "dpkg --print-architecture"
   register: dpkg_arch
   changed_when: False
 
-- name: Install kernel headers to compile wireguard with DKMS
+- name: (Debian) Install kernel headers to compile Wireguard with DKMS
   apt:
     name:
       - "linux-headers-{{ dpkg_arch.stdout }}"
     state: present
+
+- name: (Debian) Install wireguard packages
+  apt:
+    name:
+      - "wireguard-dkms"
+      - "wireguard-tools"
+    state: present
+  tags:
+    - wg-install

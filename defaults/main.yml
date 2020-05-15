@@ -1,4 +1,8 @@
 ---
+#######################################
+# General settings
+#######################################
+
 # Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "/etc/wireguard"
 
@@ -9,9 +13,19 @@ wireguard_port: "51820"
 wireguard_interface: "wg0"
 
 #wireguard_unmanaged_hosts:
-#  - host: 'test'
+#  - host: 'test1'
 #    allowed_ips: 10.200.10.10/32
 #    dns: 10.200.10.1
 #  - host: 'test2'
 #    allowed_ips: 10.200.10.11/32
 #    dns: 10.200.10.1
+
+#######################################
+# Settings only relevant for Ubuntu
+#######################################
+
+# Set to "false" if package cache should not be updated
+wireguard_ubuntu_update_cache: "true"
+
+# Set package cache valid time
+wireguard_ubuntu_cache_valid_time: "3600"
