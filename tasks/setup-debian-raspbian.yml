@@ -1,0 +1,3 @@
+---
+- fail:
+    msg: Raspbian is not supported by this role!
