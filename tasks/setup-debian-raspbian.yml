@@ -1,3 +1,56 @@
 ---
-- fail:
-    msg: Raspbian is not supported by this role!
+
+- name: (Raspbian) Install GPG - required to add wireguard key
+  apt:
+    name: gnupg
+    state: present
+
+- name: (Raspbian) Add Debian repository key
+  apt_key:
+    keyserver: "keyserver.ubuntu.com"
+    id: "04EE7237B7D453EC"
+    state: present
+  when: ansible_lsb.id == "Raspbian"
+  tags:
+    - wg-install
+
+- name: (Raspbian) Add Debian Unstable repository for WireGuard
+  apt_repository:
+    repo: "deb http://deb.debian.org/debian unstable main"
+    state: present
+    update_cache: yes
+  tags:
+    - wg-install
+
+- name: (Raspbian) Install latest kernel
+  apt:
+    name:
+    - "raspberrypi-kernel"
+    state: present
+  register: kernel_update
+  tags:
+    - wg-install
+
+- name: (Raspbian) Reboot after kernel update
+  reboot:
+    search_paths: ['/lib/molly-guard', '/usr/sbin']
+  when: kernel_update is changed
+  tags:
+    - wg-install
+
+- name: (Raspbian) Install kernel headers to compile Wireguard with DKMS
+  apt:
+    name:
+    - "raspberrypi-kernel-headers"
+    state: present
+  tags:
+    - wg-install
+
+- name: (Raspbian) Install wireguard packages
+  apt:
+    name:
+      - "wireguard-dkms"
+      - "wireguard-tools"
+    state: present
+  tags:
+    - wg-install
