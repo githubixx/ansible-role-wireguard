@@ -18,10 +18,16 @@
   register: dpkg_arch
   changed_when: False
 
+- name: (Debian) Get kernel version
+  command: "uname -r"
+  register: kernel_version
+  changed_when: False
+
 - name: (Debian) Install kernel headers to compile Wireguard with DKMS
   apt:
     name:
       - "linux-headers-{{ dpkg_arch.stdout }}"
+      - "linux-headers-{{ kernel_version.stdout }}"
     state: present
 
 - name: (Debian) Install wireguard packages
