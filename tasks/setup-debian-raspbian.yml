@@ -1,0 +1,93 @@
+---
+
+- name: (Raspbian) Install GPG - required to add wireguard key
+  apt:
+    name: gnupg
+    state: present
+
+- name: (Raspbian) Add Debian repository key
+  apt_key:
+    keyserver: "keyserver.ubuntu.com"
+    id: "04EE7237B7D453EC"
+    state: present
+  when: ansible_lsb.id == "Raspbian"
+  tags:
+    - wg-install
+
+- name: (Raspbian) Add Debian Unstable repository for WireGuard
+  apt_repository:
+    repo: "deb http://deb.debian.org/debian unstable main"
+    state: present
+    update_cache: yes
+  tags:
+    - wg-install
+
+- name: (Raspbian) Install latest kernel
+  apt:
+    name:
+    - "raspberrypi-kernel"
+    state: latest
+  register: kernel_update
+  tags:
+    - wg-install
+
+- name: (Raspbian) Reboot after kernel update (Ansible >= 2.8)
+  reboot:
+    search_paths: ['/lib/molly-guard', '/usr/sbin']
+  when:
+    - ansible_version.full is version('2.8.0', '>=')
+    - kernel_update is changed
+  tags:
+    - wg-install
+
+- name: (Raspbian) Check if molly-guard is installed (Ansible < 2.8)
+  stat:
+    path: /lib/molly-guard/
+  register: molly_guard
+
+- name: (Raspbian) Reboot after kernel update (Ansible < 2.8, no molly-guard)
+  reboot:
+  when:
+    - ansible_version.full is version('2.8.0', '<')
+    - kernel_update is changed
+    - not molly_guard.stat.exists
+  tags:
+    - wg-install
+
+- name: (Raspbian) Reboot after kernel update (Ansible < 2.8, with molly-guard)
+  command: /lib/molly-guard/shutdown -r now
+  async: 1
+  poll: 0
+  ignore_unreachable: yes
+  when:
+    - ansible_version.full is version('2.8.0', '<')
+    - kernel_update is changed
+    - molly_guard.stat.exists
+  tags:
+    - wg-install
+
+- name: (Raspbian) Waiting for host to be available (Ansible < 2.8, with molly-guard)
+  wait_for_connection:
+  when:
+    - ansible_version.full is version('2.8.0', '<')
+    - kernel_update is changed
+    - molly_guard.stat.exists
+  tags:
+    - wg-install
+
+- name: (Raspbian) Install latest kernel headers to compile Wireguard with DKMS
+  apt:
+    name:
+    - "raspberrypi-kernel-headers"
+    state: latest
+  tags:
+    - wg-install
+
+- name: (Raspbian) Install wireguard packages
+  apt:
+    name:
+      - "wireguard-dkms"
+      - "wireguard-tools"
+    state: present
+  tags:
+    - wg-install
