@@ -1,9 +1,13 @@
 Changelog
 ---------
 
-**6.3.0**
+**6.4.0**
 
 - Allow to generate keys and configuration for non-ansible hosts like smartphones with `wireguard_unmanaged_hosts` (see `defaults/main.yml`) (contribution by @juju4)
+
+**6.3.0**
+
+- Support Raspbian (contribution by @penguineer)
 
 **6.2.0**
 
