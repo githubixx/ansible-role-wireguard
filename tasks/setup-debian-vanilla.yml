@@ -21,8 +21,6 @@
 - set_fact:
     kernel_header_version: "{{ ('-cloud-' in ansible_kernel) | ternary(ansible_kernel,dpkg_arch.stdout) }}"
 
-- debug: msg="kernel_header_version {{ kernel_header_version }}"
-
 - name: (Debian) Install kernel headers to compile Wireguard with DKMS
   apt:
     name:
