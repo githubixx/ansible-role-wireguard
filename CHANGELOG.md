@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**6.3.0**
+
+- Support Raspbian (contribution by @penguineer)
+
 **6.2.0**
 
 - Support Ubuntu 20.04 (Focal Fossa)
