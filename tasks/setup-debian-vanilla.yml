@@ -18,10 +18,13 @@
   register: dpkg_arch
   changed_when: False
 
+- set_fact:
+    kernel_header_version: "{{ ('-cloud-' in ansible_kernel) | ternary(ansible_kernel,dpkg_arch.stdout) }}"
+
 - name: (Debian) Install kernel headers to compile Wireguard with DKMS
   apt:
     name:
-      - "linux-headers-{{ dpkg_arch.stdout }}"
+      - "linux-headers-{{ kernel_header_version }}"
     state: present
 
 - name: (Debian) Install wireguard packages
