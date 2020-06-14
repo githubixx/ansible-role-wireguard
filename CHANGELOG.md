@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**6.3.1**
+
+- Support Openstack Debian images (contribution by @pallinger)
+
 **6.3.0**
 
 - Support Raspbian (contribution by @penguineer)
