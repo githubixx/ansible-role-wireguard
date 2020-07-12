@@ -115,6 +115,7 @@
         wg genkey | tee {{ wireguard_remote_directory }}/{{ item.host }}-privatekey
         exit 0
       args:
+        executable: /bin/bash
         creates: "{{ wireguard_remote_directory }}/{{ item.host }}-privatekey"
       register: uh_private_key
       with_items: "{{ wireguard_unmanaged_hosts | default([]) }}"
