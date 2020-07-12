@@ -1,9 +1,43 @@
 Changelog
 ---------
 
-**Unreleased**
+**6.4.0**
 
-- Allow to generate keys and configuration for non-ansible hosts like smartphones with `wireguard_unmanaged_hosts` (contribution by @juju4)
+- Allow to generate keys and configuration for non-ansible hosts like smartphones with `wireguard_unmanaged_hosts` (see `defaults/main.yml`) (contribution by @juju4)
+
+**6.3.1**
+
+- Support Openstack Debian images (contribution by @pallinger)
+
+**6.3.0**
+
+- Support Raspbian (contribution by @penguineer)
+
+**6.2.0**
+
+- Support Ubuntu 20.04 (Focal Fossa)
+- Introduce `wireguard_ubuntu_update_cache` and `wireguard_ubuntu_cache_valid_time` variables to specifiy individual Ubuntu package cache settings. Default values are the same as before.
+- As kernel >= 5.6 (and kernel 5.4 in Ubuntu 20.04) now have `wireguard` module included `wireguard-dkms` package is no longer needed in that case. That's why WireGuard package installation is now part of the includes for the specific OS to make it easier to handle various cases.
+
+**6.1.0**
+
+- Archlinux: Linux kernel >= 5.6 contains `wireguard` module now. No need to install `wireguard-dkms` anymore in this case. Installations with LTS kernel installs `wireguard-lts` package now instead of `wireguard-dkms`. Installations with kernel <= 5.6 will still install `wireguard-dkms` package.
+
+**6.0.4**
+
+- Use the buster-backports repository on Debian Buster (or older), use package standard repositories on sid/bullseye.
+  standard repositories on sid/bullseye.
+
+  The role no longer adds the unstable _repo_ nor the _apt preference_ for that repo. There is no need to clean the preference and unstable repository, since packages from your release have a higher priority.
+
+  If you remove the apt preference (`/etc/apt/preferences.d/limit-unstable`) updates from `unstable` are accepted by apt. This likely is not what you want and may lead to an unstable state.
+
+  If you want to clean up:
+    * remove `/etc/apt/preferences.d/limit-unstable` and
+    * remove `deb http://deb.debian.org/debian/ unstable main` from `/etc/apt/sources.list.d/deb_debian_org_debian.list`.
+
+  The backports repository has a lower priority and does not need an apt preference.
+
 
 **6.0.3**
 

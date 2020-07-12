@@ -4,17 +4,6 @@
 
 - include_tasks: "setup-{{ ansible_distribution|lower }}.yml"
 
-- name: Install WireGuard
-  package:
-    name: "{{ packages }}"
-    state: present
-  vars:
-    packages:
-    - wireguard-dkms
-    - wireguard-tools
-  tags:
-    - wg-install
-
 - name: Enable WireGuard kernel module
   modprobe:
     name: wireguard
@@ -59,8 +48,9 @@
 
 - block:
   - name: Generate WireGuard private key
-    shell: "wg genkey"
+    command: "wg genkey"
     register: wg_private_key_result
+    changed_when: false
     tags:
       - wg-generate-keys
 
