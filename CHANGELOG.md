@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**6.4.0**
+
+- Support specifying optional `wireguard_preshared_key` (contribution by @legogris)
+
 **6.3.1**
 
 - Support Openstack Debian images (contribution by @pallinger)

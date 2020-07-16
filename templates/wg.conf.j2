@@ -50,6 +50,9 @@ SaveConfig = true
     {% else %}
     AllowedIPs = {{hostvars[host].wireguard_ip}}/32
     {% endif %}
+    {% if wireguard_preshared_key is defined %}
+    PresharedKey = {{wireguard_preshared_key}}
+    {% endif %}
     {% if hostvars[host].wireguard_persistent_keepalive is defined %}
     PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
     {% endif %}

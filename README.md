@@ -38,6 +38,9 @@ wireguard_port: "51820"
 
 # The default interface name that wireguard should use if not specified otherwise.
 wireguard_interface: "wg0"
+
+# Preshared key to use for all peers (optional)
+wireguard_preshared_key: "abc123"
 ```
 
 The following variable is mandatory and needs to be configured for every host in `host_vars/`:
