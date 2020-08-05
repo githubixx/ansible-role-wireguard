@@ -2,7 +2,13 @@
 - name: Gather instance facts
   setup:
 
-- include_tasks: "setup-{{ ansible_distribution|lower }}.yml"
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - "setup-{{ ansible_distribution|lower }}-{{ ansible_distribution_major_version }}.yml"
+    - "setup-{{ ansible_distribution|lower }}-{{ ansible_distribution_version }}.yml"
+    - "setup-{{ ansible_distribution|lower }}-{{ ansible_distribution_release }}.yml"
+    - "setup-{{ ansible_distribution|lower }}.yml"
+    - "setup-{{ ansible_os_family|lower }}.yml"
 
 - name: Enable WireGuard kernel module
   modprobe:

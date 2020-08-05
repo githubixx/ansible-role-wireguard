@@ -1,0 +1,29 @@
+---
+- name: (CentOS 7) Install EPEL & ELRepo repository
+  yum:
+    name:
+      - epel-release
+      - https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm
+    update_cache: yes
+
+- name: (CentOS 7) Install yum-plugin-elrepo
+  yum:
+    name: yum-plugin-elrepo
+    update_cache: yes
+
+- name: (CentOS 7) Ensure wireguard DKMS package is removed
+  yum:
+    name:
+      - "wireguard-dkms"
+    state: absent
+  tags:
+    - wg-install
+
+- name: (CentOS 7) Install wireguard packages
+  yum:
+    name:
+      - "kmod-wireguard"
+      - "wireguard-tools"
+    state: present
+  tags:
+    - wg-install
