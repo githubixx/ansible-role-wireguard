@@ -1,0 +1,14 @@
+{{ ansible_managed | comment }}
+# For unmanaged host {{ item.item.host }}
+# qrencode -t ansiutf8 < /etc/wireguard/{{ item.item.host }}.conf
+[Interface]
+PrivateKey = {{ item.stdout }}
+Address = {{ item.item.allowed_ips }}
+{% if item.item.dns is defined %}
+DNS = {{ item.item.dns }}
+{% endif %}
+
+[Peer]
+Endpoint = {{ wireguard_endpoint }}:{{ wireguard_port }}
+PublicKey = {{ public_key }}
+AllowedIPs = 0.0.0.0/0, ::/0

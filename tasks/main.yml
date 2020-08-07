@@ -1,8 +1,22 @@
 ---
-- name: Gather instance facts
-  setup:
+#- name: Gather instance facts
+#  setup:
 
-- include_tasks: "setup-{{ ansible_distribution|lower }}.yml"
+#- name: Include distribution specific tasks
+#  include_tasks: "setup-{{ ansible_distribution|lower }}.yml"
+
+- name: Include unmanaged hosts variables
+  include_vars:
+    name: wireguard_unmanaged_host_{{ item }}
+    dir: vars
+    extensions:
+      - yml
+      - yaml
+  loop: "{{ wireguard_unmanaged_hosts_list }}"
+  when: wireguard_unmanaged_hosts_list is defined
+
+- debug: var=wireguard_unmanaged_host_{{ item }}
+  loop: "{{ wireguard_unmanaged_hosts_list }}"
 
 - name: Enable WireGuard kernel module
   modprobe:

@@ -1,7 +1,7 @@
 ---
-#######################################
+################################################################################
 # General settings
-#######################################
+################################################################################
 
 # Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "/etc/wireguard"
@@ -13,9 +13,26 @@ wireguard_port: "51820"
 wireguard_interface: "wg0"
 
 
-#######################################
+################################################################################
+# Settings for devices like laptops, tablets, mobiles, etc. not managed by
+# Ansible. If you don't have such devices just leave the variables commented.
+################################################################################
+
+# Directory to store configurations for unmanaged hosts
+wireguard_unmanaged_hosts_directory: "{{ '~/wireguard_unmanaged_hosts' | expanduser }}"
+
+# 
+wireguard_unmanaged_hosts_list:
+  - tablet01
+  - mobile01
+
+#
+wireguard_unmanaged_delegate_to: "127.0.0.1"
+
+
+###############################################################################
 # Settings only relevant for Ubuntu
-#######################################
+###############################################################################
 
 # Set to "false" if package cache should not be updated
 wireguard_ubuntu_update_cache: "true"

@@ -1,0 +1,4 @@
+wireguard_address: "10.8.0.10"
+wireguard_port: "51820"
+wireguard_dns: "1.1.1.1"
+wireguard_mtu: "1492"
