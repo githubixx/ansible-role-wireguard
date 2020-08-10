@@ -3,7 +3,7 @@ Changelog
 
 **7.0.0**
 
-- Switched to install from ELRepo KMOD package for Centos. This change may break installation for systems with custom kernels. The role previously supported custom kernel implicitly because it was using DKMS package.
+- Switched to install from ELRepo KMOD package for CentOS (see https://www.wireguard.com/install/). This change may break installation for systems with custom kernels. The role previously supported custom kernel implicitly because it was using DKMS package (contribution by @elcomtik)
 
 
 **6.3.1**
