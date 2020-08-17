@@ -10,17 +10,19 @@
     - "setup-{{ ansible_distribution|lower }}.yml"
     - "setup-{{ ansible_os_family|lower }}.yml"
 
-- name: Enable WireGuard kernel module
-  modprobe:
-    name: wireguard
-    state: present
-  register: wireguard_module_enabled
-  until:  wireguard_module_enabled is succeeded
-  retries: 10
-  delay: 10
-  failed_when: wireguard_module_enabled is failure
-  tags:
-    - wg-install
+- block:
+    - name: Enable WireGuard kernel module
+      modprobe:
+        name: wireguard
+        state: present
+      register: wireguard_module_enabled
+      until:  wireguard_module_enabled is succeeded
+      retries: 10
+      delay: 10
+      failed_when: wireguard_module_enabled is failure
+      tags:
+        - wg-install
+  when: not ansible_os_family == 'Darwin'
 
 - name: Set WireGuard IP (without mask)
   set_fact:
@@ -107,9 +109,9 @@
   template:
     src: wg.conf.j2
     dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
-    owner: root
-    group: root
-    mode: 0600
+    owner: "{{ wireguard_conf_owner }}"
+    group: "{{ wireguard_conf_group }}"
+    mode: "{{ wireguard_conf_mode }}"
   tags:
     - wg-config
   notify:
@@ -135,3 +137,4 @@
     name: "wg-quick@{{ wireguard_interface }}"
     state: started
     enabled: yes
+  when: not ansible_os_family == 'Darwin'
