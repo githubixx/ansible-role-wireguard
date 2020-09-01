@@ -95,6 +95,11 @@ wireguard_postup:
 wireguard_postdown:
   - ...
 wireguard_save_config: "true"
+wireguard_extra_peer_config: |
+  # Configure external peers - not managed by ansible-role-wireguard.
+  [Peer]
+  PublicKey = 5zsSBeZZ8P9pQaaJvY9RbELQulcwC5VBXaZ93egzOlI=
+  AllowedIPs = 10.0.0.3/32
 ```
 
 `wireguard_(preup|predown|postup|postdown)` are specified as lists. Here are two examples:

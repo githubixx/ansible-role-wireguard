@@ -41,7 +41,7 @@ SaveConfig = true
 {% endif %}
 {% for host in ansible_play_hosts %}
   {% if host != inventory_hostname %}
-  
+
     [Peer]
     # {{ host }}
     PublicKey = {{hostvars[host].public_key}}
@@ -68,3 +68,7 @@ SaveConfig = true
     {% endif %}
   {% endif %}
 {% endfor %}
+{% if wireguard_extra_peer_config is defined %}
+    # Unmanaged peers from wireguard_extra_peer_config
+    {{wireguard_extra_peer_config|indent(4, False)}}
+{% endif %}
