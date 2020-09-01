@@ -29,7 +29,7 @@ Role Variables
 
 These variables can be changed in `group_vars/`:
 
-```
+```yaml
 # Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "/etc/wireguard"
 
@@ -42,13 +42,13 @@ wireguard_interface: "wg0"
 
 The following variable is mandatory and needs to be configured for every host in `host_vars/`:
 
-```
+```yaml
 wireguard_address: "10.8.0.101/24"
 ```
 
 Of course all IP's should be in the same subnet like `/24` we see in the example above. If `wireguard_allowed_ips` is not set then the default value is the value from `wireguard_address` without the CIDR but instead with `/32` which is basically a host route (have a look `templates/wg.conf.j2`). Let's see this example and let's assume you don't set `wireguard_allowed_ips` explicitly:
 
-```
+```ini
 [Interface]
 Address = 10.8.0.2/24
 PrivateKey = ....
@@ -62,7 +62,7 @@ Endpoint = controller01.p.domain.tld:51820
 
 This is part of the WireGuard config from my workstation. It has the VPN IP `10.8.0.2` and we've a `/24` subnet in which all my WireGuard hosts are located. Also you can see we've a peer here that has the endpoint `controller01.p.domain.tld:51820`. When `wireguard_allowed_ips` is not explicitly set the Ansible template will add an `AllowedIPs` entry with the IP of that host plus `/32`. In WireGuard this basically specifies the routing. The config above says: On my workstation with the IP `10.8.0.2` I want send all traffic to `10.8.0.101/32` to the endpoint `controller01.p.domain.tld:51820`. Now let's assume we set `wireguard_allowed_ips: "0.0.0.0/0"`. Then the resulting config looks like this.
 
-```
+```ini
 [Interface]
 Address = 10.8.0.2/24
 PrivateKey = ....
@@ -78,7 +78,7 @@ Now this is basically the same as above BUT now the config says: I want to route
 
 You can specify further optional settings (they don't have a default and won't be set if not specified besides `wireguard_allowed_ips` as already mentioned) also per host in `host_vars/` (or in your Ansible hosts file if you like). The values for the following variables are just examples and no defaults (for more information and examples see [wg-quick.8](https://git.zx2c4.com/WireGuard/about/src/tools/man/wg-quick.8)):
 
-```
+```yaml
 wireguard_allowed_ips: ""
 wireguard_endpoint: "host1.domain.tld"
 wireguard_persistent_keepalive: "30"
@@ -99,14 +99,14 @@ wireguard_save_config: "true"
 
 `wireguard_(preup|predown|postup|postdown)` are specified as lists. Here are two examples:
 
-```
+```yaml
 wireguard_postup:
   - iptables -t nat -A POSTROUTING -o ens12 -j MASQUERADE
   - iptables -A FORWARD -i %i -j ACCEPT
   - iptables -A FORWARD -o %i -j ACCEPT
 ```
 
-```
+```yaml
 wireguard_preup:
   - echo 1 > /proc/sys/net/ipv4/ip_forward
   - ufw allow 51820/udp
@@ -139,7 +139,7 @@ As you can see I've three gropus here: `vpn` (all hosts on that will get WireGua
 For the Kubernetes controller nodes I've defined the following host variables:
 
 Ansible host file: `host_vars/controller01.i.domain.tld`
-```
+```yaml
 ---
 wireguard_address: "10.8.0.101/24"
 wireguard_endpoint: "controller01.p.domain.tld"
@@ -148,7 +148,7 @@ ansible_python_interpreter: /usr/bin/python3
 ```
 
 Ansible host file: `host_vars/controller02.i.domain.tld`:
-```
+```yaml
 ---
 wireguard_address: "10.8.0.102/24"
 wireguard_endpoint: "controller02.p.domain.tld"
@@ -157,7 +157,7 @@ ansible_python_interpreter: /usr/bin/python3
 ```
 
 Ansible host file: `host_vars/controller03.i.domain.tld`:
-```
+```yaml
 ---
 wireguard_address: "10.8.0.103/24"
 wireguard_endpoint: "controller03.p.domain.tld"
@@ -165,12 +165,12 @@ ansible_host: "controller03.p.domain.tld"
 ansible_python_interpreter: /usr/bin/python3
 ```
 
-I've specified `ansible_python_interpreter` here for every node as the controller nodes use Ubuntu 18.04 which has Python 3 installed by default. `ansible_host` is set to the public DNS of that host. Ansible will use this hostname to connect to the host via SSH. I use the same value also for `wireguard_endpoint` because of the same reason. The WireGuard peers needs to connect to the other peers via a public IP (well at least via a IP that the WireGuard hosts can connect to - that could be of course also a internal IP if it works for you). The `wireguard_address` needs to be unique of course for every host. 
+I've specified `ansible_python_interpreter` here for every node as the controller nodes use Ubuntu 18.04 which has Python 3 installed by default. `ansible_host` is set to the public DNS of that host. Ansible will use this hostname to connect to the host via SSH. I use the same value also for `wireguard_endpoint` because of the same reason. The WireGuard peers needs to connect to the other peers via a public IP (well at least via a IP that the WireGuard hosts can connect to - that could be of course also a internal IP if it works for you). The `wireguard_address` needs to be unique of course for every host.
 
 For the Kubernetes worker I've defined the following variables:
 
 Ansible host file: `host_vars/worker01.i.domain.tld`
-```
+```yaml
 ---
 wireguard_address: "10.8.0.111/24"
 wireguard_endpoint: "worker01.p.domain.tld"
@@ -180,7 +180,7 @@ ansible_python_interpreter: /usr/bin/python3
 ```
 
 Ansible host file: `host_vars/worker02.i.domain.tld`:
-```
+```yaml
 ---
 wireguard_address: "10.8.0.112/24"
 wireguard_endpoint: "worker02.p.domain.tld"
@@ -193,7 +193,7 @@ As you can see the variables are basically the same as the controller nodes have
 
 For my internal server at home (connected via DSL router to the internet) we've this configuration:
 
-```
+```yaml
 ---
 wireguard_address: "10.8.0.1/24"
 wireguard_endpoint: "server.at.home.p.domain.tld"
@@ -206,7 +206,7 @@ By default the SSH daemon is listening on a different port than 22 on all of my 
 
 And finally for my workstation (on which I run all `ansible-playbook` commands):
 
-```
+```yaml
 wireguard_address: "10.8.0.2/24"
 wireguard_endpoint: ""
 ansible_connection: local
@@ -215,7 +215,7 @@ ansible_become: false
 
 As you can see `wireguard_endpoint: ""` is a empty string here. That means the Ansible role won't set an endpoint for my workstation. Since there is no need for the other hosts to connect to my workstation it doesn't makes sense to have a endpoint defined. So in this case I can access all hosts defined in the Ansible group `vpn` from my workstation but not the other way round. So the resulting WireGuard config for my workstation looks like this:
 
-```
+```ini
 [Interface]
 Address = 10.8.0.2/24
 PrivateKey = ....
@@ -260,7 +260,7 @@ The other WireGuard config files (`wg0.conf` by default) looks similar but of co
 Example Playbook
 ----------------
 
-```
+```yaml
 - hosts: vpn
   roles:
     - wireguard
@@ -271,7 +271,7 @@ Example Inventory using two different WireGuard interfaces on host "multi"
 
 This is a complex example using yaml inventory format:
 
-```
+```yaml
 vpn1:
   hosts:
     multi:
@@ -311,13 +311,13 @@ vpn2:
 Playbooks
 ---------
 
-```
+```yaml
 - hosts: vpn1
   roles:
     - wireguard
 ```
 
-```
+```yaml
 - hosts: vpn2
   roles:
     - wireguard
