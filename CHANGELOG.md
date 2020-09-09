@@ -3,7 +3,7 @@ Changelog
 
 **7.1.0**
 
-- Add support for unmanaged peers with `wireguard_extra_peer_config` (contribution by @joneskoo)
+- Add support for unmanaged peers with `wireguard_unmanaged_peers` (contribution by @joneskoo)
 
 **7.0.0**
 
