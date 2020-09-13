@@ -41,14 +41,9 @@
   register: wg_subcommands
   changed_when: false
 
-- name: Set default value for wg_syncconf variable (assume wg syncconf subcommand not available)
-  set_fact:
-    wg_syncconf: false
-
 - name: Check if wg syncconf subcommand is available
   set_fact:
-    wg_syncconf: true
-  when: wg_subcommands.stdout | regex_search('syncconf:')
+    wg_syncconf: "{{ 'syncconf:' in wg_subcommands.stdout }}"
 
 - name: Show syncconf subcommand status
   debug:
