@@ -27,8 +27,7 @@
 - name: (Debian) Install WireGuard packages
   apt:
     name:
-      - "wireguard-dkms"
-      - "wireguard-tools"
+      - "wireguard"
     state: present
   tags:
     - wg-install
