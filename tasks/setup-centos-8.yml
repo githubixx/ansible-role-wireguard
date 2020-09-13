@@ -1,7 +1,7 @@
 ---
 - name: (CentOS 8) Install EPEL & ELRepo repository
   yum:
-    name: 
+    name:
      - epel-release
      - elrepo-release
     update_cache: yes
