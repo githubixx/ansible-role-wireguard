@@ -2,7 +2,7 @@
 
 - include_tasks: "setup-debian-raspbian.yml"
   when: ansible_lsb.id == "Raspbian"
-  register: raspbian_setup
+  register: wireguard__register_raspbian_setup
 
 - include_tasks: "setup-debian-vanilla.yml"
-  when: raspbian_setup is skipped
+  when: wireguard__register_raspbian_setup is skipped

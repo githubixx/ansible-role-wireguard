@@ -2,8 +2,8 @@
 [Interface]
 # {{ inventory_hostname }}
 Address = {{hostvars[inventory_hostname].wireguard_address}}
-PrivateKey = {{private_key}}
-ListenPort = {{wireguard_port}}
+PrivateKey = {{ wireguard__fact_private_key }}
+ListenPort = {{ wireguard_port }}
 {% if hostvars[inventory_hostname].wireguard_dns is defined %}
 DNS = {{hostvars[inventory_hostname].wireguard_dns}}
 {% endif %}
@@ -44,7 +44,7 @@ SaveConfig = true
   
 [Peer]
 # {{ host }}
-PublicKey = {{hostvars[host].public_key}}
+PublicKey = {{hostvars[host].wireguard__fact_public_key}}
 {%     if hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
 {%     else %}

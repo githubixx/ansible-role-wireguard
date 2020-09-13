@@ -27,7 +27,7 @@
     name:
     - "raspberrypi-kernel"
     state: latest
-  register: kernel_update
+  register: wireguard__register_kernel_update
   tags:
     - wg-install
 
@@ -36,21 +36,21 @@
     search_paths: ['/lib/molly-guard', '/usr/sbin']
   when:
     - ansible_version.full is version('2.8.0', '>=')
-    - kernel_update is changed
+    - wireguard__register_kernel_update is changed
   tags:
     - wg-install
 
 - name: (Raspbian) Check if molly-guard is installed (Ansible < 2.8)
   stat:
     path: /lib/molly-guard/
-  register: molly_guard
+  register: wireguard__register_molly_guard
 
 - name: (Raspbian) Reboot after kernel update (Ansible < 2.8, no molly-guard)
   reboot:
   when:
     - ansible_version.full is version('2.8.0', '<')
-    - kernel_update is changed
-    - not molly_guard.stat.exists
+    - wireguard__register_kernel_update is changed
+    - not wireguard__register_molly_guard.stat.exists
   tags:
     - wg-install
 
@@ -61,8 +61,8 @@
   ignore_unreachable: yes
   when:
     - ansible_version.full is version('2.8.0', '<')
-    - kernel_update is changed
-    - molly_guard.stat.exists
+    - wireguard__register_kernel_update is changed
+    - wireguard__register_molly_guard.stat.exists
   tags:
     - wg-install
 
@@ -70,8 +70,8 @@
   wait_for_connection:
   when:
     - ansible_version.full is version('2.8.0', '<')
-    - kernel_update is changed
-    - molly_guard.stat.exists
+    - wireguard__register_kernel_update is changed
+    - wireguard__register_molly_guard.stat.exists
   tags:
     - wg-install
 
