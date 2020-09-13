@@ -11,7 +11,7 @@
     name: yum-plugin-elrepo
     update_cache: yes
 
-- name: (CentOS 7) Ensure wireguard DKMS package is removed
+- name: (CentOS 7) Ensure WireGuard DKMS package is removed
   yum:
     name:
       - "wireguard-dkms"
@@ -19,7 +19,7 @@
   tags:
     - wg-install
 
-- name: (CentOS 7) Install wireguard packages
+- name: (CentOS 7) Install WireGuard packages
   yum:
     name:
       - "kmod-wireguard"

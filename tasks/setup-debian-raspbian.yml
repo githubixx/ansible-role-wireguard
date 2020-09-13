@@ -1,6 +1,6 @@
 ---
 
-- name: (Raspbian) Install GPG - required to add wireguard key
+- name: (Raspbian) Install GPG - required to add WireGuard key
   apt:
     name: gnupg
     state: present
@@ -83,7 +83,7 @@
   tags:
     - wg-install
 
-- name: (Raspbian) Install wireguard packages
+- name: (Raspbian) Install WireGuard packages
   apt:
     name:
       - "wireguard-dkms"

@@ -26,7 +26,7 @@
     tags:
       - wg-install
 
-  - name: (Ubuntu) Install wireguard packages (for Ubuntu < 19.10)
+  - name: (Ubuntu) Install WireGuard packages (for Ubuntu < 19.10)
     apt:
       name:
         - "wireguard-dkms"

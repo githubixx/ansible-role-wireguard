@@ -1,5 +1,5 @@
 ---
-- name: (Debian) Install GPG - required to add wireguard key
+- name: (Debian) Install GPG - required to add WireGuard key
   apt:
     name: gnupg
     state: present
@@ -27,7 +27,7 @@
       - "linux-headers-{{ kernel_header_version }}"
     state: present
 
-- name: (Debian) Install wireguard packages
+- name: (Debian) Install WireGuard packages
   apt:
     name:
       - "wireguard-dkms"

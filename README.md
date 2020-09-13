@@ -54,7 +54,7 @@ wireguard_remote_directory: "/etc/wireguard"              # On Linux
 # The default port WireGuard will listen if not specified otherwise.
 wireguard_port: "51820"
 
-# The default interface name that wireguard should use if not specified otherwise.
+# The default interface name that WireGuard should use if not specified otherwise.
 wireguard_interface: "wg0"
 
 # The default owner of the wg.conf file
