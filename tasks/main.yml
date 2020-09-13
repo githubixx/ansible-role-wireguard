@@ -80,7 +80,9 @@
   when: wireguard__register_config_file.stat.exists
 
 - name: Derive WireGuard public key
-  shell: "echo '{{ wireguard__fact_private_key }}' | wg pubkey" # noqa 306
+  command: "wg pubkey"
+  args:
+    stdin: "{{ wireguard__fact_private_key }}"
   register: wireguard__register_public_key
   changed_when: false
   tags:
