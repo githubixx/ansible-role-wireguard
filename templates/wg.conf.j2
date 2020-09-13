@@ -1,4 +1,6 @@
 #jinja2: lstrip_blocks:"True",trim_blocks:"True"
+# {{ ansible_managed }}
+
 [Interface]
 # {{ inventory_hostname }}
 Address = {{hostvars[inventory_hostname].wireguard_address}}
