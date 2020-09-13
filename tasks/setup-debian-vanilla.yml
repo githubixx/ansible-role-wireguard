@@ -4,7 +4,7 @@
     name: gnupg
     state: present
 
-- name: (Debian) Add WireGuard repository on buster or earlier
+- name: (Debian) Add WireGuard repository on buster
   apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present

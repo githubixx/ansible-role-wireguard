@@ -7,7 +7,7 @@ I used [PeerVPN](https://peervpn.net/) before but that wasn't updated for a whil
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
-This role is tested with Ubuntu 18.04 (Bionic Beaver), Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 16.04 (Xenial Xerus), Debian 9 (Stretch), Debian 10 (Buster), Fedora 31 (or later), CentOS 7 and partially MacOS (see below) might also work or other distributions but haven't tested it (code for this operating systems was submitted by other contributors). If someone tested it let me please know if it works or send a pull request to make it work ;-)
+This role is tested with Ubuntu 18.04 (Bionic Beaver), Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 16.04 (Xenial Xerus), Debian 10 (Buster), Fedora 31 (or later), CentOS 7 and partially MacOS (see below) might also work or other distributions but haven't tested it (code for this operating systems was submitted by other contributors). If someone tested it let me please know if it works or send a pull request to make it work ;-)
 
 ### Running the VPN on MacOS
 
