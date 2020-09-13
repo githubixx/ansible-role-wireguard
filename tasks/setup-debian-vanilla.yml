@@ -15,16 +15,13 @@
 
 - name: (Debian) Get architecture
   command: "dpkg --print-architecture"
-  register: dpkg_arch
+  register: wireguard__fact_dpkg_arch
   changed_when: False
-
-- set_fact:
-    kernel_header_version: "{{ ('-cloud-' in ansible_kernel) | ternary(ansible_kernel,dpkg_arch.stdout) }}"
 
 - name: (Debian) Install kernel headers to compile Wireguard with DKMS
   apt:
     name:
-      - "linux-headers-{{ kernel_header_version }}"
+      - "linux-headers-{{ ('-cloud-' in ansible_kernel) | ternary(ansible_kernel,wireguard__fact_dpkg_arch.stdout) }}"
     state: present
 
 - name: (Debian) Install WireGuard packages
