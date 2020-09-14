@@ -115,6 +115,15 @@
   notify:
     - reconfigure wireguard
 
+- name: Create config symlink to default directory
+  file:
+    src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    dest: "{{ default_wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    state: link
+  when: default_wireguard_remote_directory != wireguard_remote_directory
+  tags:
+    - wg-config
+    
 - name: Check if reload-module-on-update is set
   stat:
     path: "{{ wireguard_remote_directory }}/.reload-module-on-update"

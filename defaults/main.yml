@@ -6,6 +6,9 @@
 # Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "/etc/wireguard"
 
+# Do not change this variable. It is used as is in tasks for comparison.
+default_wireguard_remote_directory: "/etc/wireguard"
+
 # The default port WireGuard will listen if not specified otherwise.
 wireguard_port: "51820"
 
