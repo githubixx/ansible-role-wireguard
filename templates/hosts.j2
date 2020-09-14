@@ -1,0 +1,4 @@
+#jinja2: lstrip_blocks:"True",trim_blocks:"True"
+{% for host in ansible_play_hosts %}
+{{hostvars[host].wireguard_ip}} wg-{{hostvars[host].ansible_hostname}}
+{% endfor %}

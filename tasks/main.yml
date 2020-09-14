@@ -113,7 +113,7 @@
   tags:
     - wg-config
   notify:
-    - reconfigure wireguard
+    - "reconfigure wireguard"
 
 - name: Create config symlink to default directory
   file:
@@ -123,7 +123,7 @@
   when: default_wireguard_remote_directory != wireguard_remote_directory
   tags:
     - wg-config
-    
+
 - name: Check if reload-module-on-update is set
   stat:
     path: "{{ wireguard_remote_directory }}/.reload-module-on-update"
@@ -139,8 +139,27 @@
   tags:
     - wg-config
 
+- name: generate hosts file
+  template: src=hosts.j2 dest=/tmp/wireguard-hosts
+  run_once: true
+  delegate_to: localhost
+
+- name: add mappings to /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    block: "{{ lookup('file', '/tmp/wireguard-hosts') }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK FOR WIREGUARD"
+
 - name: Start and enable WireGuard service
   service:
     name: "wg-quick@{{ wireguard_interface }}"
-    state: started
-    enabled: yes
+    state: restarted
+    enabled: no
+
+- name: remove temporary files
+  ignore_errors: yes
+  file:
+    state: absent
+    path: "/tmp/wireguard-hosts"
+  run_once: true
+  delegate_to: localhost
