@@ -73,21 +73,21 @@ SaveConfig = true
     # Peers not managed by ansible from wireguard_unmanaged_peers
     {% for peer in wireguard_unmanaged_peers.keys() %}
     [Peer]
-    # {{ peer}}
+    # {{ peer }}
     {% if wireguard_unmanaged_peers[peer].public_key is defined %}
-    PublicKey = {{wireguard_unmanaged_peers[peer].public_key}}
+    PublicKey = {{ wireguard_unmanaged_peers[peer].public_key }}
     {% endif %}
     {% if wireguard_unmanaged_peers[peer].preshared_key is defined %}
-    PresharedKey = {{wireguard_unmanaged_peers[peer].preshared_key}}
+    PresharedKey = {{ wireguard_unmanaged_peers[peer].preshared_key }}
     {% endif %}
     {% if wireguard_unmanaged_peers[peer].allowed_ips is defined %}
-    AllowedIPs = {{wireguard_unmanaged_peers[peer].allowed_ips}}
+    AllowedIPs = {{ wireguard_unmanaged_peers[peer].allowed_ips }}
     {% endif %}
     {% if wireguard_unmanaged_peers[peer].endpoint is defined %}
-    Endpoint = {{wireguard_unmanaged_peers[peer].endpoint}}
+    Endpoint = {{ wireguard_unmanaged_peers[peer].endpoint }}
     {% endif %}
     {% if wireguard_unmanaged_peers[peer].persistent_keepalive is defined %}
-    PersistentKeepalive = {{wireguard_unmanaged_peers[peer].persistent_keepalive}}
+    PersistentKeepalive = {{ wireguard_unmanaged_peers[peer].persistent_keepalive }}
     {% endif %}
     {% endfor %}
 {% endif %}
