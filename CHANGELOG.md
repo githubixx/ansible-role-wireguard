@@ -1,10 +1,14 @@
 Changelog
 ---------
 
+**7.1.0**
+
+- Add support for unmanaged peers with `wireguard_unmanaged_peers` (contribution by @joneskoo)
+
 **7.0.0**
 
 - Switched to install from ELRepo KMOD package for CentOS (see https://www.wireguard.com/install/). This change may break installation for systems with custom kernels. The role previously supported custom kernel implicitly because it was using DKMS package (contribution by @elcomtik)
-  
+
   Role removes DKMS wireguard package, however it doesn't remove jdoss-wireguard-epel-7 repository. If you don't need this repository, do cleanup by:
     * remove `/etc/yum.repos.d/wireguard.repo`
 
