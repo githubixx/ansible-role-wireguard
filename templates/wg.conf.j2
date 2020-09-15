@@ -74,9 +74,7 @@ SaveConfig = true
     {% for peer in wireguard_unmanaged_peers.keys() %}
     [Peer]
     # {{ peer }}
-    {% if wireguard_unmanaged_peers[peer].public_key is defined %}
     PublicKey = {{ wireguard_unmanaged_peers[peer].public_key }}
-    {% endif %}
     {% if wireguard_unmanaged_peers[peer].preshared_key is defined %}
     PresharedKey = {{ wireguard_unmanaged_peers[peer].preshared_key }}
     {% endif %}
