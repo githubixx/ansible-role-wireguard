@@ -34,3 +34,7 @@ wireguard_ubuntu_update_cache: "true"
 
 # Set package cache valid time
 wireguard_ubuntu_cache_valid_time: "3600"
+
+# This is sensitive: encrypt it with a tool like Ansible Vault.
+# If not set, a new one is generated on a blank configuration.
+# wireguard_private_key:

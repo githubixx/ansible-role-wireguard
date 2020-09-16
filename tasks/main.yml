@@ -60,10 +60,12 @@
 
   - name: Set private key fact
     set_fact:
-      wireguard__fact_private_key: "{{ wireguard__register_private_key.stdout }}"
+      wireguard_private_key: "{{ wireguard__register_private_key.stdout }}"
     tags:
       - wg-generate-keys
-  when: not wireguard__register_config_file.stat.exists
+  when:
+    - not wireguard__register_config_file.stat.exists
+    - wireguard_private_key is not defined
 
 - block:
   - name: Read WireGuard config file
@@ -75,15 +77,17 @@
 
   - name: Set private key fact
     set_fact:
-      wireguard__fact_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+      wireguard_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
     tags:
       - wg-config
-  when: wireguard__register_config_file.stat.exists
+  when:
+    - wireguard__register_config_file.stat.exists
+    - wireguard_private_key is not defined
 
 - name: Derive WireGuard public key
   command: "wg pubkey"
   args:
-    stdin: "{{ wireguard__fact_private_key }}"
+    stdin: "{{ wireguard_private_key }}"
   register: wireguard__register_public_key
   changed_when: false
   check_mode: no
