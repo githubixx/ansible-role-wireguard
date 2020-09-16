@@ -20,7 +20,8 @@
 - name: (Debian) Get architecture
   command: "dpkg --print-architecture"
   register: wireguard__fact_dpkg_arch
-  changed_when: False
+  changed_when: false
+  check_mode: no
 
 - name: (Debian) Install kernel headers metapackage to ensure headers will be installed
   apt:
