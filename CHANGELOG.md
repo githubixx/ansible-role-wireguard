@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**7.6.0**
+- Add `wireguard_private_key` variable (contribution by @j8r)
+- Fix check mode for Debian (contribution by @j8r)
+
 **7.5.0**
 
 - `wireguard` package is now available for Ubuntu 18.04 in universe repository. Before that `ppa:wireguard/wireguard` was used but that one isn't available anymore. The install procedure for Ubuntu 18.04 and 20.04 is now the same as both can use `wireguard` metapackage now. The role takes care to remove `wireguard-dkms` package in favour of `wireguard` metapackage but it leaves the configuration file for `ppa:wireguard/wireguard` repository untouched. So it's up to you to remove that PPA. Either use `apt-add-repository --remove ppa:wireguard/wireguard` or remove the file manually at `/etc/apt/sources.list.d/` directory (you man need to run `apt-get update` afterwards).
