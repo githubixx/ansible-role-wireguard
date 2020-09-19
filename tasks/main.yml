@@ -24,10 +24,6 @@
         - wg-install
   when: not ansible_os_family == 'Darwin'
 
-- name: Set WireGuard IP (without mask)
-  set_fact:
-    wireguard_ip: "{{ wireguard_address.split('/')[0] }}"
-
 - name: Register if config/private key already exists on target host
   stat:
     path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"

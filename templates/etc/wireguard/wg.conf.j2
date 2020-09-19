@@ -50,7 +50,7 @@ PublicKey = {{hostvars[host].wireguard__fact_public_key}}
 {%     if hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
 {%     else %}
-AllowedIPs = {{hostvars[host].wireguard_ip}}/32
+AllowedIPs = {{ hostvars[host].wireguard_address.split('/')[0] }}/32
 {%     endif %}
 {%     if hostvars[host].wireguard_persistent_keepalive is defined %}
 PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
