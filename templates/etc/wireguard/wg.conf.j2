@@ -3,20 +3,20 @@
 
 [Interface]
 # {{ inventory_hostname }}
-Address = {{wireguard_address}}
+Address = {{ wireguard_address }}
 PrivateKey = {{ wireguard__fact_private_key }}
 ListenPort = {{ wireguard_port }}
 {% if wireguard_dns is defined %}
-DNS = {{wireguard_dns}}
+DNS = {{ wireguard_dns }}
 {% endif %}
 {% if wireguard_fwmark is defined %}
-FwMark = {{wireguard_fwmark}}
+FwMark = {{ wireguard_fwmark }}
 {% endif %}
 {% if wireguard_mtu is defined %}
-MTU = {{wireguard_mtu}}
+MTU = {{ wireguard_mtu }}
 {% endif %}
 {% if wireguard_table is defined %}
-Table = {{wireguard_table}}
+Table = {{ wireguard_table }}
 {% endif %}
 {% if wireguard_preup is defined %}
 {% for wg_preup in wireguard_preup %}
