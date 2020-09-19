@@ -3,42 +3,42 @@
 
 [Interface]
 # {{ inventory_hostname }}
-Address = {{hostvars[inventory_hostname].wireguard_address}}
+Address = {{wireguard_address}}
 PrivateKey = {{ wireguard__fact_private_key }}
 ListenPort = {{ wireguard_port }}
-{% if hostvars[inventory_hostname].wireguard_dns is defined %}
-DNS = {{hostvars[inventory_hostname].wireguard_dns}}
+{% if wireguard_dns is defined %}
+DNS = {{wireguard_dns}}
 {% endif %}
-{% if hostvars[inventory_hostname].wireguard_fwmark is defined %}
-FwMark = {{hostvars[inventory_hostname].wireguard_fwmark}}
+{% if wireguard_fwmark is defined %}
+FwMark = {{wireguard_fwmark}}
 {% endif %}
-{% if hostvars[inventory_hostname].wireguard_mtu is defined %}
-MTU = {{hostvars[inventory_hostname].wireguard_mtu}}
+{% if wireguard_mtu is defined %}
+MTU = {{wireguard_mtu}}
 {% endif %}
-{% if hostvars[inventory_hostname].wireguard_table is defined %}
-Table = {{hostvars[inventory_hostname].wireguard_table}}
+{% if wireguard_table is defined %}
+Table = {{wireguard_table}}
 {% endif %}
-{% if hostvars[inventory_hostname].wireguard_preup is defined %}
-{% for wg_preup in hostvars[inventory_hostname].wireguard_preup %}
+{% if wireguard_preup is defined %}
+{% for wg_preup in wireguard_preup %}
 PreUp = {{ wg_preup }}
 {% endfor %}
 {% endif %}
-{% if hostvars[inventory_hostname].wireguard_predown is defined %}
-{% for wg_predown in hostvars[inventory_hostname].wireguard_predown %}
+{% if wireguard_predown is defined %}
+{% for wg_predown in wireguard_predown %}
 PreDown = {{ wg_predown }}
 {% endfor %}
 {% endif %}
-{% if hostvars[inventory_hostname].wireguard_postup is defined %}
-{% for wg_postup in hostvars[inventory_hostname].wireguard_postup %}
+{% if wireguard_postup is defined %}
+{% for wg_postup in wireguard_postup %}
 PostUp = {{ wg_postup }}
 {% endfor %}
 {% endif %}
-{% if hostvars[inventory_hostname].wireguard_postdown is defined %}
-{% for wg_postdown in hostvars[inventory_hostname].wireguard_postdown %}
+{% if wireguard_postdown is defined %}
+{% for wg_postdown in wireguard_postdown %}
 PostDown = {{ wg_postdown }}
 {% endfor %}
 {% endif %}
-{% if hostvars[inventory_hostname].wireguard_save_config is defined %}
+{% if wireguard_save_config is defined %}
 SaveConfig = true
 {% endif %}
 {% for host in ansible_play_hosts %}
@@ -57,8 +57,8 @@ PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
 {%     endif %}
 {%     if (
          hostvars[host].wireguard_dc is defined and
-         hostvars[inventory_hostname].wireguard_dc is defined and
-         hostvars[inventory_hostname].wireguard_dc['name'] != hostvars[host].wireguard_dc['name']
+         wireguard_dc is defined and
+         wireguard_dc['name'] != hostvars[host].wireguard_dc['name']
        )
 %}
 Endpoint = {{hostvars[host].wireguard_dc['endpoint']}}:{{hostvars[host].wireguard_dc['port']}}
