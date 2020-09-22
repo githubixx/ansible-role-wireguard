@@ -14,7 +14,7 @@
       set -o errexit
       set -o pipefail
       set -o nounset
-      systemctl is-active wg-quick@wg-quick@{{ wireguard_interface|quote }} || systemctl start wg-quick@{{ wireguard_interface|quote }}
+      systemctl is-active wg-quick@{{ wireguard_interface|quote }} || systemctl start wg-quick@{{ wireguard_interface|quote }}
       wg syncconf {{ wireguard_interface|quote }} <(wg-quick strip /etc/wireguard/{{ wireguard_interface|quote }}.conf)
       exit 0
   args:
