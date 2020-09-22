@@ -1,8 +1,13 @@
 Changelog
 ---------
+
 **7.2.0**
 
 - Basic MacOS X support (contribution by @rubendibattista)
+- Introduce variables `wireguard_conf_owner`, `wireguard_conf_group` and `wireguard_conf_mode` (contribution by @rubendibattista)
+- Fixed a typo bug in `handlers/main.yml` (contribution by @gabriel-v). But it looks like this had no impact on the "sync/restart" functionality.
+- Proper formatting of WireGuard configuration file (`wg0.conf` by default). This will most probably change the WireGuard configuration file but only the formatting. But since the Ansible registers this file as changed Ansible will sync/restart WireGuard service. For newer WireGuard versions (since Nov. 2019) this isn't a problem normally as `wg syncconf` command is used (also see `handlers/main.yml`).
+- Introduce `wireguard_dc` variable. This is an alpha feature and subject to change and may be even removed in future releases again. Therefore no documentation for this variable yet.
 
 **7.1.0**
 
