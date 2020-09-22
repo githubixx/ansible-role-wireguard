@@ -9,6 +9,22 @@ In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. 
 
 This role is tested with Ubuntu 18.04 (Bionic Beaver), Ubuntu 20 (Focal Fossa) and Archlinux. Ubuntu 16.04 (Xenial Xerus), Debian 9 (Stretch), Debian 10 (Buster), Fedora 31 (or later) and CentOS 7 might also work or other distributions but haven't tested it (code for this operating systems was submitted by other contributors). If someone tested it let me please know if it works or send a pull request to make it work ;-)
 
+### Running the VPN on macOS
+While this playbook configures, enables and starts a `systemd` service on Linux in a such a way that no additional action is needed, on macOS it installs the required packages and it just generates the correct `wg0.conf` file that is then placed in the specified `wireguard_remote_directory` (`/opt/local/etc/wireguard` by default). In order to run the VPN, then, you need to: 
+
+```
+sudo wg-quick up wg0
+```
+
+and to deactivate it
+
+```
+sudo wg-quick down wg0
+```
+
+or you can install the [official app](https://apps.apple.com/it/app/wireguard/id1451685025?l=en&mt=12) and import the `wg0.conf` file. 
+
+
 Versions
 --------
 
@@ -31,7 +47,8 @@ These variables can be changed in `group_vars/`:
 
 ```yaml
 # Directory to store WireGuard configuration on the remote hosts
-wireguard_remote_directory: "/etc/wireguard"
+wireguard_remote_directory: "/etc/wireguard" # On Linux
+# wireguard_remote_directory: "/opt/local/etc/wireguard"  # On macOS
 
 # The default port WireGuard will listen if not specified otherwise.
 wireguard_port: "51820"

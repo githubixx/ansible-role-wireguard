@@ -1,5 +1,8 @@
 Changelog
 ---------
+**7.2.0**
+
+- Basic MacOS X support (contribution by @rubendibattista)
 
 **7.1.0**
 
