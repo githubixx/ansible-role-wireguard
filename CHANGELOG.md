@@ -1,6 +1,23 @@
 Changelog
 ---------
 
+**7.3.0**
+
+- Fix spelling and typos in docs. (contribution by @ypid)
+- Drop Debian Stretch from the list of tested distros. Actual support was dropped/broken in 6.0.4 without updating the docs. (contribution by @ypid)
+- Remove obsolete `.reload-module-on-update` file.
+
+  It does not serve any function anymore after support for module
+  reloading has been removed from the postinst script in 0.0.20200215-2 on
+  2020-02-24. A module update is properly signaled via
+  /run/reboot-required so that the admin can (automatically) schedule a
+  reboot when convenient. This will also be more in line with future Debian
+  releases because starting with Debian bullseye, the kernel ships the
+  module. (contribution by @ypid)
+
+- Add `ansible_managed` header to WireGuard configuration file (`wg0.conf` by default). This will most probably change the WireGuard configuration file but only the formatting. But since the Ansible registers this file as changed Ansible will sync/restart WireGuard service. For newer WireGuard versions (since Nov. 2019) this isn't a problem normally as `wg syncconf` command is used (also see `handlers/main.yml`). (contribution by @ypid)
+- Behind the scenes coding style improvements and cleanup without user impact. (contribution by @ypid)
+
 **7.2.0**
 
 - Basic MacOS X support (contribution by @rubendibattista)
