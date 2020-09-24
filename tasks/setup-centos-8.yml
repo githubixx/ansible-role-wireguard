@@ -1,12 +1,12 @@
 ---
 - name: (CentOS 8) Install EPEL & ELRepo repository
   yum:
-    name: 
+    name:
      - epel-release
      - elrepo-release
     update_cache: yes
 
-- name: (CentOS 8) Ensure wireguard DKMS package is removed
+- name: (CentOS 8) Ensure WireGuard DKMS package is removed
   yum:
     name:
       - "wireguard-dkms"
@@ -14,7 +14,7 @@
   tags:
     - wg-install
 
-- name: (CentOS 8) Install wireguard packages
+- name: (CentOS 8) Install WireGuard packages
   yum:
     name:
       - "kmod-wireguard"

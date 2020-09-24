@@ -24,31 +24,22 @@
         - wg-install
   when: not ansible_os_family == 'Darwin'
 
-- name: Set WireGuard IP (without mask)
-  set_fact:
-    wireguard_ip: "{{ wireguard_address.split('/')[0] }}"
-
 - name: Register if config/private key already exists on target host
   stat:
     path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
-  register: config_file_stat
+  register: wireguard__register_config_file
   tags:
     - wg-generate-keys
     - wg-config
 
 - name: Get wg subcommands
   command: "wg --help"
-  register: wg_subcommands
+  register: wireguard__register_subcommands
   changed_when: false
-
-- name: Set default value for wg_syncconf variable (assume wg syncconf subcommand not available)
-  set_fact:
-    wg_syncconf: false
 
 - name: Check if wg syncconf subcommand is available
   set_fact:
-    wg_syncconf: true
-  when: wg_subcommands.stdout | regex_search('syncconf:')
+    wg_syncconf: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
 
 - name: Show syncconf subcommand status
   debug:
@@ -57,43 +48,45 @@
 - block:
   - name: Generate WireGuard private key
     command: "wg genkey"
-    register: wg_private_key_result
+    register: wireguard__register_private_key
     changed_when: false
     tags:
       - wg-generate-keys
 
   - name: Set private key fact
     set_fact:
-      private_key: "{{ wg_private_key_result.stdout }}"
+      wireguard__fact_private_key: "{{ wireguard__register_private_key.stdout }}"
     tags:
       - wg-generate-keys
-  when: not config_file_stat.stat.exists
+  when: not wireguard__register_config_file.stat.exists
 
 - block:
   - name: Read WireGuard config file
     slurp:
       src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
-    register: wg_config
+    register: wireguard__register_config
     tags:
       - wg-config
 
   - name: Set private key fact
     set_fact:
-      private_key: "{{ wg_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+      wireguard__fact_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
     tags:
       - wg-config
-  when: config_file_stat.stat.exists
+  when: wireguard__register_config_file.stat.exists
 
 - name: Derive WireGuard public key
-  shell: "echo '{{ private_key }}' | wg pubkey" # noqa 306
-  register: wg_public_key_result
+  command: "wg pubkey"
+  args:
+    stdin: "{{ wireguard__fact_private_key }}"
+  register: wireguard__register_public_key
   changed_when: false
   tags:
     - wg-config
 
 - name: Set public key fact
   set_fact:
-    public_key: "{{ wg_public_key_result.stdout }}"
+    wireguard__fact_public_key: "{{ wireguard__register_public_key.stdout }}"
   tags:
     - wg-config
 
@@ -107,7 +100,7 @@
 
 - name: Generate WireGuard configuration file
   template:
-    src: wg.conf.j2
+    src: etc/wireguard/wg.conf.j2
     dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
     owner: "{{ wireguard_conf_owner }}"
     group: "{{ wireguard_conf_group }}"
@@ -117,18 +110,10 @@
   notify:
     - reconfigure wireguard
 
-- name: Check if reload-module-on-update is set
-  stat:
-    path: "{{ wireguard_remote_directory }}/.reload-module-on-update"
-  register: reload_module_on_update
-  tags:
-    - wg-config
-
-- name: Set WireGuard reload-module-on-update
+- name: Ensure legacy reload-module-on-update is absent
   file:
     dest: "{{ wireguard_remote_directory }}/.reload-module-on-update"
-    state: touch
-  when: not reload_module_on_update.stat.exists
+    state: absent
   tags:
     - wg-config
 

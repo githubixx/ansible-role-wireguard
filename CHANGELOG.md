@@ -1,6 +1,23 @@
 Changelog
 ---------
 
+**7.3.0**
+
+- Fix spelling and typos in docs. (contribution by @ypid)
+- Drop Debian Stretch from the list of tested distros. Actual support was dropped/broken in 6.0.4 without updating the docs. (contribution by @ypid)
+- Remove obsolete `.reload-module-on-update` file.
+
+  It does not serve any function anymore after support for module
+  reloading has been removed from the postinst script in 0.0.20200215-2 on
+  2020-02-24. A module update is properly signaled via
+  /run/reboot-required so that the admin can (automatically) schedule a
+  reboot when convenient. This will also be more in line with future Debian
+  releases because starting with Debian bullseye, the kernel ships the
+  module. (contribution by @ypid)
+
+- Add `ansible_managed` header to WireGuard configuration file (`wg0.conf` by default). This will most probably change the WireGuard configuration file but only the formatting. But since the Ansible registers this file as changed Ansible will sync/restart WireGuard service. For newer WireGuard versions (since Nov. 2019) this isn't a problem normally as `wg syncconf` command is used (also see `handlers/main.yml`). (contribution by @ypid)
+- Behind the scenes coding style improvements and cleanup without user impact. (contribution by @ypid)
+
 **7.2.0**
 
 - Basic MacOS X support (contribution by @rubendibattista)
@@ -17,7 +34,7 @@ Changelog
 
 - Switched to install from ELRepo KMOD package for CentOS (see https://www.wireguard.com/install/). This change may break installation for systems with custom kernels. The role previously supported custom kernel implicitly because it was using DKMS package (contribution by @elcomtik)
 
-  Role removes DKMS wireguard package, however it doesn't remove jdoss-wireguard-epel-7 repository. If you don't need this repository, do cleanup by:
+  Role removes DKMS WireGuard package, however it doesn't remove jdoss-wireguard-epel-7 repository. If you don't need this repository, do cleanup by:
     * remove `/etc/yum.repos.d/wireguard.repo`
 
 
@@ -32,7 +49,7 @@ Changelog
 **6.2.0**
 
 - Support Ubuntu 20.04 (Focal Fossa)
-- Introduce `wireguard_ubuntu_update_cache` and `wireguard_ubuntu_cache_valid_time` variables to specifiy individual Ubuntu package cache settings. Default values are the same as before.
+- Introduce `wireguard_ubuntu_update_cache` and `wireguard_ubuntu_cache_valid_time` variables to specify individual Ubuntu package cache settings. Default values are the same as before.
 - As kernel >= 5.6 (and kernel 5.4 in Ubuntu 20.04) now have `wireguard` module included `wireguard-dkms` package is no longer needed in that case. That's why WireGuard package installation is now part of the includes for the specific OS to make it easier to handle various cases.
 
 **6.1.0**
@@ -109,7 +126,7 @@ Changelog
 
 **3.1.0**
 
-- pass package list directly to some modules by using the new and prefered syntax instead `loop` or `with_items` (contribution by ahanselka)
+- pass package list directly to some modules by using the new and preferred syntax instead `loop` or `with_items` (contribution by ahanselka)
 
 **3.0.1**
 
