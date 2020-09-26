@@ -1,4 +1,8 @@
 ---
+# Copyright (C) 2020 Robert Wimmer
+# Copyright (C) 2020 Pierre Ozoux
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 dependency:
   name: galaxy
 
@@ -154,4 +158,3 @@ verifier:
     sudo: true
   lint:
     name: flake8
-
