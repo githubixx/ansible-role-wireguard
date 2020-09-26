@@ -18,11 +18,11 @@
   modprobe:
     name: wireguard
     state: present
-  register: wireguard_module_enabled
-  until:  wireguard_module_enabled is succeeded
+  register: wireguard__register_module_enabled
+  until:  wireguard__register_module_enabled is succeeded
   retries: 10
   delay: 10
-  failed_when: wireguard_module_enabled is failure
+  failed_when: wireguard__register_module_enabled is failure
   tags:
     - wg-install
   when: not ansible_os_family == 'Darwin'
