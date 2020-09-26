@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+**7.3.1**
+
+- Debian only: Ensure the headers for the currently running kernel are installed instead of the latest one which might not be running yet. This allows DKMS to build the module for the current kernel version and avoids the need for an reboot to load the module. (contribution by @ldelelis and @ypid)
+
 **7.3.0**
 
 - Fix spelling and typos in docs. (contribution by @ypid)
