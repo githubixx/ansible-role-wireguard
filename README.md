@@ -11,7 +11,7 @@ This role is tested with Ubuntu 18.04 (Bionic Beaver), Ubuntu 20.04 (Focal Fossa
 
 ### Running the VPN on MacOS
 
-While this playbook configures, enables and starts a `systemd` service on Linux in a such a way that no additional action is needed, on MacOS it installs the required packages and it just generates the correct `wg0.conf` file that is then placed in the specified `wireguard_remote_directory` (`/opt/local/etc/wireguard` by default). In order to run the VPN, then, you need to: 
+While this playbook configures, enables and starts a `systemd` service on Linux in a such a way that no additional action is needed, on MacOS it installs the required packages and it just generates the correct `wg0.conf` file that is then placed in the specified `wireguard_remote_directory` (`/opt/local/etc/wireguard` by default). In order to run the VPN, then, you need to:
 
 ```
 sudo wg-quick up wg0
@@ -23,7 +23,7 @@ and to deactivate it
 sudo wg-quick down wg0
 ```
 
-or you can install the [official app](https://apps.apple.com/it/app/wireguard/id1451685025?l=en&mt=12) and import the `wg0.conf` file. 
+or you can install the [official app](https://apps.apple.com/it/app/wireguard/id1451685025?l=en&mt=12) and import the `wg0.conf` file.
 
 
 Versions
