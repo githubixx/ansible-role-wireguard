@@ -40,19 +40,6 @@
     - wg-generate-keys
     - wg-config
 
-- name: Get wg subcommands
-  command: "wg --help"
-  register: wireguard__register_subcommands
-  changed_when: false
-
-- name: Check if wg syncconf subcommand is available
-  set_fact:
-    wg_syncconf: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
-
-- name: Show syncconf subcommand status
-  debug:
-    var: wg_syncconf
-
 - block:
   - name: Generate WireGuard private key
     command: "wg genkey"
@@ -126,7 +113,7 @@
   tags:
     - wg-config
   notify:
-    - reconfigure wireguard
+    - Reload WireGuard interface
 
 - name: Generate WireGuard configuration file
   template:
@@ -138,7 +125,7 @@
   tags:
     - wg-config
   notify:
-    - reconfigure wireguard
+    - Reload WireGuard interface
 
 - name: Ensure legacy reload-module-on-update is absent
   file:
@@ -147,8 +134,17 @@
   tags:
     - wg-config
 
+- name: Create systemd drop-in file for wg-quick@.service
+  copy:
+    src: "etc/systemd/system/wg-quick@.service.d"
+    dest: "/etc/systemd/system"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
 - name: Start and enable WireGuard service
   service:
+    daemon_reload: True
     name: "wg-quick@{{ wireguard_interface }}"
     state: started
     enabled: yes
