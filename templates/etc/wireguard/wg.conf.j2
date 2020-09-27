@@ -4,7 +4,7 @@
 [Interface]
 # {{ inventory_hostname }}
 Address = {{ wireguard_address }}
-PrivateKey = {{ wireguard__fact_private_key }}
+PostUp = wg set %i private-key /etc/wireguard/%i.privkey
 ListenPort = {{ wireguard_port }}
 {% if wireguard_dns is defined %}
 DNS = {{ wireguard_dns }}

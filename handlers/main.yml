@@ -1,27 +1,7 @@
 ---
-- name: restart wireguard
+
+- name: "Reload WireGuard interface"
   service:
     name: "wg-quick@{{ wireguard_interface }}"
-    state: "{{ item }}"
-  loop:
-  - stopped
-  - started
-  when: >
-    not wg_syncconf and
-    not ansible_os_family == 'Darwin'
-  listen: "reconfigure wireguard"
-
-- name: syncconf wireguard
-  shell: |
-      set -o errexit
-      set -o pipefail
-      set -o nounset
-      systemctl is-active wg-quick@{{ wireguard_interface|quote }} || systemctl start wg-quick@{{ wireguard_interface|quote }}
-      wg syncconf {{ wireguard_interface|quote }} <(wg-quick strip /etc/wireguard/{{ wireguard_interface|quote }}.conf)
-      exit 0
-  args:
-    executable: "/bin/bash"
-  when: >
-    wg_syncconf and
-    not ansible_os_family == 'Darwin'
-  listen: "reconfigure wireguard"
+    state: "reloaded"
+  when: (ansible_os_family != 'Darwin')

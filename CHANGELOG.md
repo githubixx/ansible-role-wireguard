@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+**7.4.0**
+
+- Put private key into separate file instead of main config. This is done for two reasons: Avoid shoulder surfing and to avoid the need for regex configuration parsing in the role. Old configuration will be migrated on the next role run. (contribution by @ypid)
+- Remove workaround for missing `wg syncconf` subcommand. It was introduced with v1.0.20191226 which every relevant distro has caught up to by now. Upgrade your wireguard packages before updating to this release of the role. (contribution by @ypid)
+
 **7.3.0**
 
 - Fix spelling and typos in docs. (contribution by @ypid)
@@ -85,7 +90,7 @@ Changelog
 
 **6.0.0**
 
-- Newer versions of WireGuard (around November 2019) introduced `wg syncconf` subcommand. This has the advantage that changes to the WireGuard configuration can be applied without disturbing existing connections. With this change this role tries to use `wg syncconf` subcommand when available. This even works if you have hosts with older and newer WireGuard versions.
+- v1.0.20191226 WireGuard introduced the `wg syncconf` subcommand. This has the advantage that changes to the WireGuard configuration can be applied without disturbing existing connections. With this change this role tries to use `wg syncconf` subcommand when available. This even works if you have hosts with older and newer WireGuard versions.
 
 **5.0.0**
 
