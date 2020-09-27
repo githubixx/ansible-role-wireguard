@@ -24,10 +24,18 @@
         - wg-install
   when: not ansible_os_family == 'Darwin'
 
-- name: Register if config/private key already exists on target host
+- name: Register if config already exists on target host
   stat:
     path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
   register: wireguard__register_config_file
+  tags:
+    - wg-generate-keys
+    - wg-config
+
+- name: Register if private key file already exists on target host
+  stat:
+    path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.privkey"
+  register: wireguard__register_private_key_file
   tags:
     - wg-generate-keys
     - wg-config
@@ -50,30 +58,39 @@
     command: "wg genkey"
     register: wireguard__register_private_key
     changed_when: false
-    tags:
-      - wg-generate-keys
 
   - name: Set private key fact
     set_fact:
       wireguard__fact_private_key: "{{ wireguard__register_private_key.stdout }}"
-    tags:
-      - wg-generate-keys
-  when: not wireguard__register_config_file.stat.exists
+  when: not wireguard__register_config_file.stat.exists and not wireguard__register_private_key_file.stat.exists
+  tags:
+    - wg-generate-keys
 
 - block:
   - name: Read WireGuard config file
     slurp:
       src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
     register: wireguard__register_config
-    tags:
-      - wg-config
 
-  - name: Set private key fact
+  - name: Set private key fact from config file
     set_fact:
       wireguard__fact_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
-    tags:
-      - wg-config
-  when: wireguard__register_config_file.stat.exists
+  when: wireguard__register_config_file.stat.exists and not wireguard__register_private_key_file.stat.exists
+  tags:
+    - wg-config
+
+- block:
+  - name: Read WireGuard private key file
+    slurp:
+      src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.privkey"
+    register: wireguard__register_config
+
+  - name: Set private key fact from file
+    set_fact:
+      wireguard__fact_private_key: "{{ wireguard__register_config['content'] | b64decode }}"
+  when: wireguard__register_private_key_file.stat.exists
+  tags:
+    - wg-config
 
 - name: Derive WireGuard public key
   command: "wg pubkey"
@@ -97,6 +114,19 @@
     mode: 0700
   tags:
     - wg-config
+
+- name: Save WireGuard private key as separate file
+  copy:
+    content: |
+      {{ wireguard__fact_private_key }}
+    dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.privkey"
+    owner: "{{ wireguard_conf_owner }}"
+    group: "{{ wireguard_conf_group }}"
+    mode: "{{ wireguard_conf_mode }}"
+  tags:
+    - wg-config
+  notify:
+    - reconfigure wireguard
 
 - name: Generate WireGuard configuration file
   template:
