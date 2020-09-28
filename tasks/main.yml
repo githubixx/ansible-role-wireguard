@@ -10,18 +10,17 @@
     - "setup-{{ ansible_distribution|lower }}.yml"
     - "setup-{{ ansible_os_family|lower }}.yml"
 
-- block:
-    - name: Enable WireGuard kernel module
-      modprobe:
-        name: wireguard
-        state: present
-      register: wireguard_module_enabled
-      until:  wireguard_module_enabled is succeeded
-      retries: 10
-      delay: 10
-      failed_when: wireguard_module_enabled is failure
-      tags:
-        - wg-install
+- name: Enable WireGuard kernel module
+  modprobe:
+    name: wireguard
+    state: present
+  register: wireguard_module_enabled
+  until:  wireguard_module_enabled is succeeded
+  retries: 10
+  delay: 10
+  failed_when: wireguard_module_enabled is failure
+  tags:
+    - wg-install
   when: not ansible_os_family == 'Darwin'
 
 - name: Register if config/private key already exists on target host
