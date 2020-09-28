@@ -1,0 +1,157 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+    type: libvirt
+    options:
+      memory: 192
+      cpus: 2
+
+platforms:
+  - name: test-wg-ubuntu2004
+    box: generic/ubuntu2004
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.10
+    groups:
+      - vpn
+  - name: test-wg-ubuntu1804
+    box: generic/ubuntu1804
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.20
+    groups:
+      - vpn
+  - name: test-wg-debian10
+    box: generic/debian10
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.30
+    groups:
+      - vpn
+  - name: test-wg-fedora31
+    box: generic/fedora31
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.40
+    groups:
+      - vpn
+  - name: test-wg-fedora32
+    box: generic/fedora32
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.50
+    groups:
+      - vpn
+  - name: test-wg-centos8
+    box: generic/centos8
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.60
+    groups:
+      - vpn
+  - name: test-wg-centos7
+    box: generic/centos7
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.70
+    groups:
+      - vpn
+  - name: test-wg-arch
+    box: archlinux/archlinux
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.80
+    groups:
+      - vpn
+
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+  log: true
+  lint:
+    name: ansible-lint
+  inventory:
+    host_vars:
+      test-wg-ubuntu2004:
+        wireguard_address: "10.10.10.10/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.10"
+      test-wg-ubuntu1804:
+        wireguard_address: "10.10.10.20/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.20"
+      test-wg-debian10:
+        wireguard_address: "10.10.10.30/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.30"
+        ansible_python_interpreter: "/usr/bin/python"
+      test-wg-fedora31:
+        wireguard_address: "10.10.10.40/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.40"
+      test-wg-fedora32:
+        wireguard_address: "10.10.10.50/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.50.40"
+      test-wg-centos8:
+        wireguard_address: "10.10.10.60/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.60"
+      test-wg-centos7:
+        wireguard_address: "10.10.10.70/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.70"
+      test-wg-arch:
+        wireguard_address: "10.10.10.80/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.80"
+        ansible_python_interpreter: "/usr/bin/python"
+
+scenario:
+  name: kvm
+  test_sequence:
+    - prepare
+    - converge
+
+verifier:
+  name: testinfra
+  directory: tests
+  options:
+    # Add a -v so you see the individual test names,
+    # particularly useful with parameterized tests
+    v: true
+    sudo: true
+  lint:
+    name: flake8
+

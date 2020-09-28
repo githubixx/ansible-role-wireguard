@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Init pacman
+      raw: |
+        pacman-key --init
+        pacman-key --populate archlinux
+      changed_when: false
+      ignore_errors: true
+      when: ansible_distribution|lower == 'archlinux'
+
+    - name: Include WireGuard role
+      include_role:
+        name: githubixx.ansible_role_wireguard
+
