@@ -1,7 +1,11 @@
 ---
+# Copyright (C) 2018-2020 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 - name: Gather instance facts
   setup:
 
+# Installing WireGuard [[[1
 - include_tasks: "{{ item }}"
   with_first_found:
     - "setup-{{ ansible_distribution|lower }}-{{ ansible_distribution_major_version }}.yml"
@@ -14,15 +18,16 @@
   modprobe:
     name: wireguard
     state: present
-  register: wireguard_module_enabled
-  until:  wireguard_module_enabled is succeeded
+  register: wireguard__register_module_enabled
+  until:  wireguard__register_module_enabled is succeeded
   retries: 10
   delay: 10
-  failed_when: wireguard_module_enabled is failure
+  failed_when: wireguard__register_module_enabled is failure
   tags:
     - wg-install
   when: not ansible_os_family == 'Darwin'
 
+# Key handling [[[1
 - name: Register if config/private key already exists on target host
   stat:
     path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
@@ -89,6 +94,7 @@
   tags:
     - wg-config
 
+# Configuration [[[1
 - name: Create WireGuard configuration directory
   file:
     dest: "{{ wireguard_remote_directory }}"
@@ -116,6 +122,7 @@
   tags:
     - wg-config
 
+# Service [[[1
 - name: Start and enable WireGuard service
   service:
     name: "wg-quick@{{ wireguard_interface }}"

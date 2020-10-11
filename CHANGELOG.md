@@ -1,3 +1,8 @@
+<!--
+Copyright (C) 2018-2020 Robert Wimmer
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 Changelog
 ---------
 

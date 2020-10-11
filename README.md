@@ -1,3 +1,9 @@
+<!--
+Copyright (C) 2018-2020 Robert Wimmer
+Copyright (C) 2019 fbourqui
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 ansible-role-wireguard
 ======================
 
@@ -11,7 +17,7 @@ This role is tested with Ubuntu 18.04 (Bionic Beaver), Ubuntu 20.04 (Focal Fossa
 
 ### Running the VPN on MacOS
 
-While this playbook configures, enables and starts a `systemd` service on Linux in a such a way that no additional action is needed, on MacOS it installs the required packages and it just generates the correct `wg0.conf` file that is then placed in the specified `wireguard_remote_directory` (`/opt/local/etc/wireguard` by default). In order to run the VPN, then, you need to: 
+While this playbook configures, enables and starts a `systemd` service on Linux in a such a way that no additional action is needed, on MacOS it installs the required packages and it just generates the correct `wg0.conf` file that is then placed in the specified `wireguard_remote_directory` (`/opt/local/etc/wireguard` by default). In order to run the VPN, then, you need to:
 
 ```
 sudo wg-quick up wg0
@@ -23,7 +29,7 @@ and to deactivate it
 sudo wg-quick down wg0
 ```
 
-or you can install the [official app](https://apps.apple.com/it/app/wireguard/id1451685025?l=en&mt=12) and import the `wg0.conf` file. 
+or you can install the [official app](https://apps.apple.com/it/app/wireguard/id1451685025?l=en&mt=12) and import the `wg0.conf` file.
 
 
 Versions
@@ -168,7 +174,7 @@ controller0[1:3].i.domain.tld
 worker0[1:2].i.domain.tld
 ```
 
-As you can see I've three gropus here: `vpn` (all hosts on that will get WireGuard installed), `k8s_controller` (the Kubernetes controller nodes) and `k8s_worker` (the Kubernetes worker nodes). The `i` in the domainname is for `internal`. All the `i.domain.tld` DNS entries have a `A` record that points to the WireGuard IP that we define shortly for every host e.g.: ` controller01.i.domain.tld. IN A 10.8.0.101`. The reason for that is that all Kubernetes components only binds and listen on the WireGuard interface in my setup. And since I need this internal IPs for all my Kubernetes components I specify the internal DNS entries in my Ansible `hosts` file. That way I can use the Ansible inventory hostnames and variables very easy in the playbooks and templates.
+As you can see I've three groups here: `vpn` (all hosts on that will get WireGuard installed), `k8s_controller` (the Kubernetes controller nodes) and `k8s_worker` (the Kubernetes worker nodes). The `i` in the domainname is for `internal`. All the `i.domain.tld` DNS entries have a `A` record that points to the WireGuard IP that we define shortly for every host e.g.: ` controller01.i.domain.tld. IN A 10.8.0.101`. The reason for that is that all Kubernetes components only binds and listen on the WireGuard interface in my setup. And since I need this internal IPs for all my Kubernetes components I specify the internal DNS entries in my Ansible `hosts` file. That way I can use the Ansible inventory hostnames and variables very easy in the playbooks and templates.
 
 For the Kubernetes controller nodes I've defined the following host variables:
 
@@ -360,7 +366,7 @@ Playbooks
 License
 -------
 
-GNU GENERAL PUBLIC LICENSE Version 3
+[GNU General Public License v3.0 or later](https://spdx.org/licenses/GPL-3.0-or-later.html)
 
 Author Information
 ------------------
