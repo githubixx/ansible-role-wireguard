@@ -6,43 +6,17 @@
   tags:
     - wg-install
 
-- block:
-  - name: (Ubuntu) Install support packages needed for Wireguard (for Ubuntu < 19.10)
-    package:
-      name: "{{ packages }}"
-      state: present
-    vars:
-      packages:
-      - software-properties-common
-      - linux-headers-{{ ansible_kernel }}
-    tags:
-      - wg-install
+- name: (Ubuntu) Ensure WireGuard DKMS package is removed
+  apt:
+    name:
+      - "wireguard-dkms"
+    state: absent
+  tags:
+    - wg-install
 
-  - name: (Ubuntu) Add WireGuard repository (for Ubuntu < 19.10)
-    apt_repository:
-      repo: "ppa:wireguard/wireguard"
-      state: present
-      update_cache: yes
-    tags:
-      - wg-install
-
-  - name: (Ubuntu) Install WireGuard packages (for Ubuntu < 19.10)
-    apt:
-      name:
-        - "wireguard-dkms"
-        - "wireguard-tools"
-      state: present
-    tags:
-      - wg-install
-  when:
-    - ansible_lsb.major_release is version('19.10', '<')
-
-- block:
-  - name: (Ubuntu) Install wireguard-tools package (for Ubuntu > 19.04)
-    apt:
-      name: "wireguard-tools"
-      state: present
-    tags:
-      - wg-install
-  when:
-    - ansible_lsb.major_release is version('19.04', '>')
+- name: (Ubuntu) Install wireguard package
+  apt:
+    name: "wireguard"
+    state: present
+  tags:
+    - wg-install
