@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**7.5.0**
+
+- `wireguard` package is now available for Ubuntu 18.04 in universe repository. Before that `ppa:wireguard/wireguard` was used but that one isn't available anymore. The install procedure for Ubuntu 18.04 and 20.04 is now the same as both can use `wireguard` metapackage now. The role takes care to remove `wireguard-dkms` package in favour of `wireguard` metapackage but it leaves the configuration file for `ppa:wireguard/wireguard` repository untouched. So it's up to you to remove that PPA. Either use `apt-add-repository --remove ppa:wireguard/wireguard` or remove the file manually at `/etc/apt/sources.list.d/` directory (you man need to run `apt-get update` afterwards).
+
 **7.4.0**
 
 - Added initial molecule infrastructure
@@ -19,15 +23,7 @@ Changelog
 
 - Fix spelling and typos in docs. (contribution by @ypid)
 - Drop Debian Stretch from the list of tested distros. Actual support was dropped/broken in 6.0.4 without updating the docs. (contribution by @ypid)
-- Remove obsolete `.reload-module-on-update` file.
-
-  It does not serve any function anymore after support for module
-  reloading has been removed from the postinst script in 0.0.20200215-2 on
-  2020-02-24. A module update is properly signaled via
-  /run/reboot-required so that the admin can (automatically) schedule a
-  reboot when convenient. This will also be more in line with future Debian
-  releases because starting with Debian bullseye, the kernel ships the
-  module. (contribution by @ypid)
+- Remove obsolete `.reload-module-on-update` file. It does not serve any function anymore after support for module reloading has been removed from the postinst script in 0.0.20200215-2 on 2020-02-24. A module update is properly signaled via /run/reboot-required so that the admin can (automatically) schedule a reboot when convenient. This will also be more in line with future Debian releases because starting with Debian bullseye, the kernel ships the module. (contribution by @ypid)
 
 - Add `ansible_managed` header to WireGuard configuration file (`wg0.conf` by default). This will most probably change the WireGuard configuration file but only the formatting. But since the Ansible registers this file as changed Ansible will sync/restart WireGuard service. For newer WireGuard versions (since Nov. 2019) this isn't a problem normally as `wg syncconf` command is used (also see `handlers/main.yml`). (contribution by @ypid)
 - Behind the scenes coding style improvements and cleanup without user impact. (contribution by @ypid)
