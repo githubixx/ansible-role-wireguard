@@ -38,7 +38,7 @@
 
 - name: (Raspbian) Reboot after kernel update (Ansible >= 2.8)
   reboot:
-    search_paths: ['/lib/molly-guard', '/usr/sbin']
+    search_paths: ['/lib/molly-guard', '/usr/sbin', '/sbin']
   when:
     - ansible_version.full is version('2.8.0', '>=')
     - wireguard__register_kernel_update is changed
