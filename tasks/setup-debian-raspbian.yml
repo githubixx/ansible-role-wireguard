@@ -7,18 +7,21 @@
     name: gnupg
     state: present
 
-- name: (Raspbian) Add Debian repository key
+- name: (Raspbian) Add Debian repository keys
   apt_key:
     keyserver: "keyserver.ubuntu.com"
-    id: "04EE7237B7D453EC"
+    id: "{{ item }}"
     state: present
   when: ansible_lsb.id == "Raspbian"
+  with_items:
+    - "04EE7237B7D453EC"
+    - "648ACFD622F3D138"
   tags:
     - wg-install
 
-- name: (Raspbian) Add Debian Unstable repository for WireGuard
+- name: (Raspbian) Add Debian Buster Backports repository for WireGuard
   apt_repository:
-    repo: "deb http://deb.debian.org/debian unstable main"
+    repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
     update_cache: yes
   tags:
