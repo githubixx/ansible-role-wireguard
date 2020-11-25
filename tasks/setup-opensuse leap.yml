@@ -1,0 +1,13 @@
+---
+# Copyright (C) 2020 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
+- name: (openSUSE Leap) Install WireGuard packages
+  zypper:
+    name:
+      - "wireguard-tools"
+    state: present
+  tags:
+    - wg-install
+

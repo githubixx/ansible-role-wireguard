@@ -6,12 +6,16 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**7.8.0**
+
+- Added support for `openSUSE Leap 15.2`
+
 **7.7.0**
 - Use wireguard packages from Debian Backports instead of Debian Sid, these packages are more suitable for a stable distribution and have less impact on the system. Packages from unstable must be removed manually (including kernel) to make the switch on an existing system. Upgrading the role has no effect other than adding Debian Backports to the Apt repositories.
 - Fix reboot mechanism in Raspbian role, now also works without `molly-guard`
 
 **7.6.0**
-- Add `wireguard_private_key` variable (contribution by @j8r)
+- Added `wireguard_private_key` variable (contribution by @j8r)
 - Fix check mode for Debian (contribution by @j8r)
 
 **7.5.0**
