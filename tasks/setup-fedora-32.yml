@@ -1,0 +1,20 @@
+---
+# Copyright (C) 2020 Ties de Kock
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (Fedora) Add WireGuard COPR
+  yum_repository:
+    name: "jdoss-wireguard"
+    description: "Copr repo for WireGuard owned by jdoss"
+    baseurl: "https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/fedora-$releasever-$basearch/"
+    gpgkey: "https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/pubkey.gpg"
+    gpgcheck: yes
+
+- name: (Fedora) Install WireGuard packages
+  yum:
+    name:
+      - "wireguard-dkms"
+      - "wireguard-tools"
+    state: present
+  tags:
+    - wg-install
