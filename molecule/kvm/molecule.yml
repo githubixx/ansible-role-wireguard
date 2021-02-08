@@ -43,8 +43,8 @@ platforms:
         ip: 192.168.10.30
     groups:
       - vpn
-  - name: test-wg-fedora31
-    box: generic/fedora31
+  - name: test-wg-fedora33
+    box: generic/fedora33
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -124,7 +124,7 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.30"
         ansible_python_interpreter: "/usr/bin/python"
-      test-wg-fedora31:
+      test-wg-fedora33:
         wireguard_address: "10.10.10.40/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
