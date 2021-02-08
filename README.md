@@ -314,7 +314,7 @@ Example Playbooks
       tags: role-wireguard
 ```
 
-Example Inventory using two different WireGuard interfaces on host "multi"
+Example inventory using two different WireGuard interfaces on host "multi"
 --------------------------------------------------------------------------
 
 This is a complex example using yaml inventory format:
@@ -354,6 +354,20 @@ vpn2:
     another:
       wireguard_address: 10.9.1.2/32
       wireguard_endpoint: another.exemple.com
+```
+
+Sample playbooks for example above:
+
+```yaml
+- hosts: vpn1
+  roles:
+    - githubixx.ansible_role_wireguard
+```
+
+```yaml
+- hosts: vpn2
+  roles:
+    - githubixx.ansible_role_wireguard
 ```
 
 License
