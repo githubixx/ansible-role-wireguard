@@ -6,6 +6,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**7.9.0**
+
+- Added support for `Fedora 33` (contribution by @wzzrd)
+- Removed support for `Fedora 31` (reached end of life)
+
 **7.8.0**
 
 - Added support for `openSUSE Leap 15.2`
