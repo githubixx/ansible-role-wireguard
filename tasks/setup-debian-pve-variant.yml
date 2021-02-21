@@ -1,0 +1,27 @@
+---
+# Copyright (C) 2018-2020 Robert Wimmer
+# Copyright (C) 2019-2020 Ties de Kock
+# Copyright (C) 2021 Steve Fan
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (Debian) Add WireGuard repository on buster derived Proxmox
+  apt_repository:
+    repo: "deb http://deb.debian.org/debian buster-backports main"
+    state: "{{ 'present' if (ansible_distribution_version | int <= 10) else 'absent' }}"
+    update_cache: yes
+  tags:
+    - wg-install
+
+- name: (Debian) Install kernel headers for the currently running kernel to compile Wireguard with DKMS
+  apt:
+    name:
+      - "pve-headers-{{ ansible_kernel }}"
+    state: present
+
+- name: (Debian) Install WireGuard packages
+  apt:
+    name:
+      - "wireguard"
+    state: present
+  tags:
+    - wg-install
