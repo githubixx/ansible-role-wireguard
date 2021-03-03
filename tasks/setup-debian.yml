@@ -12,4 +12,4 @@
   register: wireguard__register_pve_variant_setup
 
 - include_tasks: "setup-debian-vanilla.yml"
-  when: (wireguard__register_raspbian_setup is skipped) and (wireguard__register_pve_variant_setup is skipped)
+  when: wireguard__register_raspbian_setup is skipped and wireguard__register_pve_variant_setup is skipped
