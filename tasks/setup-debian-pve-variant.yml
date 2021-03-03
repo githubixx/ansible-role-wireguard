@@ -12,7 +12,7 @@
   tags:
     - wg-install
 
-- name: (Debian) Install kernel headers for the currently running kernel to compile Wireguard with DKMS
+- name: (Proxmox) Install kernel headers for the currently running kernel to compile WireGuard with DKMS
   apt:
     name:
       - "pve-headers-{{ ansible_kernel }}"
