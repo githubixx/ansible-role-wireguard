@@ -4,7 +4,7 @@
 # Copyright (C) 2021 Steve Fan
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: (Debian) Add WireGuard repository on buster derived Proxmox
+- name: (Proxmox) Add WireGuard repository
   apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: "{{ 'present' if (ansible_distribution_version | int <= 10) else 'absent' }}"
