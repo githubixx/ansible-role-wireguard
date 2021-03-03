@@ -18,7 +18,7 @@
       - "pve-headers-{{ ansible_kernel }}"
     state: present
 
-- name: (Debian) Install WireGuard packages
+- name: (Proxmox) Install WireGuard packages
   apt:
     name:
       - "wireguard"
