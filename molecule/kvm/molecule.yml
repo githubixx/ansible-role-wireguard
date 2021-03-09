@@ -97,6 +97,15 @@ platforms:
         ip: 192.168.10.90
     groups:
       - vpn
+  - name: test-wg-proxmox
+    box: rantanevich/proxmox
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.100
+    groups:
+      - vpn
 
 provisioner:
   name: ansible
@@ -155,6 +164,11 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.90"
+      test-wg-proxmox:
+        wireguard_address: "10.10.10.100/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.100"
 
 scenario:
   name: kvm
