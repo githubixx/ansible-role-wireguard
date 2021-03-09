@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - include_tasks: "setup-debian-raspbian.yml"
-  when: ansible_lsb.id == "Raspbian"
+  when: ansible_lsb.id is defined and ansible_lsb.id == "Raspbian"
   register: wireguard__register_raspbian_setup
 
 - include_tasks: "setup-debian-pve-variant.yml"
