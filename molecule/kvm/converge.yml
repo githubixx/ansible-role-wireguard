@@ -16,8 +16,9 @@
       when: ansible_distribution|lower == 'archlinux'
 
     - name: (Proxmox) Delete /var/lib/apt/lists/lock
-      raw: |
-        rm /var/lib/apt/lists/lock
+      file:
+        name: /var/lib/apt/lists/lock
+        state: absent
       ignore_errors: true
       when: ansible_kernel.find("pve") != -1
 
