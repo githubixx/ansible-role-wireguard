@@ -15,6 +15,12 @@
       ignore_errors: true
       when: ansible_distribution|lower == 'archlinux'
 
+    - name: (Proxmox) Delete /var/lib/apt/lists/lock
+      raw: |
+        rm /var/lib/apt/lists/lock
+      ignore_errors: true
+      when: ansible_kernel.find("pve") != -1
+
     - name: Include WireGuard role
       include_role:
         name: githubixx.ansible_role_wireguard
