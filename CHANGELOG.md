@@ -6,6 +6,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**7.10.0**
+
+- Support for Proxmox
+- Check if `wireguard_endpoint` exists before checking if it is empty
+
 **7.9.0**
 
 - Added support for `Fedora 33` (contribution by @wzzrd)
