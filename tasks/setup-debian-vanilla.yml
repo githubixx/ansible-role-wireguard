@@ -10,12 +10,14 @@
     update_cache: yes
   tags:
     - wg-install
+  when: wireguard_debian_manage_deb_repo == "true"
 
 - name: (Debian) Install kernel headers for the currently running kernel to compile Wireguard with DKMS
   apt:
     name:
       - "linux-headers-{{ ansible_kernel }}"
     state: present
+  when: wireguard_debian_manage_deb_repo == "true"
 
 - name: (Debian) Get architecture
   command: "dpkg --print-architecture"
@@ -28,7 +30,9 @@
     name:
       - "linux-headers-{{ wireguard__fact_dpkg_arch.stdout }}"
     state: present
-  when: ('-cloud-' not in ansible_kernel)
+  when:
+    - ('-cloud-' not in ansible_kernel)
+    - wireguard_debian_manage_deb_repo == "true"
 
 - name: (Debian) Install WireGuard packages
   apt:

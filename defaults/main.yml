@@ -25,6 +25,13 @@ wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'whee
 wireguard_conf_mode: 0600
 
 
+######################################
+# Settings only relevant for Debian
+######################################
+
+# Set to "false" if apt repos are managed outside this role
+wireguard_debian_manage_deb_repo: "true"
+
 #######################################
 # Settings only relevant for Ubuntu
 #######################################
