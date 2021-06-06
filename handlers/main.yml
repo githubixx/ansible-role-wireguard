@@ -9,9 +9,10 @@
   loop:
   - stopped
   - started
-  when: >
-    not wg_syncconf and
-    not ansible_os_family == 'Darwin'
+  when:
+    - not wg_syncconf
+    - not ansible_os_family == 'Darwin'
+    - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
 
 - name: syncconf wireguard
@@ -24,7 +25,8 @@
       exit 0
   args:
     executable: "/bin/bash"
-  when: >
-    wg_syncconf and
-    not ansible_os_family == 'Darwin'
+  when:
+    - wg_syncconf
+    - not ansible_os_family == 'Darwin'
+    - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
