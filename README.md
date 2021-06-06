@@ -71,6 +71,10 @@ wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'whee
 
 # The default mode of the wg.conf file
 wireguard_conf_mode: 0600
+
+# The default state of the wireguard service
+wireguard_service_enabled: "yes"
+wireguard_service_state: "started"
 ```
 
 The following variable is mandatory and needs to be configured for every host in `host_vars/` e.g.:
