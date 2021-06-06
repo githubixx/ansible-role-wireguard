@@ -28,6 +28,13 @@ wireguard_conf_mode: 0600
 wireguard_service_enabled: "yes"
 wireguard_service_state: "started"
 
+######################################
+# Settings only relevant for Debian
+######################################
+
+# Set to "false" if apt repos are managed outside this role
+wireguard_debian_manage_deb_repo: "true"
+
 #######################################
 # Settings only relevant for Ubuntu
 #######################################
