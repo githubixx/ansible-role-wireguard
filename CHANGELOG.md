@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**7.11.0**
+
+- Introduce new variables `wireguard_service_enabled` and `wireguard_service_state` (contribution by @tjend)
+
 **7.10.0**
 
 - Support for Proxmox
