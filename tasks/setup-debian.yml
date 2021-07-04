@@ -3,15 +3,27 @@
 # Copyright (C) 2021 Steve Fan
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- include_tasks: "setup-debian-raspbian.yml"
+- include_tasks:
+    file: "setup-debian-raspbian.yml"
+    apply:
+      tags:
+        - wg-install
   when: ansible_lsb.id is defined and ansible_lsb.id == "Raspbian"
   register: wireguard__register_raspbian_setup
 
-- include_tasks: "setup-debian-pve-variant.yml"
+- include_tasks:
+    file: "setup-debian-pve-variant.yml"
+    apply:
+      tags:
+        - wg-install
   when: ansible_kernel.find("pve") != -1
   register: wireguard__register_pve_variant_setup
 
-- include_tasks: "setup-debian-vanilla.yml"
+- include_tasks:
+    file: "setup-debian-vanilla.yml"
+    apply:
+      tags:
+        - wg-install
   when:
     - wireguard__register_raspbian_setup is skipped
     - wireguard__register_pve_variant_setup is skipped
