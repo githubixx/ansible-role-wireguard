@@ -6,6 +6,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**7.12.0**
+
+- Refactor `wg-install` tag handling. For more details see [Fix tag "wg-install" & Add no_log](https://github.com/githubixx/ansible-role-wireguard/pull/110) and [Tag wg-install is not applied properly](Tag wg-install is not applied properly) (contribution by @moonrail)
+- Default verbosity of 0 or slight increases up to 2 will now not print any private keys to output (contribution by @moonrail)
+
 **7.11.0**
 
 - Introduce new variables `wireguard_service_enabled` and `wireguard_service_state` (contribution by @tjend)
