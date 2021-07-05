@@ -6,13 +6,19 @@
   setup:
 
 # Installing WireGuard [[[1
-- include_tasks: "{{ item }}"
+- include_tasks:
+    file: "{{ item }}"
+    apply:
+      tags:
+        - wg-install
   with_first_found:
     - "setup-{{ ansible_distribution|lower }}-{{ ansible_distribution_major_version }}.yml"
     - "setup-{{ ansible_distribution|lower }}-{{ ansible_distribution_version }}.yml"
     - "setup-{{ ansible_distribution|lower }}-{{ ansible_distribution_release }}.yml"
     - "setup-{{ ansible_distribution|lower }}.yml"
     - "setup-{{ ansible_os_family|lower }}.yml"
+  tags:
+    - wg-install
 
 - name: Enable WireGuard kernel module
   modprobe:
@@ -56,12 +62,14 @@
     command: "wg genkey"
     register: wireguard__register_private_key
     changed_when: false
+    no_log: '{{ ansible_verbosity < 3 }}'
     tags:
       - wg-generate-keys
 
   - name: Set private key fact
     set_fact:
       wireguard_private_key: "{{ wireguard__register_private_key.stdout }}"
+    no_log: '{{ ansible_verbosity < 3 }}'
     tags:
       - wg-generate-keys
   when:
@@ -73,12 +81,14 @@
     slurp:
       src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
     register: wireguard__register_config
+    no_log: '{{ ansible_verbosity < 3 }}'
     tags:
       - wg-config
 
   - name: Set private key fact
     set_fact:
       wireguard_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+    no_log: '{{ ansible_verbosity < 3 }}'
     tags:
       - wg-config
   when:
@@ -92,6 +102,7 @@
   register: wireguard__register_public_key
   changed_when: false
   check_mode: no
+  no_log: '{{ ansible_verbosity < 3 }}'
   tags:
     - wg-config
 
@@ -117,6 +128,7 @@
     owner: "{{ wireguard_conf_owner }}"
     group: "{{ wireguard_conf_group }}"
     mode: "{{ wireguard_conf_mode }}"
+  no_log: '{{ ansible_verbosity < 3 }}'
   tags:
     - wg-config
   notify:

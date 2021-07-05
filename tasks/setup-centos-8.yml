@@ -14,8 +14,6 @@
     name:
       - "wireguard-dkms"
     state: absent
-  tags:
-    - wg-install
 
 - name: (CentOS 8) Install WireGuard packages
   yum:
@@ -23,5 +21,3 @@
       - "kmod-wireguard"
       - "wireguard-tools"
     state: present
-  tags:
-    - wg-install

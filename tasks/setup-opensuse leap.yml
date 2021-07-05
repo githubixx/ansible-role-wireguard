@@ -8,6 +8,3 @@
     name:
       - "wireguard-tools"
     state: present
-  tags:
-    - wg-install
-

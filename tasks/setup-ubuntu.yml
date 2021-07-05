@@ -6,8 +6,6 @@
   apt:
     update_cache: "{{ wireguard_ubuntu_update_cache }}"
     cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
-  tags:
-    - wg-install
 
 - block:
   - name: (Ubuntu) Install support packages needed for Wireguard (for Ubuntu < 19.10)
@@ -18,8 +16,6 @@
       packages:
       - software-properties-common
       - linux-headers-{{ ansible_kernel }}
-    tags:
-      - wg-install
   when:
     - ansible_lsb.major_release is version('19.10', '<')
 
@@ -28,12 +24,8 @@
     name:
       - "wireguard-dkms"
     state: absent
-  tags:
-    - wg-install
 
 - name: (Ubuntu) Install wireguard package
   apt:
     name: "wireguard"
     state: present
-  tags:
-    - wg-install

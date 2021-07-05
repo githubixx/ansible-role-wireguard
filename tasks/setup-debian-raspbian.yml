@@ -16,16 +16,12 @@
   with_items:
     - "04EE7237B7D453EC"
     - "648ACFD622F3D138"
-  tags:
-    - wg-install
 
 - name: (Raspbian) Add Debian Buster Backports repository for WireGuard
   apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
     update_cache: yes
-  tags:
-    - wg-install
 
 - name: (Raspbian) Install latest kernel
   apt:
@@ -33,8 +29,6 @@
     - "raspberrypi-kernel"
     state: latest
   register: wireguard__register_kernel_update
-  tags:
-    - wg-install
 
 - name: (Raspbian) Reboot after kernel update (Ansible >= 2.8)
   reboot:
@@ -42,8 +36,6 @@
   when:
     - ansible_version.full is version('2.8.0', '>=')
     - wireguard__register_kernel_update is changed
-  tags:
-    - wg-install
 
 - name: (Raspbian) Check if molly-guard is installed (Ansible < 2.8)
   stat:
@@ -56,8 +48,6 @@
     - ansible_version.full is version('2.8.0', '<')
     - wireguard__register_kernel_update is changed
     - not wireguard__register_molly_guard.stat.exists
-  tags:
-    - wg-install
 
 - name: (Raspbian) Reboot after kernel update (Ansible < 2.8, with molly-guard)
   command: /lib/molly-guard/shutdown -r now
@@ -68,8 +58,6 @@
     - ansible_version.full is version('2.8.0', '<')
     - wireguard__register_kernel_update is changed
     - wireguard__register_molly_guard.stat.exists
-  tags:
-    - wg-install
 
 - name: (Raspbian) Waiting for host to be available (Ansible < 2.8, with molly-guard)
   wait_for_connection:
@@ -77,16 +65,12 @@
     - ansible_version.full is version('2.8.0', '<')
     - wireguard__register_kernel_update is changed
     - wireguard__register_molly_guard.stat.exists
-  tags:
-    - wg-install
 
 - name: (Raspbian) Install latest kernel headers to compile Wireguard with DKMS
   apt:
     name:
     - "raspberrypi-kernel-headers"
     state: latest
-  tags:
-    - wg-install
 
 - name: (Raspbian) Install WireGuard packages
   apt:
@@ -94,5 +78,3 @@
       - "wireguard-dkms"
       - "wireguard-tools"
     state: present
-  tags:
-    - wg-install
