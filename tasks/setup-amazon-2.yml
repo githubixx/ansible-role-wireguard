@@ -1,0 +1,27 @@
+---
+# Copyright (C) 2020 Gav Main
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Install EPEL from Amazon Linux Extras
+  command: amazon-linux-extras install epel -y
+  args:
+    creates: /etc/yum.repos.d/epel.repo
+
+- name: (Amazon Linux 2) Add WireGuard COPR
+  yum_repository:
+    name: "jdoss-wireguard"
+    description: "Copr repo for WireGuard owned by jdoss"
+    baseurl: "https://download.copr.fedorainfracloud.org/results/jdoss/wireguard/epel-7-$basearch/"
+    gpgkey: "https://copr-be.cloud.fedoraproject.org/results/jdoss/wireguard/pubkey.gpg"
+    gpgcheck: yes
+
+- name: (Amazon Linux 2) Install WireGuard packages
+  yum:
+    name:
+      - "wireguard-dkms"
+      - "wireguard-tools"
+    state: present
+  async: 120
+  poll: 10
+  tags:
+    - wg-install
