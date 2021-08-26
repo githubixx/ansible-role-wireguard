@@ -1,27 +1,6 @@
 ---
-# Copyright (C) 2018-2020 Robert Wimmer
+# Copyright (C) 2018-2021 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
-
-- name: (Archlinux) Install wireguard-lts package
-  pacman:
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
-  with_items:
-    - {name: wireguard-dkms, state: absent}
-    - {name: wireguard-lts, state: present}
-  become: true
-  when:
-    - ansible_kernel is match(".*-lts$")
-    - ansible_kernel is version('5.6', '<')
-
-- name: (Archlinux) Install wireguard-dkms package
-  pacman:
-    name: wireguard-dkms
-    state: present
-  become: true
-  when:
-    - not ansible_kernel is match(".*-lts$")
-    - ansible_kernel is version('5.6', '<')
 
 - name: (Archlinux) Install wireguard-tools package
   pacman:
