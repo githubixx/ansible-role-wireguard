@@ -7,12 +7,12 @@
     name:
       - epel-release
       - https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm
-    update_cache: yes
+    update_cache: true
 
 - name: (CentOS 7) Install yum-plugin-elrepo
   yum:
     name: yum-plugin-elrepo
-    update_cache: yes
+    update_cache: true
 
 - name: (CentOS 7) Ensure WireGuard DKMS package is removed
   yum:

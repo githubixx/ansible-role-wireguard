@@ -8,7 +8,7 @@
     apt_repository:
       repo: "deb http://deb.debian.org/debian buster-backports main"
       state: present
-      update_cache: yes
+      update_cache: true
 
   - name: (Debian) Install kernel headers for the currently running kernel to compile Wireguard with DKMS
     apt:
@@ -20,7 +20,7 @@
     command: "dpkg --print-architecture"
     register: wireguard__fact_dpkg_arch
     changed_when: false
-    check_mode: no
+    check_mode: false
 
   - name: (Debian) Install kernel headers metapackage to ensure headers will be installed
     apt:

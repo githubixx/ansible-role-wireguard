@@ -21,12 +21,12 @@
   apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: (Raspbian) Install latest kernel
   apt:
     name:
-    - "raspberrypi-kernel"
+      - "raspberrypi-kernel"
     state: latest
   register: wireguard__register_kernel_update
 
@@ -53,7 +53,7 @@
   command: /lib/molly-guard/shutdown -r now
   async: 1
   poll: 0
-  ignore_unreachable: yes
+  ignore_unreachable: true
   when:
     - ansible_version.full is version('2.8.0', '<')
     - wireguard__register_kernel_update is changed
@@ -69,7 +69,7 @@
 - name: (Raspbian) Install latest kernel headers to compile Wireguard with DKMS
   apt:
     name:
-    - "raspberrypi-kernel-headers"
+      - "raspberrypi-kernel-headers"
     state: latest
 
 - name: (Raspbian) Install WireGuard packages
