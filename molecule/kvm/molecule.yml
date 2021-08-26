@@ -52,8 +52,8 @@ platforms:
         ip: 192.168.10.40
     groups:
       - vpn
-  - name: test-wg-fedora32
-    box: generic/fedora32
+  - name: test-wg-fedora34
+    box: generic/fedora34
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -106,6 +106,15 @@ platforms:
         ip: 192.168.10.100
     groups:
       - vpn
+  - name: test-wg-debian11
+    box: generic/debian11
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.110
+    groups:
+      - vpn
 
 provisioner:
   name: ansible
@@ -138,7 +147,7 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.40"
-      test-wg-fedora32:
+      test-wg-fedora34:
         wireguard_address: "10.10.10.50/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
@@ -169,6 +178,12 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.100"
+      test-wg-debian11:
+        wireguard_address: "10.10.10.110/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.110"
+        ansible_python_interpreter: "/usr/bin/python3"
 
 scenario:
   name: kvm

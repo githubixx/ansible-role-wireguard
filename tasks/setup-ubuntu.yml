@@ -7,15 +7,16 @@
     update_cache: "{{ wireguard_ubuntu_update_cache }}"
     cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
 
-- block:
-  - name: (Ubuntu) Install support packages needed for Wireguard (for Ubuntu < 19.10)
-    package:
-      name: "{{ packages }}"
-      state: present
-    vars:
-      packages:
-      - software-properties-common
-      - linux-headers-{{ ansible_kernel }}
+- name: (Ubuntu) Tasks for Ubuntu < 19.10
+  block:
+    - name: (Ubuntu) Install support packages needed for Wireguard (for Ubuntu < 19.10)
+      package:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - software-properties-common
+          - linux-headers-{{ ansible_kernel }}
   when:
     - ansible_lsb.major_release is version('19.10', '<')
 

@@ -5,7 +5,6 @@
 - name: Gather instance facts
   setup:
 
-# Installing WireGuard [[[1
 - include_tasks:
     file: "{{ item }}"
     apply:
@@ -25,7 +24,7 @@
     name: wireguard
     state: present
   register: wireguard__register_module_enabled
-  until:  wireguard__register_module_enabled is succeeded
+  until: wireguard__register_module_enabled is succeeded
   retries: 10
   delay: 10
   failed_when: wireguard__register_module_enabled is failure
@@ -33,64 +32,66 @@
     - wg-install
   when: not ansible_os_family == 'Darwin'
 
-- block:
-  # Key handling [[[1
-  - name: Register if config/private key already exists on target host
-    stat:
-      path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
-    register: wireguard__register_config_file
+- name: Generate keys | Check wg syncconf subcommand status
+  block:
+    - name: Register if config/private key already exists on target host
+      stat:
+        path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+      register: wireguard__register_config_file
 
-  - name: Get wg subcommands
-    command: "wg --help"
-    register: wireguard__register_subcommands
-    changed_when: false
-    check_mode: no
+    - name: Get wg subcommands
+      command: "wg --help"
+      register: wireguard__register_subcommands
+      changed_when: false
+      check_mode: false
 
-  - name: Check if wg syncconf subcommand is available
-    set_fact:
-      wg_syncconf: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
+    - name: Check if wg syncconf subcommand is available
+      set_fact:
+        wg_syncconf: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
+
+    - name: Show syncconf subcommand status
+      debug:
+        var: wg_syncconf
   tags:
     - wg-generate-keys
     - wg-config
 
-- name: Show syncconf subcommand status
-  debug:
-    var: wg_syncconf
+- name: WireGuard private key handling for new keys
+  block:
+    - name: Generate WireGuard private key
+      command: "wg genkey"
+      register: wireguard__register_private_key
+      changed_when: false
+      no_log: '{{ ansible_verbosity < 3 }}'
+      tags:
+        - wg-generate-keys
 
-- block:
-  - name: Generate WireGuard private key
-    command: "wg genkey"
-    register: wireguard__register_private_key
-    changed_when: false
-    no_log: '{{ ansible_verbosity < 3 }}'
-    tags:
-      - wg-generate-keys
-
-  - name: Set private key fact
-    set_fact:
-      wireguard_private_key: "{{ wireguard__register_private_key.stdout }}"
-    no_log: '{{ ansible_verbosity < 3 }}'
-    tags:
-      - wg-generate-keys
+    - name: Set private key fact
+      set_fact:
+        wireguard_private_key: "{{ wireguard__register_private_key.stdout }}"
+      no_log: '{{ ansible_verbosity < 3 }}'
+      tags:
+        - wg-generate-keys
   when:
     - not wireguard__register_config_file.stat.exists
     - wireguard_private_key is not defined
 
-- block:
-  - name: Read WireGuard config file
-    slurp:
-      src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
-    register: wireguard__register_config
-    no_log: '{{ ansible_verbosity < 3 }}'
-    tags:
-      - wg-config
+- name: WireGuard private key handling for existing keys
+  block:
+    - name: Read WireGuard config file
+      slurp:
+        src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+      register: wireguard__register_config
+      no_log: '{{ ansible_verbosity < 3 }}'
+      tags:
+        - wg-config
 
-  - name: Set private key fact
-    set_fact:
-      wireguard_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
-    no_log: '{{ ansible_verbosity < 3 }}'
-    tags:
-      - wg-config
+    - name: Set private key fact
+      set_fact:
+        wireguard_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+      no_log: '{{ ansible_verbosity < 3 }}'
+      tags:
+        - wg-config
   when:
     - wireguard__register_config_file.stat.exists
     - wireguard_private_key is not defined
@@ -101,7 +102,7 @@
     stdin: "{{ wireguard_private_key }}"
   register: wireguard__register_public_key
   changed_when: false
-  check_mode: no
+  check_mode: false
   no_log: '{{ ansible_verbosity < 3 }}'
   tags:
     - wg-config
@@ -112,7 +113,6 @@
   tags:
     - wg-config
 
-# Configuration [[[1
 - name: Create WireGuard configuration directory
   file:
     dest: "{{ wireguard_remote_directory }}"
@@ -141,7 +141,6 @@
   tags:
     - wg-config
 
-# Service [[[1
 - name: Start and enable WireGuard service
   service:
     name: "wg-quick@{{ wireguard_interface }}"
