@@ -44,6 +44,7 @@ PostDown = {{ wg_postdown }}
 {% if wireguard_save_config is defined %}
 SaveConfig = true
 {% endif %}
+{% if wireguard_managed_peers_enabled %}
 {% for host in ansible_play_hosts %}
 {%   if host != inventory_hostname %}
 
@@ -82,6 +83,7 @@ Endpoint = {{host}}:{{wireguard_port}}
 {%     endif %}
 {%   endif %}
 {% endfor %}
+{% endif %}
 {% if wireguard_unmanaged_peers is defined %}
 
 # Peers not managed by Ansible from "wireguard_unmanaged_peers" variable

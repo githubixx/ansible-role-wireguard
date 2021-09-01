@@ -6,6 +6,8 @@
 # General settings
 #######################################
 
+wireguard_managed_peers_enabled: True
+
 # Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "{{ '/etc/wireguard' if not ansible_os_family == 'Darwin' else '/opt/local/etc/wireguard' }}"
 
