@@ -1,0 +1,23 @@
+---
+# Copyright (C) 2021 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (Rocky Linux 8) Install EPEL & ELRepo repository
+  yum:
+    name:
+      - epel-release
+      - elrepo-release
+    update_cache: true
+
+- name: (Rocky Linux 8) Ensure WireGuard DKMS package is removed
+  yum:
+    name:
+      - "wireguard-dkms"
+    state: absent
+
+- name: (Rocky Linux 8) Install WireGuard packages
+  yum:
+    name:
+      - "kmod-wireguard"
+      - "wireguard-tools"
+    state: present
