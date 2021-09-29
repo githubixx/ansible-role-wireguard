@@ -11,7 +11,7 @@ This Ansible role is used in my blog series [Kubernetes the not so hard way with
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
-This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 33 (or later) and CentOS 7/8 should also work and are tested via the provided "Molecule" tests (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 33 (or later), CentOS 7/8, AlmaLinux and Rocky Linux should also work and are tested via the provided "Molecule" tests (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
 
 ### Running the VPN on MacOS
 

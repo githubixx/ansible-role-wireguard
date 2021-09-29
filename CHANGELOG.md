@@ -6,6 +6,12 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**8.1.0**
+
+- add Rocky Linux support
+- add AlmaLinux support
+- add Molecule tests for Rocky Linux and AlmaLinux
+
 **8.0.0**
 
 - add `Debian 11 (Bullseye)` support

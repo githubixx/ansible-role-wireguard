@@ -115,6 +115,24 @@ platforms:
         ip: 192.168.10.110
     groups:
       - vpn
+  - name: test-wg-rocky8
+    box: generic/rocky8
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.120
+    groups:
+      - vpn
+  - name: test-wg-alma8
+    box: generic/alma8
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.130
+    groups:
+      - vpn
 
 provisioner:
   name: ansible
@@ -184,6 +202,16 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.110"
         ansible_python_interpreter: "/usr/bin/python3"
+      test-wg-rocky8:
+        wireguard_address: "10.10.10.120/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.120"
+      test-wg-alma8:
+        wireguard_address: "10.10.10.130/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.130"
 
 scenario:
   name: kvm
