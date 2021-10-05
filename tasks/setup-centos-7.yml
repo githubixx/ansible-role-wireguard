@@ -2,17 +2,24 @@
 # Copyright (C) 2020 Roman Danko
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: (CentOS 7) Install EPEL & ELRepo repository
+- name: (CentOS 7) Install EPEL repository & yum utils
   yum:
     name:
       - epel-release
-      - https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm
+      - yum-utils
     update_cache: true
 
-- name: (CentOS 7) Install yum-plugin-elrepo
-  yum:
-    name: yum-plugin-elrepo
-    update_cache: true
+- name: (CentOS 7) Enable CentosPlus repo
+  command: "yum-config-manager"
+  args:
+    stdin: "--setopt=centosplus.includepkgs=kernel-plus --enablerepo=centosplus --save"
+  changed_when: false
+
+- name: (CentOS 7) Update to kernel-plus
+  ansible.builtin.replace:
+    path: /etc/sysconfig/kernel
+    regexp: '^DEFAULTKERNEL=kernel$'
+    replace: 'DEFAULTKERNEL=kernel-plus'
 
 - name: (CentOS 7) Ensure WireGuard DKMS package is removed
   yum:
@@ -23,6 +30,6 @@
 - name: (CentOS 7) Install WireGuard packages
   yum:
     name:
-      - "kmod-wireguard"
+      - "kernel-plus"
       - "wireguard-tools"
     state: present
