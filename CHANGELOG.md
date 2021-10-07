@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**8.2.0**
+
+- add support for `kernel-plus` for CentOS 7 (contribution by @john-p-potter)
+
 **8.1.0**
 
 - add Rocky Linux support
