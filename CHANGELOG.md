@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**8.3.0**
+
+- add Molecule test for CentOS 7 `kernel-plus`
+
 **8.2.0**
 
 - add support for `kernel-plus` for CentOS 7 (contribution by @john-p-potter)
