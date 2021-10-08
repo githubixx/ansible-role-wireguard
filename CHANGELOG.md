@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**8.4.0**
+
+- add support for installing wireguard in pve lxc guest (contribution by @tobias-richter)
+
 **8.3.0**
 
 - add Molecule test for CentOS 7 `kernel-plus`
