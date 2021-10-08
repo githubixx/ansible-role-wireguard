@@ -1,0 +1,16 @@
+---
+# Copyright (C) 2021 Tobias Richter
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (Proxmox) Add WireGuard repository
+  apt_repository:
+    repo: "deb http://deb.debian.org/debian buster-backports main"
+    state: "{{ 'present' if (ansible_distribution_version | int <= 10) else 'absent' }}"
+    update_cache: true
+
+- name: (Proxmox lxc) Install wireguard-tools.
+  apt:
+    install_recommends: no
+    name:
+      - wireguard-tools
+    state: present
