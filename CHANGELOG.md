@@ -6,6 +6,20 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**8.3.0**
+
+- add Molecule test for CentOS 7 `kernel-plus`
+
+**8.2.0**
+
+- add support for `kernel-plus` for CentOS 7 (contribution by @john-p-potter)
+
+**8.1.0**
+
+- add Rocky Linux support
+- add AlmaLinux support
+- add Molecule tests for Rocky Linux and AlmaLinux
+
 **8.0.0**
 
 - add `Debian 11 (Bullseye)` support
