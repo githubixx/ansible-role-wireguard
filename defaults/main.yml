@@ -38,6 +38,9 @@ wireguard_ubuntu_update_cache: "true"
 # Set package cache valid time
 wireguard_ubuntu_cache_valid_time: "3600"
 
+# Allows overriding of AllowedIPs on host_var base
+wireguard_allowed_ips_override: {}
+
 #######################################
 # Settings only relevant for CentOS 7
 #######################################

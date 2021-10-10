@@ -6,6 +6,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**8.5.0**
+
+- add `wireguard_allowed_ips_override` to allow host specific AllowedIPs configuration (contribution by @tobias-richter)
+
 **8.4.0**
 
 - add support for installing wireguard in pve lxc guest (contribution by @tobias-richter)

@@ -112,10 +112,20 @@ Endpoint = controller01.p.domain.tld:51820
 
 Now this is basically the same as above BUT now the config says: I want to route EVERY traffic originating from my workstation to the endpoint `controller01.p.domain.tld:51820`. If that endpoint can handle the traffic is of course another thing and it's up to you how you configure the endpoint routing ;-)
 
+To override `wireguard_allowed_ips` for a managed peer when the config is rendered on a specific host you can use the option `wireguard_allowed_ips_override`.
+Based on the Kubernetes example below the managed peer `controller01.i.domain.tld` will get `AllowedIPs` setting of `10.8.0.101/32` on all other managed peers that are part of the play.
+In our example we want to allow an additional subnet on `controller02.i.domain.tld`. This can be done by configuring `wireguard_allowed_ips_override` in `host_vars/controller01.i.domain.tld`.
+When the config of `controller01.i.domain.tld` is rendered on `controller02.i.domain.tld` this value is used and only on `controller02.i.domain.tld` the `AllowedIPs` is set to `10.8.0.101/32, 10.7.0.0/24`.
+```yaml
+wireguard_allowed_ips_override:
+  "controller02.i.domain.tld": "10.8.0.101/32, 10.7.0.0/24"
+```
+
 You can specify further optional settings (they don't have a default and won't be set if not specified besides `wireguard_allowed_ips` as already mentioned) also per host in `host_vars/` (or in your Ansible hosts file if you like). The values for the following variables are just examples and no defaults (for more information and examples see [wg-quick.8](https://git.zx2c4.com/WireGuard/about/src/tools/man/wg-quick.8)):
 
 ```yaml
 wireguard_allowed_ips: ""
+wireguard_allowed_ips_override: {}
 wireguard_endpoint: "host1.domain.tld"
 wireguard_persistent_keepalive: "30"
 wireguard_dns: "1.1.1.1"

@@ -50,7 +50,9 @@ SaveConfig = true
 [Peer]
 # {{ host }}
 PublicKey = {{hostvars[host].wireguard__fact_public_key}}
-{%     if hostvars[host].wireguard_allowed_ips is defined %}
+{%     if hostvars[host].wireguard_allowed_ips_override[inventory_hostname] is defined %}
+AllowedIPs = {{hostvars[host].wireguard_allowed_ips_override[inventory_hostname]}}
+{%     elif hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
 {%     else %}
 AllowedIPs = {{ hostvars[host].wireguard_address.split('/')[0] }}/32
