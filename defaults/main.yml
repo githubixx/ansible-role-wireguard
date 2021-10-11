@@ -24,6 +24,9 @@ wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'whee
 # The default mode of the wg.conf file
 wireguard_conf_mode: 0600
 
+# The path to the config template to use
+wireguard_conf_template_path: "templates/etc/wireguard/wg.conf.j2"
+
 # The default state of the wireguard service
 wireguard_service_enabled: "yes"
 wireguard_service_state: "started"
