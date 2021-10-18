@@ -28,6 +28,10 @@ wireguard_conf_mode: 0600
 wireguard_service_enabled: "yes"
 wireguard_service_state: "started"
 
+# This is sensitive: encrypt it with a tool like Ansible Vault.
+# If not set, a new one is generated on a blank configuration.
+# wireguard_private_key:
+
 #######################################
 # Settings only relevant for Ubuntu
 #######################################
@@ -54,6 +58,3 @@ wireguard_centos7_installation_method: "standard"
 # The default seconds to wait for machine to reboot and respond
 wireguard_centos7_kernel_plus_reboot_timeout: "600"
 
-# This is sensitive: encrypt it with a tool like Ansible Vault.
-# If not set, a new one is generated on a blank configuration.
-# wireguard_private_key:
