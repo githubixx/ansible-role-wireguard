@@ -51,7 +51,7 @@ wireguard_ubuntu_cache_valid_time: "3600"
 # signed WireGuard module.
 # UTILIZING KERNEL-PLUS WILL PERFORM A SYSTEM REBOOT DURING SETUP!!
 #
-# The default of "standard" will use the standard kernel and 
+# The default of "standard" will use the standard kernel and
 # the ELRepo module for WireGuard.
 wireguard_centos7_installation_method: "standard"
 
