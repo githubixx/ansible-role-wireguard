@@ -57,4 +57,3 @@ wireguard_centos7_installation_method: "standard"
 
 # The default seconds to wait for machine to reboot and respond
 wireguard_centos7_kernel_plus_reboot_timeout: "600"
-
