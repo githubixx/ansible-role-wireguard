@@ -88,7 +88,7 @@ platforms:
         ip: 192.168.10.80
     groups:
       - vpn
-  - name: test-wg-opensuse-leap
+  - name: test-wg-opensuse-leap-15-2
     box: opensuse/Leap-15.2.x86_64
     interfaces:
       - auto_config: true
@@ -195,7 +195,7 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.80"
         ansible_python_interpreter: "/usr/bin/python"
-      test-wg-opensuse-leap:
+      test-wg-opensuse-leap-15-2:
         wireguard_address: "10.10.10.90/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
