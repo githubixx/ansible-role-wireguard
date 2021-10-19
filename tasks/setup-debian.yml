@@ -13,27 +13,25 @@
 
 - name: pve variants
   block:
-  - ansible.builtin.include_tasks:
-      file: "setup-debian-pve-host-variant.yml"
-      apply:
-        tags:
-          - wg-install
-    when:
-      - ansible_virtualization_role == "host"
-    register: wireguard__register_pve_host_variant_setup
+    - ansible.builtin.include_tasks:
+        file: "setup-debian-pve-host-variant.yml"
+        apply:
+          tags:
+            - wg-install
+      when:
+        - ansible_virtualization_role == "host"
+      register: wireguard__register_pve_host_variant_setup
 
-  - ansible.builtin.include_tasks:
-      file: "setup-debian-pve-guest-variant.yml"
-      apply:
-        tags:
-          - wg-install
-    when:
-      - ansible_virtualization_role == "guest"
-    register: wireguard__register_pve_guest_variant_setup
-
+    - ansible.builtin.include_tasks:
+        file: "setup-debian-pve-guest-variant.yml"
+        apply:
+          tags:
+            - wg-install
+      when:
+        - ansible_virtualization_role == "guest"
+      register: wireguard__register_pve_guest_variant_setup
   when:
     - ansible_kernel.find("pve") != -1
-
 
 - ansible.builtin.include_tasks:
     file: "setup-debian-vanilla.yml"
