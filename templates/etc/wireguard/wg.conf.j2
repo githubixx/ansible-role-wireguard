@@ -26,14 +26,14 @@ Table = {{ wireguard_table }}
 PreUp = {{ wg_preup }}
 {% endfor %}
 {% endif %}
-{% if wireguard_predown is defined %}
-{% for wg_predown in wireguard_predown %}
-PreDown = {{ wg_predown }}
-{% endfor %}
-{% endif %}
 {% if wireguard_postup is defined %}
 {% for wg_postup in wireguard_postup %}
 PostUp = {{ wg_postup }}
+{% endfor %}
+{% endif %}
+{% if wireguard_predown is defined %}
+{% for wg_predown in wireguard_predown %}
+PreDown = {{ wg_predown }}
 {% endfor %}
 {% endif %}
 {% if wireguard_postdown is defined %}
