@@ -122,6 +122,53 @@
   tags:
     - wg-config
 
+- name: Anticipate configuration changes
+  ansible.builtin.template:
+    src: etc/wireguard/wg.conf.j2
+    dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    owner: "{{ wireguard_conf_owner }}"
+    group: "{{ wireguard_conf_group }}"
+    mode: "{{ wireguard_conf_mode }}"
+  check_mode: yes
+  diff: yes
+  register: wg_config
+  tags:
+    - wg-config
+
+- name: Examine configuration changes | Execute lifecycle hooks if necessary
+  block:
+    - name: Compute differences between present and future configuration
+      ansible.utils.fact_diff:
+        before: "{{ wg_config.diff[0].before }}"
+        after: "{{ wg_config.diff[0].after }}"
+      register: wg_config_diff
+
+    - name: Check if any lifecycle hooks have changed
+      ansible.builtin.set_fact:
+        wg_hooks_changed: "{{
+          wg_config_diff.diff_lines|select('contains', '-PreDown')|length > 0
+          or
+          wg_config_diff.diff_lines|select('contains', '-PostDown')|length > 0
+          or
+          wg_config_diff.diff_lines|select('contains', '+PreUp')|length > 0
+          or
+          wg_config_diff.diff_lines|select('contains', '+PostUp')|length > 0
+        }}"
+
+    - name: Shutdown WireGuard to run lifecycle hooks
+      ansible.builtin.debug:
+        msg: Lifecycle hooks have changed
+      when: wg_hooks_changed
+      changed_when: yes
+      notify: shutdown wireguard
+  when: wg_config is changed
+  tags:
+    - wg-config
+
+- ansible.builtin.meta: flush_handlers
+  tags:
+    - wg-config
+
 - name: Generate WireGuard configuration file
   ansible.builtin.template:
     src: etc/wireguard/wg.conf.j2
