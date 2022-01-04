@@ -3,20 +3,20 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (AlmaLinux 8) Install EPEL & ELRepo repository
-  yum:
+  ansible.builtin.yum:
     name:
       - epel-release
       - elrepo-release
     update_cache: true
 
 - name: (AlmaLinux 8) Ensure WireGuard DKMS package is removed
-  yum:
+  ansible.builtin.yum:
     name:
       - "wireguard-dkms"
     state: absent
 
 - name: (AlmaLinux 8) Install WireGuard packages
-  yum:
+  ansible.builtin.yum:
     name:
       - "kmod-wireguard"
       - "wireguard-tools"

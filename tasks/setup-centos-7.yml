@@ -5,19 +5,19 @@
 - name: (CentOS 7) Tasks for standard kernel
   block:
     - name: (CentOS 7) Install EPEL & ELRepo repository
-      yum:
+      ansible.builtin.yum:
         name:
           - epel-release
           - https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm
         update_cache: true
 
     - name: (CentOS 7) Install yum-plugin-elrepo
-      yum:
+      ansible.builtin.yum:
         name: yum-plugin-elrepo
         update_cache: true
 
     - name: (CentOS 7) Install WireGuard packages
-      yum:
+      ansible.builtin.yum:
         name:
           - "kmod-wireguard"
           - "wireguard-tools"
@@ -26,7 +26,7 @@
     - wireguard_centos7_installation_method == "standard"
 
 - name: (CentOS 7) Ensure WireGuard DKMS package is removed
-  yum:
+  ansible.builtin.yum:
     name:
       - "wireguard-dkms"
     state: absent
@@ -34,24 +34,24 @@
 - name: (CentOS 7) Tasks for kernel-plus
   block:
     - name: (CentOS 7) Install EPEL repository & yum utils
-      yum:
+      ansible.builtin.yum:
         name:
           - epel-release
           - yum-utils
         update_cache: true
 
     - name: (CentOS 7) Enable CentosPlus repo
-      command: yum-config-manager --setopt=centosplus.includepkgs=kernel-plus --enablerepo=centosplus --save
+      ansible.builtin.command: yum-config-manager --setopt=centosplus.includepkgs=kernel-plus --enablerepo=centosplus --save
       changed_when: false
 
     - name: (CentOS 7) Update to kernel-plus
-      replace:
+      ansible.builtin.replace:
         path: /etc/sysconfig/kernel
         regexp: '^DEFAULTKERNEL=kernel$'
         replace: 'DEFAULTKERNEL=kernel-plus'
 
     - name: (CentOS 7) Install WireGuard packages
-      yum:
+      ansible.builtin.yum:
         name:
           - "kernel-plus"
           - "wireguard-tools"
@@ -59,7 +59,7 @@
       register: centos7_yum_updates
 
     - name: (CentOS 7) Reboot Instance to update kernel
-      reboot:
+      ansible.builtin.reboot:
         reboot_timeout: "{{ wireguard_centos7_kernel_plus_reboot_timeout }}"
       when:
         - centos7_yum_updates.changes is defined

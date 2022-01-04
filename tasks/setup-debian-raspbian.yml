@@ -3,12 +3,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (Raspbian) Install GPG - required to add WireGuard key
-  apt:
+  ansible.builtin.apt:
     name: gnupg
     state: present
 
 - name: (Raspbian) Add Debian repository keys
-  apt_key:
+  ansible.builtin.apt_key:
     keyserver: "keyserver.ubuntu.com"
     id: "{{ item }}"
     state: present
@@ -18,39 +18,39 @@
     - "648ACFD622F3D138"
 
 - name: (Raspbian) Add Debian Buster Backports repository for WireGuard
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
     update_cache: true
 
 - name: (Raspbian) Install latest kernel
-  apt:
+  ansible.builtin.apt:
     name:
       - "raspberrypi-kernel"
     state: latest
   register: wireguard__register_kernel_update
 
 - name: (Raspbian) Reboot after kernel update (Ansible >= 2.8)
-  reboot:
+  ansible.builtin.reboot:
     search_paths: ['/lib/molly-guard', '/usr/sbin', '/sbin']
   when:
     - ansible_version.full is version('2.8.0', '>=')
     - wireguard__register_kernel_update is changed
 
 - name: (Raspbian) Check if molly-guard is installed (Ansible < 2.8)
-  stat:
+  ansible.builtin.stat:
     path: /lib/molly-guard/
   register: wireguard__register_molly_guard
 
 - name: (Raspbian) Reboot after kernel update (Ansible < 2.8, no molly-guard)
-  reboot:
+  ansible.builtin.reboot:
   when:
     - ansible_version.full is version('2.8.0', '<')
     - wireguard__register_kernel_update is changed
     - not wireguard__register_molly_guard.stat.exists
 
 - name: (Raspbian) Reboot after kernel update (Ansible < 2.8, with molly-guard)
-  command: /lib/molly-guard/shutdown -r now
+  ansible.builtin.command: /lib/molly-guard/shutdown -r now
   async: 1
   poll: 0
   ignore_unreachable: true
@@ -60,20 +60,20 @@
     - wireguard__register_molly_guard.stat.exists
 
 - name: (Raspbian) Waiting for host to be available (Ansible < 2.8, with molly-guard)
-  wait_for_connection:
+  ansible.builtin.wait_for_connection:
   when:
     - ansible_version.full is version('2.8.0', '<')
     - wireguard__register_kernel_update is changed
     - wireguard__register_molly_guard.stat.exists
 
 - name: (Raspbian) Install latest kernel headers to compile Wireguard with DKMS
-  apt:
+  ansible.builtin.apt:
     name:
       - "raspberrypi-kernel-headers"
     state: latest
 
 - name: (Raspbian) Install WireGuard packages
-  apt:
+  ansible.builtin.apt:
     name:
       - "wireguard-dkms"
       - "wireguard-tools"

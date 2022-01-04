@@ -3,7 +3,7 @@
 # Copyright (C) 2021 Steve Fan
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- include_tasks:
+- ansible.builtin.include_tasks:
     file: "setup-debian-raspbian.yml"
     apply:
       tags:
@@ -13,7 +13,7 @@
 
 - name: pve variants
   block:
-  - include_tasks:
+  - ansible.builtin.include_tasks:
       file: "setup-debian-pve-host-variant.yml"
       apply:
         tags:
@@ -22,7 +22,7 @@
       - ansible_virtualization_role == "host"
     register: wireguard__register_pve_host_variant_setup
 
-  - include_tasks:
+  - ansible.builtin.include_tasks:
       file: "setup-debian-pve-guest-variant.yml"
       apply:
         tags:
@@ -35,7 +35,7 @@
     - ansible_kernel.find("pve") != -1
 
 
-- include_tasks:
+- ansible.builtin.include_tasks:
     file: "setup-debian-vanilla.yml"
     apply:
       tags:

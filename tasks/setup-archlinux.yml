@@ -3,6 +3,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (Archlinux) Install wireguard-tools package
-  pacman:
+  ansible.builtin.pacman:
     name: wireguard-tools
     state: present

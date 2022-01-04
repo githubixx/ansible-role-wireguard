@@ -8,7 +8,7 @@
   gather_facts: true
   tasks:
     - name: Init pacman
-      raw: |
+      ansible.builtin.raw: |
         pacman-key --init
         pacman-key --populate archlinux
       changed_when: false
@@ -16,12 +16,12 @@
       when: ansible_distribution|lower == 'archlinux'
 
     - name: (Proxmox) Delete /var/lib/apt/lists/lock
-      file:
+      ansible.builtin.file:
         name: /var/lib/apt/lists/lock
         state: absent
       ignore_errors: true
       when: ansible_kernel.find("pve") != -1
 
     - name: Include WireGuard role
-      include_role:
+      ansible.builtin.include_role:
         name: githubixx.ansible_role_wireguard

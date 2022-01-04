@@ -3,9 +3,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: Gather instance facts
-  setup:
+  ansible.builtin.setup:
 
-- include_tasks:
+- ansible.builtin.include_tasks:
     file: "{{ item }}"
     apply:
       tags:
@@ -20,7 +20,7 @@
     - wg-install
 
 - name: Enable WireGuard kernel module
-  modprobe:
+  community.general.modprobe:
     name: wireguard
     state: present
   register: wireguard__register_module_enabled
@@ -35,22 +35,22 @@
 - name: Generate keys | Check wg syncconf subcommand status
   block:
     - name: Register if config/private key already exists on target host
-      stat:
+      ansible.builtin.stat:
         path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
       register: wireguard__register_config_file
 
     - name: Get wg subcommands
-      command: "wg --help"
+      ansible.builtin.command: "wg --help"
       register: wireguard__register_subcommands
       changed_when: false
       check_mode: false
 
     - name: Check if wg syncconf subcommand is available
-      set_fact:
+      ansible.builtin.set_fact:
         wg_syncconf: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
 
     - name: Show syncconf subcommand status
-      debug:
+      ansible.builtin.debug:
         var: wg_syncconf
   tags:
     - wg-generate-keys
@@ -59,7 +59,7 @@
 - name: WireGuard private key handling for new keys
   block:
     - name: Generate WireGuard private key
-      command: "wg genkey"
+      ansible.builtin.command: "wg genkey"
       register: wireguard__register_private_key
       changed_when: false
       no_log: '{{ ansible_verbosity < 3 }}'
@@ -67,7 +67,7 @@
         - wg-generate-keys
 
     - name: Set private key fact
-      set_fact:
+      ansible.builtin.set_fact:
         wireguard_private_key: "{{ wireguard__register_private_key.stdout }}"
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
@@ -79,7 +79,7 @@
 - name: WireGuard private key handling for existing keys
   block:
     - name: Read WireGuard config file
-      slurp:
+      ansible.builtin.slurp:
         src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
       register: wireguard__register_config
       no_log: '{{ ansible_verbosity < 3 }}'
@@ -87,7 +87,7 @@
         - wg-config
 
     - name: Set private key fact
-      set_fact:
+      ansible.builtin.set_fact:
         wireguard_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
@@ -97,7 +97,7 @@
     - wireguard_private_key is not defined
 
 - name: Derive WireGuard public key
-  command: "wg pubkey"
+  ansible.builtin.command: "wg pubkey"
   args:
     stdin: "{{ wireguard_private_key }}"
   register: wireguard__register_public_key
@@ -108,13 +108,13 @@
     - wg-config
 
 - name: Set public key fact
-  set_fact:
+  ansible.builtin.set_fact:
     wireguard__fact_public_key: "{{ wireguard__register_public_key.stdout }}"
   tags:
     - wg-config
 
 - name: Create WireGuard configuration directory
-  file:
+  ansible.builtin.file:
     dest: "{{ wireguard_remote_directory }}"
     state: directory
     mode: 0700
@@ -122,7 +122,7 @@
     - wg-config
 
 - name: Generate WireGuard configuration file
-  template:
+  ansible.builtin.template:
     src: etc/wireguard/wg.conf.j2
     dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
     owner: "{{ wireguard_conf_owner }}"
@@ -135,14 +135,14 @@
     - reconfigure wireguard
 
 - name: Ensure legacy reload-module-on-update is absent
-  file:
+  ansible.builtin.file:
     dest: "{{ wireguard_remote_directory }}/.reload-module-on-update"
     state: absent
   tags:
     - wg-config
 
 - name: Start and enable WireGuard service
-  service:
+  ansible.builtin.service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: "{{ wireguard_service_state }}"
     enabled: "{{ wireguard_service_enabled }}"
