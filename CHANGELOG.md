@@ -5,6 +5,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 9.1.0
+
+- execute lifecycle hooks if necessary upon reconfiguration (contribution by @8ware)
+
 ## 9.0.0
 
 - set minimally required Ansible version to `2.9` (contribution by @8ware)
