@@ -131,6 +131,7 @@
     mode: "{{ wireguard_conf_mode }}"
   check_mode: yes
   diff: yes
+  changed_when: no
   register: wg_config
   tags:
     - wg-config
@@ -142,6 +143,7 @@
         before: "{{ wg_config.diff[0].before }}"
         after: "{{ wg_config.diff[0].after }}"
       register: wg_config_diff
+      changed_when: no
 
     - name: Check if any lifecycle hooks have changed
       ansible.builtin.set_fact:
@@ -163,7 +165,7 @@
         - wg_hooks_changed
         - not ansible_os_family == 'Darwin'
         - wireguard_service_enabled == "yes"
-  when: wg_config is changed
+  when: wg_config.diff[0] is defined
   tags:
     - wg-config
 
