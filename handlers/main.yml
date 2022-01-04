@@ -2,25 +2,6 @@
 # Copyright (C) 2018-2020 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: shutdown wireguard
-  ansible.builtin.service:
-    name: "wg-quick@{{ wireguard_interface }}"
-    state: stopped
-  when:
-    - not ansible_os_family == 'Darwin'
-    - wireguard_service_enabled == "yes"
-
-- name: startup wireguard
-  ansible.builtin.service:
-    name: "wg-quick@{{ wireguard_interface }}"
-    state: started
-  when:
-    - wg_syncconf
-    - wg_hooks_changed
-    - not ansible_os_family == 'Darwin'
-    - wireguard_service_enabled == "yes"
-  listen: "reconfigure wireguard"
-
 - name: restart wireguard
   ansible.builtin.service:
     name: "wg-quick@{{ wireguard_interface }}"
@@ -29,7 +10,7 @@
     - stopped
     - started
   when:
-    - not wg_syncconf
+    - not wg_syncconf or wg_hooks_changed
     - not ansible_os_family == 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
@@ -45,8 +26,7 @@
   args:
     executable: "/bin/bash"
   when:
-    - wg_syncconf
-    - not wg_hooks_changed
+    - wg_syncconf and not wg_hooks_changed
     - not ansible_os_family == 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"

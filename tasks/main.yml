@@ -156,16 +156,14 @@
         }}"
 
     - name: Shutdown WireGuard to run lifecycle hooks
-      ansible.builtin.debug:
-        msg: Lifecycle hooks have changed
-      when: wg_hooks_changed
-      changed_when: yes
-      notify: shutdown wireguard
+      ansible.builtin.service:
+        name: "wg-quick@{{ wireguard_interface }}"
+        state: stopped
+      when:
+        - wg_hooks_changed
+        - not ansible_os_family == 'Darwin'
+        - wireguard_service_enabled == "yes"
   when: wg_config is changed
-  tags:
-    - wg-config
-
-- ansible.builtin.meta: flush_handlers
   tags:
     - wg-config
 
