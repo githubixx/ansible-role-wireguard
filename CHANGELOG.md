@@ -6,6 +6,12 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Changelog
 ---------
 
+**9.0.0**
+
+- set minimally required Ansible version to 2.9
+- fully qualify modules names (requires Ansible >= 2.9)
+- rearrange hooks to match lifecycle order
+
 **8.4.0**
 
 - add support for installing wireguard in pve lxc guest (contribution by @tobias-richter)
