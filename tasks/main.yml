@@ -5,6 +5,12 @@
 - name: Gather instance facts
   setup:
 
+- name: Test SSH and root access
+  become: true
+  raw: "{{ 'true' if ansible_os_family == 'Darwin' else '/bin/true'  }}"
+  changed_when: false
+  any_errors_fatal: true
+
 - include_tasks:
     file: "{{ item }}"
     apply:
