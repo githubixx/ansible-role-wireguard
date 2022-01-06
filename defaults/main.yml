@@ -38,6 +38,22 @@ wireguard_ubuntu_update_cache: "true"
 # Set package cache valid time
 wireguard_ubuntu_cache_valid_time: "3600"
 
+#######################################
+# Settings only relevant for CentOS 7
+#######################################
+
+# Set wireguard_centos7_installation_method to "kernel-plus"
+# to use the kernel-plus kernel, which includes a built-in,
+# signed WireGuard module.
+# UTILIZING KERNEL-PLUS WILL PERFORM A SYSTEM REBOOT DURING SETUP!!
+#
+# The default of "standard" will use the standard kernel and 
+# the ELRepo module for WireGuard.
+wireguard_centos7_installation_method: "standard"
+
+# The default seconds to wait for machine to reboot and respond
+wireguard_centos7_kernel_plus_reboot_timeout: "600"
+
 # This is sensitive: encrypt it with a tool like Ansible Vault.
 # If not set, a new one is generated on a blank configuration.
 # wireguard_private_key:

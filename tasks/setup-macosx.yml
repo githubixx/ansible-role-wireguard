@@ -6,7 +6,7 @@
   package:
     name: wireguard-go
     state: present
-  become: yes
+  become: true
 
 - name: (MacOS) Install wireguard-tools package
   package:

@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2018-2020 Robert Wimmer
+Copyright (C) 2018-2021 Robert Wimmer
 Copyright (C) 2019 fbourqui
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
@@ -7,30 +7,27 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ansible-role-wireguard
 ======================
 
-This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. The latest release is [available via Ansible Galaxy](https://galaxy.ansible.com/githubixx/ansible_role_wireguard).  I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster. This VPN also includes two clients so that I can communicate securely with the Kubernetes API server. Also my Postfix mailserver running as K8s DaemonSet forwards mails to my internal Postfix through WireGuard VPN.
-
-I used [PeerVPN](https://peervpn.net/) before but that wasn't updated for a while. As I moved my cloud hosts from Scaleway to Hetzner cloud it was a good time to switch the VPN solution ;-) In general PeerVPN still works perfectly fine esp. if you need a easy to setup fully meshed network (where every node is able to talk to all other nodes and even if node `A` should be able to talk to Node `C` via node `B` ;-) ). But PeerVPN needs also lot of CPU resources and throughput could be better. That's solved with [WireGuard](https://www.wireguard.io/).
+This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. The latest release is [available via Ansible Galaxy](https://galaxy.ansible.com/githubixx/ansible_role_wireguard).  I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster.
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
-This role is tested with Ubuntu 18.04 (Bionic Beaver), Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 16.04 (Xenial Xerus), Debian 10 (Buster), Fedora 32 (or later), CentOS 7/8 and partially MacOS (see below) might also work but only best effort (code for this operating systems was submitted by other contributors).
+This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 33 (or later), CentOS 7/8, AlmaLinux and Rocky Linux should also work and are tested via the provided "Molecule" tests (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
 
 ### Running the VPN on MacOS
 
 While this playbook configures, enables and starts a `systemd` service on Linux in a such a way that no additional action is needed, on MacOS it installs the required packages and it just generates the correct `wg0.conf` file that is then placed in the specified `wireguard_remote_directory` (`/opt/local/etc/wireguard` by default). In order to run the VPN, then, you need to:
 
-```
+```bash
 sudo wg-quick up wg0
 ```
 
 and to deactivate it
 
-```
+```bash
 sudo wg-quick down wg0
 ```
 
 or you can install the [official app](https://apps.apple.com/it/app/wireguard/id1451685025?l=en&mt=12) and import the `wg0.conf` file.
-
 
 Versions
 --------
@@ -40,7 +37,9 @@ I tag every release and try to stay with [semantic versioning](http://semver.org
 Requirements
 ------------
 
-By default port `51820` (protocol UDP) should be accessible from the outside. But you can adjust the port by changing the variable `wireguard_port`. Also IP forwarding needs to be enabled e.g. via `echo 1 > /proc/sys/net/ipv4/ip_forward `. I decided not to implement this task in this Ansible role. IMHO that should be handled elsewhere. You can use my [ansible-role-harden-linux](https://github.com/githubixx/ansible-role-harden-linux) e.g. Besides changing sysctl entries (which you need to enable IP forwarding) it also manages firewall settings among other things. Nevertheless the `PreUp`, `PreDown`, `PostUp` and `PostDown` hooks may be a good place to do some network related stuff before a WireGuard interface comes up or goes down.
+By default port `51820` (protocol UDP) should be accessible from the outside. But you can adjust the port by changing the variable `wireguard_port`. Also IP forwarding needs to be enabled e.g. via `echo 1 > /proc/sys/net/ipv4/ip_forward`. I decided not to implement this task in this Ansible role. IMHO that should be handled elsewhere.
+You can use my [ansible-role-harden-linux](https://github.com/githubixx/ansible-role-harden-linux) e.g. Besides changing sysctl entries (which you need to enable IP forwarding) it also manages firewall settings among other things.
+Nevertheless the `PreUp`, `PreDown`, `PostUp` and `PostDown` hooks may be a good place to do some network related stuff before a WireGuard interface comes up or goes down.
 
 Changelog
 ---------
@@ -164,7 +163,7 @@ Here is a litte example for what I use the playbook: I use WireGuard to setup a 
 
 First, here is a part of my Ansible `hosts` file:
 
-```
+```ini
 [vpn]
 controller0[1:3].i.domain.tld
 worker0[1:2].i.domain.tld
@@ -178,11 +177,12 @@ controller0[1:3].i.domain.tld
 worker0[1:2].i.domain.tld
 ```
 
-As you can see I've three groups here: `vpn` (all hosts on that will get WireGuard installed), `k8s_controller` (the Kubernetes controller nodes) and `k8s_worker` (the Kubernetes worker nodes). The `i` in the domainname is for `internal`. All the `i.domain.tld` DNS entries have a `A` record that points to the WireGuard IP that we define shortly for every host e.g.: ` controller01.i.domain.tld. IN A 10.8.0.101`. The reason for that is that all Kubernetes components only binds and listen on the WireGuard interface in my setup. And since I need this internal IPs for all my Kubernetes components I specify the internal DNS entries in my Ansible `hosts` file. That way I can use the Ansible inventory hostnames and variables very easy in the playbooks and templates.
+As you can see I've three groups here: `vpn` (all hosts on that will get WireGuard installed), `k8s_controller` (the Kubernetes controller nodes) and `k8s_worker` (the Kubernetes worker nodes). The `i` in the domainname is for `internal`. All the `i.domain.tld` DNS entries have a `A` record that points to the WireGuard IP that we define shortly for every host e.g.: `controller01.i.domain.tld. IN A 10.8.0.101`. The reason for that is that all Kubernetes components only binds and listen on the WireGuard interface in my setup. And since I need this internal IPs for all my Kubernetes components I specify the internal DNS entries in my Ansible `hosts` file. That way I can use the Ansible inventory hostnames and variables very easy in the playbooks and templates.
 
 For the Kubernetes controller nodes I've defined the following host variables:
 
 Ansible host file: `host_vars/controller01.i.domain.tld`
+
 ```yaml
 ---
 wireguard_address: "10.8.0.101/24"
@@ -192,6 +192,7 @@ ansible_python_interpreter: /usr/bin/python3
 ```
 
 Ansible host file: `host_vars/controller02.i.domain.tld`:
+
 ```yaml
 ---
 wireguard_address: "10.8.0.102/24"
@@ -214,6 +215,7 @@ I've specified `ansible_python_interpreter` here for every node as the controlle
 For the Kubernetes worker I've defined the following variables:
 
 Ansible host file: `host_vars/worker01.i.domain.tld`
+
 ```yaml
 ---
 wireguard_address: "10.8.0.111/24"
@@ -224,6 +226,7 @@ ansible_python_interpreter: /usr/bin/python3
 ```
 
 Ansible host file: `host_vars/worker02.i.domain.tld`:
+
 ```yaml
 ---
 wireguard_address: "10.8.0.112/24"
@@ -372,6 +375,25 @@ Sample playbooks for example above:
 - hosts: vpn2
   roles:
     - githubixx.ansible_role_wireguard
+```
+
+Testing
+-------
+
+This role has a small test setup that is created using [Molecule](https://github.com/ansible-community/molecule), libvirt (vagrant-libvirt) and QEMU/KVM. Please see my blog post [Testing Ansible roles with Molecule, libvirt (vagrant-libvirt) and QEMU/KVM](https://www.tauceti.blog/posts/testing-ansible-roles-with-molecule-libvirt-vagrant-qemu-kvm/) how to setup. The test configuration is [here](https://github.com/githubixx/ansible-role-wireguard/tree/master/molecule/kvm).
+
+Afterwards molecule can be executed:
+
+```bash
+molecule converge -s kvm
+```
+
+This will setup quite a few virtual machines (VM) with different supported Linux operating systems.
+
+To clean up run
+
+```bash
+molecule destroy -s kvm
 ```
 
 License

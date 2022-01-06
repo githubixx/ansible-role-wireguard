@@ -5,27 +5,30 @@ galaxy_info:
   author: Robert Wimmer
   description: Installs Wireguard incl. systemd integration
   license: GPL-3.0-or-later
-  min_ansible_version: 2.5
+  min_ansible_version: 2.7
+  role_name: ansible_role_wireguard
+  namespace: githubixx
   platforms:
-  - name: ArchLinux
-  - name: Ubuntu
-    versions:
-    - bionic
-    - focal
-  - name: Debian
-    versions:
-    - buster
-  - name: EL
-    versions:
-    - 7
-    - 8
-  - name: Fedora
-    versions:
-    - 32
-    - 33
-  - name: opensuse
-    versions:
-    - 15.2
+    - name: ArchLinux
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Fedora
+      versions:
+        - 33
+        - 34
+    - name: opensuse
+      versions:
+        - 15.2
   galaxy_tags:
     - networking
     - security

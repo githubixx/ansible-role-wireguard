@@ -1,10 +1,36 @@
 <!--
-Copyright (C) 2018-2020 Robert Wimmer
+Copyright (C) 2018-2021 Robert Wimmer
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
 Changelog
 ---------
+
+**8.4.0**
+
+- add support for installing wireguard in pve lxc guest (contribution by @tobias-richter)
+
+**8.3.0**
+
+- add Molecule test for CentOS 7 `kernel-plus`
+
+**8.2.0**
+
+- add support for `kernel-plus` for CentOS 7 (contribution by @john-p-potter)
+
+**8.1.0**
+
+- add Rocky Linux support
+- add AlmaLinux support
+- add Molecule tests for Rocky Linux and AlmaLinux
+
+**8.0.0**
+
+- add `Debian 11 (Bullseye)` support
+- add 'Fedora 34` support
+- remove `Fedora 32` support (EOL was in May 2021)
+- fix various issues reported by `ansible-lint`
+- Archlinux: As `linux-lts` is using kernel `5.10` now there is no need to install `wireguard-lts` + WireGuard DKMS packages any longer (and this packages are gone anyway)
 
 **7.12.0**
 
