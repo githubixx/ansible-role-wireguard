@@ -3,7 +3,8 @@
 # Copyright (C) 2021 Steve Fan
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- ansible.builtin.include_tasks:
+- name: Setup for Raspbian
+  ansible.builtin.include_tasks:
     file: "setup-debian-raspbian.yml"
     apply:
       tags:
@@ -11,9 +12,10 @@
   when: ansible_lsb.id is defined and ansible_lsb.id == "Raspbian"
   register: wireguard__register_raspbian_setup
 
-- name: pve variants
+- name: Setup for Proxmox VE variants
   block:
-    - ansible.builtin.include_tasks:
+    - name: Setup Proxmox VE host
+      ansible.builtin.include_tasks:
         file: "setup-debian-pve-host-variant.yml"
         apply:
           tags:
@@ -22,7 +24,8 @@
         - ansible_virtualization_role == "host"
       register: wireguard__register_pve_host_variant_setup
 
-    - ansible.builtin.include_tasks:
+    - name: Setup Proxmox VE guest
+      ansible.builtin.include_tasks:
         file: "setup-debian-pve-guest-variant.yml"
         apply:
           tags:
@@ -33,7 +36,8 @@
   when:
     - ansible_kernel.find("pve") != -1
 
-- ansible.builtin.include_tasks:
+- name: Setup for Debian
+  ansible.builtin.include_tasks:
     file: "setup-debian-vanilla.yml"
     apply:
       tags:
