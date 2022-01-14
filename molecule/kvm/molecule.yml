@@ -52,15 +52,6 @@ platforms:
         ip: 192.168.10.50
     groups:
       - vpn
-  - name: test-wg-centos8
-    box: generic/centos8
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.60
-    groups:
-      - vpn
   - name: test-wg-centos7
     box: generic/centos7
     interfaces:
@@ -174,11 +165,6 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.50.40"
-      test-wg-centos8:
-        wireguard_address: "10.10.10.60/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.60"
       test-wg-centos7:
         wireguard_address: "10.10.10.70/24"
         wireguard_port: 51820
