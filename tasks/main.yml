@@ -5,7 +5,8 @@
 - name: Gather instance facts
   ansible.builtin.setup:
 
-- ansible.builtin.include_tasks:
+- name: Include tasks depending on OS
+  ansible.builtin.include_tasks:
     file: "{{ item }}"
     apply:
       tags:
