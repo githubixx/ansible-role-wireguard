@@ -11,9 +11,13 @@ This Ansible role is used in my blog series [Kubernetes the not so hard way with
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
-This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 33 (or later), CentOS 7/8, AlmaLinux and Rocky Linux should also work and are tested via the provided "Molecule" tests (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+Linux
+-----
 
-### Running the VPN on MacOS
+This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 34 (or later), CentOS 7, AlmaLinux, Rocky Linux and openSUSE Leap 15.3 should also work and are tested via the provided "Molecule" tests (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+
+MacOS
+-----
 
 While this playbook configures, enables and starts a `systemd` service on Linux in a such a way that no additional action is needed, on MacOS it installs the required packages and it just generates the correct `wg0.conf` file that is then placed in the specified `wireguard_remote_directory` (`/opt/local/etc/wireguard` by default). In order to run the VPN, then, you need to:
 
@@ -202,6 +206,7 @@ ansible_python_interpreter: /usr/bin/python3
 ```
 
 Ansible host file: `host_vars/controller03.i.domain.tld`:
+
 ```yaml
 ---
 wireguard_address: "10.8.0.103/24"
@@ -332,12 +337,12 @@ vpn1:
     multi:
       wireguard_address: 10.9.0.1/32
       wireguard_allowed_ips: "10.9.0.1/32, 192.168.2.0/24"
-      wireguard_endpoint: multi.exemple.com
+      wireguard_endpoint: multi.example.com
     nated:
       wireguard_address: 10.9.0.2/32
       wireguard_allowed_ips: "10.9.0.2/32, 192.168.3.0/24"
       wireguard_persistent_keepalive: 15
-      wireguard_endpoint: nated.exemple.com
+      wireguard_endpoint: nated.example.com
       wireguard_postup:
         - iptables -t nat -A POSTROUTING -o ens12 -j MASQUERADE
         - iptables -A FORWARD -i %i -j ACCEPT
@@ -357,10 +362,10 @@ vpn2:
       # when using several interface on one host, we must use different ports
       wireguard_port: 51821
       wireguard_address: 10.9.1.1/32
-      wireguard_endpoint: multi.exemple.com
+      wireguard_endpoint: multi.example.com
     another:
       wireguard_address: 10.9.1.2/32
-      wireguard_endpoint: another.exemple.com
+      wireguard_endpoint: another.example.com
 ```
 
 Sample playbooks for example above:
