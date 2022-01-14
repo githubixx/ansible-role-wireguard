@@ -43,15 +43,6 @@ platforms:
         ip: 192.168.10.30
     groups:
       - vpn
-  - name: test-wg-fedora33
-    box: generic/fedora33
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.40
-    groups:
-      - vpn
   - name: test-wg-fedora34
     box: generic/fedora34
     interfaces:
