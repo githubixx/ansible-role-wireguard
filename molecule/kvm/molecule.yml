@@ -88,15 +88,6 @@ platforms:
         ip: 192.168.10.80
     groups:
       - vpn
-  - name: test-wg-opensuse-leap-15-2
-    box: opensuse/Leap-15.2.x86_64
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.90
-    groups:
-      - vpn
   - name: test-wg-proxmox
     box: rantanevich/proxmox
     interfaces:
