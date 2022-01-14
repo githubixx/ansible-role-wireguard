@@ -25,6 +25,7 @@ platforms:
         ip: 192.168.10.10
     groups:
       - vpn
+      - ubuntu
   - name: test-wg-ubuntu1804
     box: generic/ubuntu1804
     interfaces:
@@ -34,6 +35,7 @@ platforms:
         ip: 192.168.10.20
     groups:
       - vpn
+      - ubuntu
   - name: test-wg-debian10
     box: generic/debian10
     interfaces:
@@ -43,6 +45,7 @@ platforms:
         ip: 192.168.10.30
     groups:
       - vpn
+      - debian
   - name: test-wg-fedora34
     box: generic/fedora34
     interfaces:
@@ -52,6 +55,7 @@ platforms:
         ip: 192.168.10.50
     groups:
       - vpn
+      - fedora
   - name: test-wg-centos7
     box: generic/centos7
     interfaces:
@@ -61,6 +65,7 @@ platforms:
         ip: 192.168.10.70
     groups:
       - vpn
+      - el7
   - name: test-wg-arch
     box: archlinux/archlinux
     interfaces:
@@ -70,8 +75,9 @@ platforms:
         ip: 192.168.10.80
     groups:
       - vpn
+      - archlinux
   - name: test-wg-proxmox
-    box: rantanevich/proxmox
+    box: dbuenoparedesFuze/Proxmox-6.4
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -79,6 +85,7 @@ platforms:
         ip: 192.168.10.100
     groups:
       - vpn
+      - proxmox
   - name: test-wg-debian11
     box: generic/debian11
     interfaces:
@@ -88,6 +95,7 @@ platforms:
         ip: 192.168.10.110
     groups:
       - vpn
+      - debian
   - name: test-wg-rocky8
     box: generic/rocky8
     interfaces:
@@ -97,6 +105,7 @@ platforms:
         ip: 192.168.10.120
     groups:
       - vpn
+      - el8
   - name: test-wg-alma8
     box: generic/alma8
     interfaces:
@@ -106,6 +115,7 @@ platforms:
         ip: 192.168.10.130
     groups:
       - vpn
+      - el8
   - name: test-wg-centos7-kernel-plus
     box: generic/centos7
     interfaces:
@@ -115,6 +125,7 @@ platforms:
         ip: 192.168.10.140
     groups:
       - vpn
+      - el7
   - name: test-wg-opensuse-leap-15-3
     box: opensuse/Leap-15.3.x86_64
     interfaces:
@@ -124,6 +135,7 @@ platforms:
         ip: 192.168.10.150
     groups:
       - vpn
+      - opensuse
   - name: test-wg-fedora35
     box: generic/fedora35
     interfaces:
@@ -133,6 +145,7 @@ platforms:
         ip: 192.168.10.160
     groups:
       - vpn
+      - fedora
 
 provisioner:
   name: ansible

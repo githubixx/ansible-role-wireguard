@@ -2,14 +2,46 @@
 # Copyright (C) 2021 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- hosts: test-wg-opensuse-leap-15-3
+- hosts: opensuse
   remote_user: vagrant
   become: true
   gather_facts: true
   tasks:
     - name: Remove backports repositories
-      raw: |
+      ansible.builtin.raw: |
         zypper rr repo-backports-debug-update
         zypper rr repo-backports-update
       changed_when: false
       failed_when: false
+
+- hosts: archlinux
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Init pacman
+      ansible.builtin.raw: |
+        pacman-key --init
+        pacman-key --populate archlinux
+      changed_when: false
+      failed_when: false
+
+- hosts: proxmox
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: (Proxmox) Delete /var/lib/apt/lists/lock
+      ansible.builtin.file:
+        name: /var/lib/apt/lists/lock
+        state: absent
+
+- hosts: ubuntu
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Update APT package cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
