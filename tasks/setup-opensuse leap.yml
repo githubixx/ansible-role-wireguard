@@ -4,7 +4,7 @@
 
 
 - name: (openSUSE Leap) Install WireGuard packages
-  zypper:
+  community.general.zypper:
     name:
       - "wireguard-tools"
     state: present

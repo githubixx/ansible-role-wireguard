@@ -6,25 +6,25 @@
 - name: (Debian) Tasks for Debian version <= 10
   block:
     - name: (Debian) Add WireGuard repository on buster
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: "deb http://deb.debian.org/debian buster-backports main"
         state: present
         update_cache: true
 
     - name: (Debian) Install kernel headers for the currently running kernel to compile Wireguard with DKMS
-      apt:
+      ansible.builtin.apt:
         name:
           - "linux-headers-{{ ansible_kernel }}"
         state: present
 
     - name: (Debian) Get architecture
-      command: "dpkg --print-architecture"
+      ansible.builtin.command: "dpkg --print-architecture"
       register: wireguard__fact_dpkg_arch
       changed_when: false
       check_mode: false
 
     - name: (Debian) Install kernel headers metapackage to ensure headers will be installed
-      apt:
+      ansible.builtin.apt:
         name:
           - "linux-headers-{{ wireguard__fact_dpkg_arch.stdout }}"
         state: present
@@ -34,7 +34,7 @@
     - ansible_lsb.major_release is version('11', '<')
 
 - name: (Debian) Install WireGuard packages
-  apt:
+  ansible.builtin.apt:
     name:
       - "wireguard"
     state: present

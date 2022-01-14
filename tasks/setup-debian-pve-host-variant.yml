@@ -5,19 +5,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (Proxmox) Add WireGuard repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: "{{ 'present' if (ansible_distribution_version | int <= 10) else 'absent' }}"
     update_cache: true
 
 - name: (Proxmox) Install kernel headers for the currently running kernel to compile WireGuard with DKMS
-  apt:
+  ansible.builtin.apt:
     name:
       - "pve-headers-{{ ansible_kernel }}"
     state: present
 
 - name: (Proxmox) Install WireGuard packages
-  apt:
+  ansible.builtin.apt:
     name:
       - "wireguard"
     state: present

@@ -3,14 +3,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (Ubuntu) Update APT package cache
-  apt:
+  ansible.builtin.apt:
     update_cache: "{{ wireguard_ubuntu_update_cache }}"
     cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
 
 - name: (Ubuntu) Tasks for Ubuntu < 19.10
   block:
     - name: (Ubuntu) Install support packages needed for Wireguard (for Ubuntu < 19.10)
-      package:
+      ansible.builtin.package:
         name: "{{ packages }}"
         state: present
       vars:
@@ -21,12 +21,12 @@
     - ansible_lsb.major_release is version('19.10', '<')
 
 - name: (Ubuntu) Ensure WireGuard DKMS package is removed
-  apt:
+  ansible.builtin.apt:
     name:
       - "wireguard-dkms"
     state: absent
 
 - name: (Ubuntu) Install wireguard package
-  apt:
+  ansible.builtin.apt:
     name: "wireguard"
     state: present

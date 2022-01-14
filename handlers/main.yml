@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: restart wireguard
-  service:
+  ansible.builtin.service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: "{{ item }}"
   loop:
@@ -16,7 +16,7 @@
   listen: "reconfigure wireguard"
 
 - name: syncconf wireguard
-  shell: |
+  ansible.builtin.shell: |
     set -o errexit
     set -o pipefail
     set -o nounset
