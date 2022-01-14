@@ -1,0 +1,15 @@
+---
+# Copyright (C) 2021 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- hosts: test-wg-opensuse-leap-15-3
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Remove backports repositories
+      raw: |
+        zypper rr repo-backports-debug-update
+        zypper rr repo-backports-update
+      changed_when: false
+      failed_when: false

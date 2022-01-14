@@ -142,6 +142,15 @@ platforms:
         ip: 192.168.10.140
     groups:
       - vpn
+  - name: test-wg-opensuse-leap-15-3
+    box: opensuse/Leap-15.3.x86_64
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.150
+    groups:
+      - vpn
 
 provisioner:
   name: ansible
@@ -227,6 +236,11 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.140"
         wireguard_centos7_installation_method: "kernel-plus"
+      test-wg-opensuse-leap-15-3:
+        wireguard_address: "10.10.10.150/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.150"
 
 scenario:
   name: kvm
