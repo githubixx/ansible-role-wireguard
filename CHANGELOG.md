@@ -7,9 +7,14 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 ## 9.0.0
 
-- set minimally required Ansible version to 2.9 (contribution by @8ware)
+- set minimally required Ansible version to `2.9` (contribution by @8ware)
 - fully qualify modules names (requires Ansible >= 2.9) (contribution by @8ware)
 - rearrange hooks to match lifecycle order (contribution by @8ware)
+- remove `CentOS 8` support (reached end of life) - use AlmaLinux or Rocky Linux instead
+- remove `Fedora 33` support (reached end of life)
+- remove `openSUSE Leap 15.2` support (reached end of life)
+- add `openSUSE 15.3` support
+- add `Fedora 35` support
 
 ## 8.4.0
 
