@@ -10,7 +10,7 @@
 
 - name: (Proxmox lxc) Install wireguard-tools.
   ansible.builtin.apt:
-    install_recommends: no
+    install_recommends: false
     name:
       - wireguard-tools
     state: present

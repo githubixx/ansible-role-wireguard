@@ -25,6 +25,7 @@ platforms:
         ip: 192.168.10.10
     groups:
       - vpn
+      - ubuntu
   - name: test-wg-ubuntu1804
     box: generic/ubuntu1804
     interfaces:
@@ -34,6 +35,7 @@ platforms:
         ip: 192.168.10.20
     groups:
       - vpn
+      - ubuntu
   - name: test-wg-debian10
     box: generic/debian10
     interfaces:
@@ -43,8 +45,9 @@ platforms:
         ip: 192.168.10.30
     groups:
       - vpn
-  - name: test-wg-fedora33
-    box: generic/fedora33
+      - debian
+  - name: test-wg-fedora34
+    box: generic/fedora34
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -52,8 +55,9 @@ platforms:
         ip: 192.168.10.40
     groups:
       - vpn
-  - name: test-wg-fedora34
-    box: generic/fedora34
+      - fedora
+  - name: test-wg-centos7
+    box: generic/centos7
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -61,8 +65,9 @@ platforms:
         ip: 192.168.10.50
     groups:
       - vpn
-  - name: test-wg-centos8
-    box: generic/centos8
+      - el7
+  - name: test-wg-arch
+    box: archlinux/archlinux
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -70,8 +75,9 @@ platforms:
         ip: 192.168.10.60
     groups:
       - vpn
-  - name: test-wg-centos7
-    box: generic/centos7
+      - archlinux
+  - name: test-wg-debian11
+    box: generic/debian11
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -79,8 +85,9 @@ platforms:
         ip: 192.168.10.70
     groups:
       - vpn
-  - name: test-wg-arch
-    box: archlinux/archlinux
+      - debian
+  - name: test-wg-rocky8
+    box: generic/rocky8
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -88,8 +95,9 @@ platforms:
         ip: 192.168.10.80
     groups:
       - vpn
-  - name: test-wg-opensuse-leap
-    box: opensuse/Leap-15.2.x86_64
+      - el8
+  - name: test-wg-alma8
+    box: generic/alma8
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -97,8 +105,9 @@ platforms:
         ip: 192.168.10.90
     groups:
       - vpn
-  - name: test-wg-proxmox
-    box: rantanevich/proxmox
+      - el8
+  - name: test-wg-centos7-kernel-plus
+    box: generic/centos7
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -106,8 +115,9 @@ platforms:
         ip: 192.168.10.100
     groups:
       - vpn
-  - name: test-wg-debian11
-    box: generic/debian11
+      - el7
+  - name: test-wg-opensuse-leap-15-3
+    box: opensuse/Leap-15.3.x86_64
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -115,8 +125,9 @@ platforms:
         ip: 192.168.10.110
     groups:
       - vpn
-  - name: test-wg-rocky8
-    box: generic/rocky8
+      - opensuse
+  - name: test-wg-fedora35
+    box: generic/fedora35
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -124,24 +135,7 @@ platforms:
         ip: 192.168.10.120
     groups:
       - vpn
-  - name: test-wg-alma8
-    box: generic/alma8
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.130
-    groups:
-      - vpn
-  - name: test-wg-centos7-kernel-plus
-    box: generic/centos7
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.140
-    groups:
-      - vpn
+      - fedora
 
 provisioner:
   name: ansible
@@ -169,64 +163,54 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.30"
         ansible_python_interpreter: "/usr/bin/python"
-      test-wg-fedora33:
+      test-wg-fedora34:
         wireguard_address: "10.10.10.40/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.40"
-      test-wg-fedora34:
+      test-wg-centos7:
         wireguard_address: "10.10.10.50/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.50.40"
-      test-wg-centos8:
+        wireguard_endpoint: "192.168.10.50"
+      test-wg-arch:
         wireguard_address: "10.10.10.60/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.60"
-      test-wg-centos7:
+        ansible_python_interpreter: "/usr/bin/python"
+      test-wg-debian11:
         wireguard_address: "10.10.10.70/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.70"
-      test-wg-arch:
+        ansible_python_interpreter: "/usr/bin/python3"
+      test-wg-rocky8:
         wireguard_address: "10.10.10.80/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.80"
-        ansible_python_interpreter: "/usr/bin/python"
-      test-wg-opensuse-leap:
+      test-wg-alma8:
         wireguard_address: "10.10.10.90/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.90"
-      test-wg-proxmox:
+      test-wg-centos7-kernel-plus:
         wireguard_address: "10.10.10.100/24"
-        wireguard_port: 51820
+        wireguard_port: 51821
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.100"
-      test-wg-debian11:
+        wireguard_centos7_installation_method: "kernel-plus"
+      test-wg-opensuse-leap-15-3:
         wireguard_address: "10.10.10.110/24"
-        wireguard_port: 51820
+        wireguard_port: 51822
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.110"
-        ansible_python_interpreter: "/usr/bin/python3"
-      test-wg-rocky8:
+      test-wg-fedora35:
         wireguard_address: "10.10.10.120/24"
-        wireguard_port: 51820
+        wireguard_port: 51823
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.120"
-      test-wg-alma8:
-        wireguard_address: "10.10.10.130/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.130"
-      test-wg-centos7-kernel-plus:
-        wireguard_address: "10.10.10.140/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.140"
-        wireguard_centos7_installation_method: "kernel-plus"
 
 scenario:
   name: kvm

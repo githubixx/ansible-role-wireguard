@@ -24,11 +24,11 @@ galaxy_info:
         - 8
     - name: Fedora
       versions:
-        - 33
         - 34
+        - 35
     - name: opensuse
       versions:
-        - 15.2
+        - 15.3
   galaxy_tags:
     - networking
     - security
