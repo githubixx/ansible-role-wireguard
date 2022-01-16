@@ -16,6 +16,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - add `openSUSE 15.3` support
 - add `Fedora 35` support
 - remove Proxmox from Molecule test (Vagrant boxes for Proxmox are not useable)
+- Remove unnecessary check if value is an integer on `wireguard_port` (see [#112](https://github.com/githubixx/ansible-role-wireguard/pull/112) (contribution by @abelfodil)
 
 ## 8.4.0
 
