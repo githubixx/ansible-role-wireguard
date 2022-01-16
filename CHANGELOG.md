@@ -15,6 +15,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - remove `openSUSE Leap 15.2` support (reached end of life)
 - add `openSUSE 15.3` support
 - add `Fedora 35` support
+- remove Proxmox from Molecule test (Vagrant boxes for Proxmox are not useable)
 
 ## 8.4.0
 
