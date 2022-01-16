@@ -197,18 +197,18 @@ provisioner:
         wireguard_endpoint: "192.168.10.90"
       test-wg-centos7-kernel-plus:
         wireguard_address: "10.10.10.100/24"
-        wireguard_port: 51820
+        wireguard_port: 51821
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.100"
         wireguard_centos7_installation_method: "kernel-plus"
       test-wg-opensuse-leap-15-3:
         wireguard_address: "10.10.10.110/24"
-        wireguard_port: 51820
+        wireguard_port: 51822
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.110"
       test-wg-fedora35:
         wireguard_address: "10.10.10.120/24"
-        wireguard_port: 51820
+        wireguard_port: 51823
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.120"
 
