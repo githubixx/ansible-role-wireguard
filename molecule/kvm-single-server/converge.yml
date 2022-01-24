@@ -1,0 +1,12 @@
+---
+# Copyright (C) 2022 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- hosts: all
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Include WireGuard role
+      ansible.builtin.include_role:
+        name: githubixx.ansible_role_wireguard
