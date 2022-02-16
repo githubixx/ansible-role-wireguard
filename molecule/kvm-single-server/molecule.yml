@@ -1,0 +1,82 @@
+---
+# Copyright (C) 2022 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+dependency:
+  name: galaxy
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+    type: libvirt
+    options:
+      memory: 192
+      cpus: 2
+
+platforms:
+  - name: test-wg-ubuntu2004
+    box: generic/ubuntu2004
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.10
+    groups:
+      - vpn
+      - ubuntu
+  - name: test-wg-ubuntu1804
+    box: generic/ubuntu1804
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.20
+    groups:
+      - vpn
+      - ubuntu
+  - name: test-wg-debian11
+    box: generic/debian11
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.30
+    groups:
+      - vpn
+      - debian
+
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+  log: true
+  lint:
+    name: ansible-lint
+  inventory:
+    host_vars:
+      test-wg-ubuntu2004:
+        wireguard_address: "10.10.10.10/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.10"
+      test-wg-ubuntu1804:
+        wireguard_address: "10.10.10.20/24"
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: ""
+      test-wg-debian11:
+        wireguard_address: "10.10.10.30/24"
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: ""
+        ansible_python_interpreter: "/usr/bin/python3"
+
+scenario:
+  name: kvm-single-server
+  test_sequence:
+    - prepare
+    - converge
+
+verifier:
+  name: ansible
+  enabled: False
