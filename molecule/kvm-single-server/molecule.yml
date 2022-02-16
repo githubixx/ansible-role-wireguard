@@ -78,12 +78,5 @@ scenario:
     - converge
 
 verifier:
-  name: testinfra
-  directory: tests
-  options:
-    # Add a -v so you see the individual test names,
-    # particularly useful with parameterized tests
-    v: true
-    sudo: true
-  lint:
-    name: flake8
+  name: ansible
+  enabled: False
