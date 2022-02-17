@@ -5,6 +5,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 9.0.1
+
+- FIX: The template rendering the WireGuard configuration only checked if `wireguard_save_config` was set and if so sets `SaveConfig = true`. So setting `wireguard_save_config: "false"` had no effect.
+
 ## 9.0.0
 
 - set minimally required Ansible version to `2.9` (contribution by @8ware)
