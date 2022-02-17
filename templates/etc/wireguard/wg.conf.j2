@@ -42,7 +42,7 @@ PostDown = {{ wg_postdown }}
 {% endfor %}
 {% endif %}
 {% if wireguard_save_config is defined %}
-SaveConfig = true
+SaveConfig = {{ wireguard_save_config }}
 {% endif %}
 {% for host in ansible_play_hosts %}
 {%   if host != inventory_hostname %}
