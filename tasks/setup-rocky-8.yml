@@ -35,6 +35,12 @@
         name: jdoss/wireguard
         chroot: epel-8-{{ ansible_architecture }}
 
+    - name: (Rocky Linux 8) Install EPEL repository
+      ansible.builtin.yum:
+        name:
+          - epel-release
+        update_cache: true
+
     - name: (Rocky Linux 8) Ensure WireGuard KMOD package is removed
       ansible.builtin.yum:
         name:
