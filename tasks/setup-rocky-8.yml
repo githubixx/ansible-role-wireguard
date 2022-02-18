@@ -47,5 +47,5 @@
           - "wireguard-tools"
         state: present
   when:
-    - wireguard_rockylinux8_installation_method == "non-standard"
+    - wireguard_rockylinux8_installation_method == "dkms"
 
