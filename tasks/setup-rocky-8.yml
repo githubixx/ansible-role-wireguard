@@ -24,7 +24,8 @@
           - "wireguard-tools"
         state: present
   when:
-    - wireguard_rockylinux8_installation_method == "standard"
+    - (wireguard_rockylinux8_installation_method == "standard" and ansible_architecture == "x86_64" and ansible_kernel is match("4\.18\.0-.*x86_64")) or
+      (wireguard_rockylinux8_installation_method == "kmod")
 
 - name: (Rocky Linux 8) Tasks for non-standard kernel
   block:
@@ -47,5 +48,5 @@
           - "wireguard-tools"
         state: present
   when:
-    - wireguard_rockylinux8_installation_method == "dkms"
-
+    - (wireguard_rockylinux8_installation_method == "standard" and (ansible_architecture != "x86_64" or ansible_kernel is not match("4\.18\.0-.*x86_64"))) or
+      (wireguard_rockylinux8_installation_method == "dkms")
