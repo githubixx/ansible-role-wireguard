@@ -146,6 +146,7 @@ platforms:
     groups:
       - vpn
       - el8
+      - el8-dkms
 
 provisioner:
   name: ansible
@@ -226,7 +227,6 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.130"
-        wireguard_rockylinux8_installation_method: "dkms"
 
 scenario:
   name: kvm
