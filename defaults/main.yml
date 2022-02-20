@@ -62,13 +62,11 @@ wireguard_centos7_kernel_plus_reboot_timeout: "600"
 # Settings only relevant for RockyLinux 8
 #########################################
 
-# Set wireguard_rockylinux8_installation_method to "kmod"
-# to force installation with kmod-wireguard from ELRepo.
-#
 # Set wireguard_rockylinux8_installation_method to "dkms"
-# to force building WireGuard module from source, with wireguard-dkms.
+# to build WireGuard module from source, with wireguard-dkms.
+# This is required if you use a custom kernel and/or your arch
+# is not x64_64.
 #
-# The default of "standard" will use kmod-wireguard if your arch
-# is x86_64 and you use the official kernel, and fallback
-# to wireguard-dkms installation otherwise.
+# The default of "standard" will install the kernel module
+# with kmod-wireguard from ELRepo.
 wireguard_rockylinux8_installation_method: "standard"
