@@ -146,7 +146,7 @@ platforms:
     groups:
       - vpn
       - el8
-      - el8-dkms
+      - el8dkms
 
 provisioner:
   name: ansible
