@@ -7,7 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 ## 9.1.0
 
-- added variable `wireguard_rockylinux8_installation_method`. Set `wireguard_rockylinux8_installation_method` to `dkms` to build WireGuard module from source, with wireguard-dkms. This is required if you use a custom kernel and/or your arch is not `x86_64`. The default of `standard` will install the kernel module with kmod-wireguard from ELRepo (contribution by @gitouche-sur-osm)
+- For `Rocky Linux 8` only: Added variable `wireguard_rockylinux8_installation_method`. Set `wireguard_rockylinux8_installation_method` to `dkms` to build WireGuard module from source, with wireguard-dkms. This is required if you use a custom kernel and/or your arch is not `x86_64`. The default of `standard` will install the kernel module with kmod-wireguard from ELRepo (contribution by @gitouche-sur-osm)
 
 ## 9.0.1
 
