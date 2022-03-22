@@ -46,7 +46,7 @@
         update_cache: true
         cache_valid_time: 3600
 
-- hosts: el8-dkms
+- hosts: el8dkms
   remote_user: vagrant
   become: true
   gather_facts: true
