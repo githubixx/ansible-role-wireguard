@@ -2,22 +2,56 @@
 # Copyright (C) 2021 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: (Rocky Linux 8) Install EPEL & ELRepo repository
-  ansible.builtin.yum:
-    name:
-      - epel-release
-      - elrepo-release
-    update_cache: true
+- name: (Rocky Linux 8) Tasks for standard kernel
+  block:
+    - name: (Rocky Linux 8) Install EPEL & ELRepo repository
+      ansible.builtin.yum:
+        name:
+          - epel-release
+          - elrepo-release
+        update_cache: true
 
-- name: (Rocky Linux 8) Ensure WireGuard DKMS package is removed
-  ansible.builtin.yum:
-    name:
-      - "wireguard-dkms"
-    state: absent
+    - name: (Rocky Linux 8) Ensure WireGuard DKMS package is removed
+      ansible.builtin.yum:
+        name:
+          - "wireguard-dkms"
+        state: absent
 
-- name: (Rocky Linux 8) Install WireGuard packages
-  ansible.builtin.yum:
-    name:
-      - "kmod-wireguard"
-      - "wireguard-tools"
-    state: present
+    - name: (Rocky Linux 8) Install WireGuard packages
+      ansible.builtin.yum:
+        name:
+          - "kmod-wireguard"
+          - "wireguard-tools"
+        state: present
+  when:
+    - wireguard_rockylinux8_installation_method == "standard"
+
+- name: (Rocky Linux 8) Tasks for non-standard kernel
+  block:
+    - name: (Rocky Linux 8) Install jdoss/wireguard COPR repository
+      community.general.copr:
+        state: enabled
+        name: jdoss/wireguard
+        chroot: epel-8-{{ ansible_architecture }}
+
+    - name: (Rocky Linux 8) Install EPEL repository
+      ansible.builtin.yum:
+        name:
+          - epel-release
+        update_cache: true
+
+    - name: (Rocky Linux 8) Ensure WireGuard KMOD package is removed
+      ansible.builtin.yum:
+        name:
+          - "kmod-wireguard"
+        state: absent
+
+    - name: (Rocky Linux 8) Install WireGuard packages
+      ansible.builtin.yum:
+        name:
+          - "wireguard-dkms"
+          - "wireguard-tools"
+        state: present
+  when:
+    - wireguard_rockylinux8_installation_method == "dkms"
+
