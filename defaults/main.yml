@@ -15,6 +15,9 @@ wireguard_port: "51820"
 # The default interface name that WireGuard should use if not specified otherwise.
 wireguard_interface: "wg0"
 
+# The template for wg.conf file (default is provided with the role)
+wireguard_conf_template: etc/wireguard/wg.conf.j2
+
 # The default owner of the wg.conf file
 wireguard_conf_owner: root
 
