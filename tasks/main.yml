@@ -45,14 +45,24 @@
       register: wireguard__register_subcommands
       changed_when: false
       check_mode: false
+      when:
+        - wireguard_interface_restart_behavior is not defined
 
     - name: Check if wg syncconf subcommand is available
       ansible.builtin.set_fact:
-        wg_syncconf: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
+        use_wg_syncconf: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
+      when:
+        - wireguard_interface_restart_behavior is not defined
+
+    - name: Set whether wg syncconf should get used to apply interface changes
+      ansible.builtin.set_fact:
+        use_wg_syncconf: "{{ wireguard_interface_restart_behavior == 'sync' }}"
+      when:
+        - wireguard_interface_restart_behavior is defined
 
     - name: Show syncconf subcommand status
       ansible.builtin.debug:
-        var: wg_syncconf
+        var: use_wg_syncconf
   tags:
     - wg-generate-keys
     - wg-config

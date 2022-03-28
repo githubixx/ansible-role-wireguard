@@ -10,7 +10,7 @@
     - stopped
     - started
   when:
-    - not wg_syncconf
+    - not use_wg_syncconf
     - not ansible_os_family == 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
@@ -26,7 +26,7 @@
   args:
     executable: "/bin/bash"
   when:
-    - wg_syncconf
+    - use_wg_syncconf
     - not ansible_os_family == 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"

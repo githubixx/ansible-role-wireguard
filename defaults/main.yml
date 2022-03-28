@@ -28,6 +28,14 @@ wireguard_conf_mode: 0600
 wireguard_service_enabled: "yes"
 wireguard_service_state: "started"
 
+# Which method should be used to apply new wireguard configurations?
+# Possible options:
+#   sync: Does make use of the `wg syncconf` command, connections are not interrupted but it does
+#         populate route changes to the interface. Not available on older kernels / systems.
+#   restart: Performs a full restart on the interface. Does interrupt the connections shortly.
+#   undefined: Use sync on systems where it is available, otherwise use restart. (default)
+# wireguard_interface_restart_behavior:
+
 # This is sensitive: encrypt it with a tool like Ansible Vault.
 # If not set, a new one is generated on a blank configuration.
 # wireguard_private_key:

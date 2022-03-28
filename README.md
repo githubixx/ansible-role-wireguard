@@ -75,6 +75,14 @@ wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'whee
 # The default mode of the wg.conf file
 wireguard_conf_mode: 0600
 
+# Which method should be used to apply new wireguard configurations?
+# Possible options:
+#   sync: Does make use of the `wg syncconf` command, connections are not interrupted but it does
+#         populate route changes to the interface. Not available on older kernels / systems.
+#   restart: Performs a full restart on the interface. Does interrupt the connections shortly.
+#   undefined: Use sync on systems where it is available, otherwise use restart. (default)
+# wireguard_interface_restart_behavior:
+
 # The default state of the wireguard service
 wireguard_service_enabled: "yes"
 wireguard_service_state: "started"
