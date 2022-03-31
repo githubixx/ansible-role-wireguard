@@ -1,0 +1,83 @@
+- name: WireGuard condiguration exists
+  stat:
+    path: "{{ wireguard_remote_directory }}/clients/{{ item.name }}.conf"
+  register: peer_config_file
+
+- name: WireGuard private key handling for existing keys
+  block:
+    - name: Read WireGuard config file
+      slurp:
+        src: "{{ wireguard_remote_directory }}/clients/{{ item.name }}.conf"
+      register: register_config
+
+    - name: Set private key fact
+      set_fact:
+        peer_private_key: "{{ register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+  when:
+    - peer_config_file.stat.exists
+
+- name: WireGuard private key handling for not existing keys
+  block:
+    - name: Generate WireGuard private key to {{ item.name }} peer.
+      command: "wg genkey"
+      register: private_key
+      changed_when: false
+
+    - name: Set private key fact
+      set_fact:
+        peer_private_key: "{{ private_key.stdout }}"
+  when:
+    - not peer_config_file.stat.exists
+
+- name: Generate WireGuard public key to {{ item.name }} peer.
+  command: "wg pubkey"
+  args:
+    stdin: "{{ peer_private_key }}"
+  register: public_key
+
+- name: Set public key fact.
+  set_fact:
+    peer_public_key: "{{ public_key.stdout }}"
+
+- name: Set IP Address fact.
+  set_fact: 
+    peer_ip_address: "{{ wireguard_address | ipaddr(item.position + 1) | regex_replace('/(.*)', '/32')}}"
+
+- name: Create {{ item.name }} peer configs.
+  template:
+    src: "etc/wireguard/clients/peer.conf.j2"
+    dest: "{{ wireguard_remote_directory }}/clients/{{ item.name }}.conf"
+    mode: 0644
+  
+- name: Set peer configuration.
+  set_fact: 
+    wg_peer: 
+      name: "{{ item.name }}"
+      ip: "{{ peer_ip_address }}"
+      publickey: "{{ peer_public_key }}"
+
+- name: Concat all peers.
+  set_fact: 
+    wg_peers: "{{ wg_peers + [wg_peer] }}"
+
+- name: Slack notify
+  block:
+    - name: Read WireGuard config file
+      slurp:
+        src: "{{ wireguard_remote_directory }}/clients/{{ item.name }}.conf"
+      register: register_config
+
+    - name: Creation notification
+      slack:
+        token: "{{ slack_token }}"
+        username: "Staging Wireguard"
+        icon_url: https://www.wireguard.com/img/icons/favicon-64.png
+        channel: "@{{ item.name }}"
+        msg: |
+          :rocket: Aqui esta seu arquivo de configuração wireguard:
+
+          ```{{ register_config['content'] | b64decode }}```
+          > OBS.: Você deve importar para dentro do seu client este aquivo!
+      delegate_to: localhost
+  when:
+    - not peer_config_file.stat.exists
