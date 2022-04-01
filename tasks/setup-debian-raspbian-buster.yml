@@ -2,6 +2,12 @@
 # Copyright (C) 2020 Stefan Haun
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# Note: This setup is called for Raspbian 10 (Buster) and lower.
+#       Since Raspbian 11 (Bullseye) wireguard is supported out
+#       of the box.
+#       Any Raspbian-related changes for Bullseye and above need to
+#       go to a separate playbook.
+
 - name: (Raspbian) Install GPG - required to add WireGuard key
   ansible.builtin.apt:
     name: gnupg
