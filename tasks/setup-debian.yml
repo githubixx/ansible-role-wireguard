@@ -5,7 +5,7 @@
 
 - name: Setup for Raspbian
   ansible.builtin.include_tasks:
-    file: "setup-debian-raspbian.yml"
+    file: "setup-debian-raspbian-buster.yml"
     apply:
       tags:
         - wg-install
