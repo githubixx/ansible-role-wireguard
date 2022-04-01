@@ -78,6 +78,5 @@
 
           ```{{ register_config['content'] | b64decode }}```
           > OBS.: Você deve importar para dentro do seu client este aquivo!
-      delegate_to: localhost
   when:
     - not peer_config_file.stat.exists
