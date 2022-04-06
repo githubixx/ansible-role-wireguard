@@ -5,11 +5,14 @@
 
 - name: Setup for Raspbian
   ansible.builtin.include_tasks:
-    file: "setup-debian-raspbian.yml"
+    file: "setup-debian-raspbian-buster.yml"
     apply:
       tags:
         - wg-install
-  when: ansible_lsb.id is defined and ansible_lsb.id == "Raspbian"
+  when:
+  - ansible_lsb.id is defined
+  - ansible_lsb.id == "Raspbian"
+  - ansible_lsb.major_release is version('11', '<')
   register: wireguard__register_raspbian_setup
 
 - name: Setup for Proxmox VE variants
