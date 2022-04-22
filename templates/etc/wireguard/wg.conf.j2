@@ -87,7 +87,7 @@ Endpoint = {{host}}:{{wireguard_port}}
 # Peers not managed by Ansible from "wireguard_unmanaged_peers" variable
 {% for peer in wireguard_unmanaged_peers.keys() %}
 [Peer]
-# {{ peer }}
+# Name = {{ peer }}
 PublicKey = {{ wireguard_unmanaged_peers[peer].public_key }}
 {%     if wireguard_unmanaged_peers[peer].preshared_key is defined %}
 PresharedKey = {{ wireguard_unmanaged_peers[peer].preshared_key }}
