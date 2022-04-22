@@ -48,7 +48,7 @@ SaveConfig = {{ wireguard_save_config }}
 {%   if host != inventory_hostname %}
 
 [Peer]
-# {{ host }}
+# Name = {{ host }}
 PublicKey = {{hostvars[host].wireguard__fact_public_key}}
 {%     if hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
