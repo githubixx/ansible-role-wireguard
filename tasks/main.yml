@@ -33,26 +33,28 @@
     - wg-install
   when: not ansible_os_family == 'Darwin'
 
-- name: Generate keys | Check wg syncconf subcommand status
+- name: wg subcommands handling
   block:
-    - name: Register if config/private key already exists on target host
-      ansible.builtin.stat:
-        path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
-      register: wireguard__register_config_file
-
     - name: Get wg subcommands
       ansible.builtin.command: "wg --help"
       register: wireguard__register_subcommands
       changed_when: false
       check_mode: false
-
+    
     - name: Check if wg syncconf subcommand is available
       ansible.builtin.set_fact:
         wg_syncconf: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
-
+    
     - name: Show syncconf subcommand status
       ansible.builtin.debug:
         var: wg_syncconf
+  tags:
+    - wg-config
+
+- name: Register if config/private key already exists on target host
+  ansible.builtin.stat:
+    path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+  register: wireguard__register_config_file
   tags:
     - wg-generate-keys
     - wg-config
