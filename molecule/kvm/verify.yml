@@ -1,0 +1,33 @@
+---
+# Copyright (C) 2022 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Verify setup
+  hosts: all
+  vars:
+    hosts_count: "{{ groups['vpn'] | length }}"
+  tasks:
+    - name: Count WireGuard interfaces
+      ansible.builtin.shell: |
+        set -o errexit
+        set -o pipefail
+        set -o nounset
+        wg | grep "peer: " | wc -l
+        exit 0
+      args:
+        executable: "/bin/bash"
+      register: wireguard__interfaces_count
+      changed_when: false
+
+    - name: Print WireGuard interface count
+      ansible.builtin.debug:
+        var: wireguard__interfaces_count.stdout
+
+    - name: Print hosts count in vpn group
+      ansible.builtin.debug:
+        var: hosts_count
+
+    - name: There should be as much WireGuard interfaces as hosts in vpn group minus one
+      ansible.builtin.assert:
+        that:
+          - "hosts_count|int -1 == wireguard__interfaces_count.stdout|int"
