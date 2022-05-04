@@ -1,34 +1,33 @@
-# Copyright (C) 2018-2020 Robert Wimmer
+# Copyright (C) 2018-2022 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 galaxy_info:
   author: Robert Wimmer
   description: Installs Wireguard incl. systemd integration
   license: GPL-3.0-or-later
-  min_ansible_version: 2.9
+  min_ansible_version: "2.9"
   role_name: ansible_role_wireguard
-  namespace: githubixx
   platforms:
     - name: ArchLinux
     - name: Ubuntu
       versions:
-        - bionic
-        - focal
+        - "bionic"
+        - "focal"
     - name: Debian
       versions:
-        - buster
-        - bullseye
+        - "buster"
+        - "bullseye"
     - name: EL
       versions:
-        - 7
-        - 8
+        - "7"
+        - "8"
     - name: Fedora
       versions:
-        - 34
-        - 35
+        - "34"
+        - "35"
     - name: opensuse
       versions:
-        - 15.3
+        - "15.3"
   galaxy_tags:
     - networking
     - security
