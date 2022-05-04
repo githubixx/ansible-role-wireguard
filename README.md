@@ -14,7 +14,7 @@ In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. 
 Linux
 -----
 
-This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 34 (or later), CentOS 7, AlmaLinux, Rocky Linux and openSUSE Leap 15.3 should also work and are tested via the provided "Molecule" tests (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 34 (or later), CentOS 7, AlmaLinux, Rocky Linux and openSUSE Leap 15.3 should also work and are tested via the provided [Molecule tests](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
 
 MacOS
 -----
@@ -113,6 +113,56 @@ wireguard_service_state: "started"
 # the safest way to go. Also if you want to avoid the possibility creating some
 # hard to detect side effects this option should be considered.
 wireguard_interface_restart: false
+
+# Normally the role automatically creates a private key the very first time
+# if there isn't already a WireGuard configuration. But this option allows
+# to provide your own WireGuard private key if really needed. As this is of
+# course a very sensitive value you might consider a tool like Ansible Vault
+# to store it encrypted.
+# wireguard_private_key:
+```
+
+There are also a few Linux distribution specific settings:
+
+```yaml
+#######################################
+# Settings only relevant for Ubuntu
+#######################################
+
+# Set to "false" if package cache should not be updated
+wireguard_ubuntu_update_cache: "true"
+
+# Set package cache valid time
+wireguard_ubuntu_cache_valid_time: "3600"
+
+#######################################
+# Settings only relevant for CentOS 7
+#######################################
+
+# Set wireguard_centos7_installation_method to "kernel-plus"
+# to use the kernel-plus kernel, which includes a built-in,
+# signed WireGuard module.
+# UTILIZING KERNEL-PLUS WILL PERFORM A SYSTEM REBOOT DURING SETUP!!
+#
+# The default of "standard" will use the standard kernel and
+# the ELRepo module for WireGuard.
+wireguard_centos7_installation_method: "standard"
+
+# The default seconds to wait for machine to reboot and respond
+wireguard_centos7_kernel_plus_reboot_timeout: "600"
+
+#########################################
+# Settings only relevant for RockyLinux 8
+#########################################
+
+# Set wireguard_rockylinux8_installation_method to "dkms"
+# to build WireGuard module from source, with wireguard-dkms.
+# This is required if you use a custom kernel and/or your arch
+# is not x86_64.
+#
+# The default of "standard" will install the kernel module
+# with kmod-wireguard from ELRepo.
+wireguard_rockylinux8_installation_method: "standard"
 ```
 
 The following variable is mandatory and needs to be configured for every host in `host_vars/` e.g.:
