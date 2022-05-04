@@ -31,7 +31,7 @@
       when:
         - ('-cloud-' not in ansible_kernel)
   when:
-    - ansible_lsb.major_release is version('11', '<')
+    - ansible_distribution_major_version is version('11', '<')
 
 - name: (Debian) Install WireGuard packages
   ansible.builtin.apt:
