@@ -239,4 +239,4 @@ scenario:
 
 verifier:
   name: ansible
-  enabled: False
+  enabled: false
