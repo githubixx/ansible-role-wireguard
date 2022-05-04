@@ -14,7 +14,7 @@ In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. 
 Linux
 -----
 
-This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 34 (or later), CentOS 7, AlmaLinux, Rocky Linux and openSUSE Leap 15.3 should also work and are tested via the provided "Molecule" tests (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 34 (or later), CentOS 7, AlmaLinux, Rocky Linux and openSUSE Leap 15.3 should also work and are tested via the provided [Molecule tests](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
 
 MacOS
 -----
@@ -78,6 +78,91 @@ wireguard_conf_mode: 0600
 # The default state of the wireguard service
 wireguard_service_enabled: "yes"
 wireguard_service_state: "started"
+
+# By default "wg syncconf" is used to apply WireGuard interface settings if
+# they've changed. Older WireGuard tools doesn't provide this option. In that
+# case as a fallback the WireGuard interface will be restarted. This causes a
+# short interruption of network connections.
+#
+# So even if "false" is the default, the role figures out if the "syncconf"
+# option of the "wg" utility is available and if not falls back to "true"
+# (which means interface will be restarted as this is the only possible option
+# in this case).
+#
+# Possible options:
+# - false (default)
+# - true
+#
+# Both options have their pros and cons. The default "false" option (do not
+# restart interface)
+# - does not need to restart the WireGuard interface to apply changes
+# - does not cause a short VPN connection interruption when changes are applied
+# - might cause network routes are not properly reloaded
+#
+# Setting the option value to "true" will
+# - restart the WireGuard interface as the name suggests in case of changes
+# - cause a short VPN connection interruption when changes are applied
+# - make sure that network routes are properly reloaded
+#
+# So it depends a little bit on your setup which option works best. If you
+# don't have an overly complicated routing that changes very often or at all
+# using "false" here is most properly good enough for you. E.g. if you just
+# want to connect a few servers via VPN and it normally stays this way.
+#
+# If you have a more dynamic routing setup then setting this to "true" might be
+# the safest way to go. Also if you want to avoid the possibility creating some
+# hard to detect side effects this option should be considered.
+wireguard_interface_restart: false
+
+# Normally the role automatically creates a private key the very first time
+# if there isn't already a WireGuard configuration. But this option allows
+# to provide your own WireGuard private key if really needed. As this is of
+# course a very sensitive value you might consider a tool like Ansible Vault
+# to store it encrypted.
+# wireguard_private_key:
+```
+
+There are also a few Linux distribution specific settings:
+
+```yaml
+#######################################
+# Settings only relevant for Ubuntu
+#######################################
+
+# Set to "false" if package cache should not be updated
+wireguard_ubuntu_update_cache: "true"
+
+# Set package cache valid time
+wireguard_ubuntu_cache_valid_time: "3600"
+
+#######################################
+# Settings only relevant for CentOS 7
+#######################################
+
+# Set wireguard_centos7_installation_method to "kernel-plus"
+# to use the kernel-plus kernel, which includes a built-in,
+# signed WireGuard module.
+# UTILIZING KERNEL-PLUS WILL PERFORM A SYSTEM REBOOT DURING SETUP!!
+#
+# The default of "standard" will use the standard kernel and
+# the ELRepo module for WireGuard.
+wireguard_centos7_installation_method: "standard"
+
+# The default seconds to wait for machine to reboot and respond
+wireguard_centos7_kernel_plus_reboot_timeout: "600"
+
+#########################################
+# Settings only relevant for RockyLinux 8
+#########################################
+
+# Set wireguard_rockylinux8_installation_method to "dkms"
+# to build WireGuard module from source, with wireguard-dkms.
+# This is required if you use a custom kernel and/or your arch
+# is not x86_64.
+#
+# The default of "standard" will install the kernel module
+# with kmod-wireguard from ELRepo.
+wireguard_rockylinux8_installation_method: "standard"
 ```
 
 The following variable is mandatory and needs to be configured for every host in `host_vars/` e.g.:

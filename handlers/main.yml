@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2018-2020 Robert Wimmer
+# Copyright (C) 2018-2022 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: restart wireguard
@@ -10,7 +10,7 @@
     - stopped
     - started
   when:
-    - not wg_syncconf
+    - wireguard__restart_interface
     - not ansible_os_family == 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
@@ -26,7 +26,7 @@
   args:
     executable: "/bin/bash"
   when:
-    - wg_syncconf
+    - not wireguard__restart_interface
     - not ansible_os_family == 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
