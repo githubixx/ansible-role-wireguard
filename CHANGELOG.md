@@ -9,7 +9,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - add `wireguard_interface_restart` variable. This allows the user to decide if the WireGuard interface should be restarted or not in case of changes to the interface. The default is (and was) to use `wg syncconf` which applies the changes to the interface without the need to restart the interface. Restarting the interface was only done if `wg`'s `syncconf` command wasn't available. But that's basically only true for very old (and outdated) WireGuard tools. For more information on this have a look at the README (initial [PR](https://github.com/githubixx/ansible-role-wireguard/pull/152) by @lmm-git)
 - on Debian `lsb-release` is no longer needed (contribution by @blackandred)
-- WireGuard is directly supported by `Raspbian 11` (Bullseye) and higher. So `Raspbian 11` and `Raspbian 10 (Buster)` (and lower) needs to be a handled a little bit differently. (contribution by @penguineer)
+- WireGuard is directly supported by `Raspbian 11` (Bullseye) and higher. So `Raspbian 11` and `Raspbian 10 (Buster)` (and lower) needs to be handled a little bit differently. (contribution by @penguineer)
 - implement a very basic Molecule unit test
 
 ## 9.1.0
