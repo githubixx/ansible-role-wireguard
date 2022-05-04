@@ -78,6 +78,41 @@ wireguard_conf_mode: 0600
 # The default state of the wireguard service
 wireguard_service_enabled: "yes"
 wireguard_service_state: "started"
+
+# By default "wg syncconf" is used to apply WireGuard interface settings if
+# they've changed. Older WireGuard tools doesn't provide this option. In that
+# case as a fallback the WireGuard interface will be restarted. This causes a
+# short interruption of network connections.
+#
+# So even if "false" is the default, the role figures out if the "syncconf"
+# option of the "wg" utility is available and if not falls back to "true"
+# (which means interface will be restarted as this is the only possible option
+# in this case).
+#
+# Possible options:
+# - false (default)
+# - true
+#
+# Both options have their pros and cons. The default "false" option (do not
+# restart interface)
+# - does not need to restart the WireGuard interface to apply changes
+# - does not cause a short VPN connection interruption when changes are applied
+# - might cause network routes are not properly reloaded
+#
+# Setting the option value to "true" will
+# - restart the WireGuard interface as the name suggests in case of changes
+# - cause a short VPN connection interruption when changes are applied
+# - make sure that network routes are properly reloaded
+#
+# So it depends a little bit on your setup which option works best. If you
+# don't have an overly complicated routing that changes very often or at all
+# using "false" here is most properly good enough for you. E.g. if you just
+# want to connect a few servers via VPN and it normally stays this way.
+#
+# If you have a more dynamic routing setup then setting this to "true" might be
+# the safest way to go. Also if you want to avoid the possibility creating some
+# hard to detect side effects this option should be considered.
+wireguard_interface_restart: false
 ```
 
 The following variable is mandatory and needs to be configured for every host in `host_vars/` e.g.:
