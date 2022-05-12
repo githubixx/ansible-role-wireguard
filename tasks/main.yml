@@ -31,7 +31,7 @@
   failed_when: wireguard__register_module_enabled is failure
   tags:
     - wg-install
-  when: not ansible_os_family == 'Darwin'
+  when: not ansible_os_family == 'Darwin' and not ansible_os_family == 'Windows'
 
 - name: Set default for WireGuard interface restart behavior
   ansible.builtin.set_fact:
@@ -49,6 +49,14 @@
       register: wireguard__register_subcommands
       changed_when: false
       check_mode: false
+      when: not ansible_os_family == 'Windows'
+
+    - name: Get wg subcommands (Windows)
+      ansible.builtin.win_command: "wg --help"
+      register: wireguard__register_subcommands
+      changed_when: false
+      check_mode: false
+      when: ansible_os_family == 'Windows'
 
     - name: Check if wg syncconf subcommand is available
       ansible.builtin.set_fact:
@@ -84,6 +92,17 @@
   tags:
     - wg-generate-keys
     - wg-config
+  when: not ansible_os_family == 'Windows'
+
+- name: Register if config/private key already exists on target host (Windows)
+  ansible.builtin.win_stat:
+    path: "{{ wireguard_remote_directory }}\\{{ wireguard_interface }}.conf"
+    get_checksum: no
+  register: wireguard__register_config_file
+  tags:
+    - wg-generate-keys
+    - wg-config
+  when: ansible_os_family == 'Windows'
 
 - name: WireGuard private key handling for new keys
   block:
@@ -94,6 +113,16 @@
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
         - wg-generate-keys
+      when: not ansible_os_family == 'Windows'
+
+    - name: Generate WireGuard private key (Windows)
+      ansible.builtin.win_command: "wg genkey"
+      register: wireguard__register_private_key
+      changed_when: false
+      no_log: '{{ ansible_verbosity < 3 }}'
+      tags:
+        - wg-generate-keys
+      when: ansible_os_family == 'Windows'
 
     - name: Set private key fact
       ansible.builtin.set_fact:
@@ -114,6 +143,7 @@
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
         - wg-config
+      when: not ansible_os_family == 'Windows'
 
     - name: Set private key fact
       ansible.builtin.set_fact:
@@ -135,6 +165,19 @@
   no_log: '{{ ansible_verbosity < 3 }}'
   tags:
     - wg-config
+  when: not ansible_os_family == 'Windows'
+
+- name: Derive WireGuard public key (Windows)
+  ansible.builtin.win_command: "wg pubkey"
+  args:
+    stdin: "{{ wireguard_private_key }}"
+  register: wireguard__register_public_key
+  changed_when: false
+  check_mode: false
+  no_log: '{{ ansible_verbosity < 3 }}'
+  tags:
+    - wg-config
+  when: ansible_os_family == 'Windows'
 
 - name: Set public key fact
   ansible.builtin.set_fact:
@@ -149,6 +192,23 @@
     mode: 0700
   tags:
     - wg-config
+  when: not ansible_os_family == 'Windows'
+
+- name: Create WireGuard configuration directory (Windows)
+  ansible.builtin.win_file:
+    dest: "{{ wireguard_remote_directory }}"
+    state: directory
+  tags:
+    - wg-config
+  when: ansible_os_family == 'Windows'
+
+- name: Remote old WireGuard configuration file to allow the new one (Windows)
+  ansible.builtin.win_file:
+    path: "{{ wireguard_remote_directory }}\\{{ wireguard_interface }}.conf.dpapi"
+    state: absent
+  tags:
+    - wg-config
+  when: ansible_os_family == 'Windows'
 
 - name: Generate WireGuard configuration file
   ansible.builtin.template:
@@ -169,10 +229,19 @@
     state: absent
   tags:
     - wg-config
+  when: not ansible_os_family == 'Windows'
+
+- name: Ensure legacy reload-module-on-update is absent (Windows)
+  ansible.builtin.win_file:
+    dest: "{{ wireguard_remote_directory }}/.reload-module-on-update"
+    state: absent
+  tags:
+    - wg-config
+  when: ansible_os_family == 'Windows'
 
 - name: Start and enable WireGuard service
   ansible.builtin.service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: "{{ wireguard_service_state }}"
     enabled: "{{ wireguard_service_enabled }}"
-  when: not ansible_os_family == 'Darwin'
+  when: not ansible_os_family == 'Darwin' and not ansible_os_family == 'Windows'

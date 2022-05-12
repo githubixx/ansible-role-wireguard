@@ -27,6 +27,6 @@
     executable: "/bin/bash"
   when:
     - not wireguard__restart_interface
-    - not ansible_os_family == 'Darwin'
+    - not ansible_os_family == 'Darwin' and not ansible_os_family == 'Windows'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"

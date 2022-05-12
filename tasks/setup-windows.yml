@@ -1,0 +1,15 @@
+---
+
+# The product id is used to check if it's already installed. If set to empty, WireGuard will be installed.
+# To get a correct value, use a command : reg query  HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ /s  /f WireGuard /e
+# The productid this the value show just after HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Uninstall\
+# By example : {2FDB79CE-5193-4A39-82BB-E00158CC1533}
+- name: Get get product_id
+  ansible.windows.win_command: reg query  HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ /s  /f WireGuard /e
+  register: wireguard_product_id
+
+- name: Install WireGuard
+  ansible.windows.win_package:
+    path: "{{ wireguard_windows_source }}"
+    product_id: "{{ wireguard_product_id | regex_search('{[0-9A-F-]+}') }}"
+    provider: auto

@@ -14,7 +14,7 @@ In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. 
 Linux
 -----
 
-This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 34 (or later), CentOS 7, AlmaLinux, Rocky Linux and openSUSE Leap 15.3 should also work and are tested via the provided [Molecule tests](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 34 (or later), CentOS 7, AlmaLinux, Rocky Linux and openSUSE Leap 15.3 should also work and are tested via the provided [Molecule tests](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS and Windows (see below) should also work partitially but is only best effort.
 
 MacOS
 -----
@@ -32,6 +32,11 @@ sudo wg-quick down wg0
 ```
 
 or you can install the [official app](https://apps.apple.com/it/app/wireguard/id1451685025?l=en&mt=12) and import the `wg0.conf` file.
+
+Windows
+-------
+
+This role is tested with Windows 10 Professionnal via a winrm connection. The installer is download directly from WireGuard web site (or a source in the variable `wireguard_windows_source`. The installation is fully automatic, in the folder `C:\Program Files\WireGuard`. The DPAPI files with the existing wireguard configuration can't be read in this version, configuration is recreated each time one the Windows side. Note that the tunnel name in the WireGuard GUI is the name of the `wireguard_interface`.
 
 Versions
 --------
