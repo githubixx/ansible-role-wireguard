@@ -492,12 +492,22 @@ Afterwards molecule can be executed:
 molecule converge -s kvm
 ```
 
-This will setup quite a few virtual machines (VM) with different supported Linux operating systems.
+This will setup quite a few virtual machines (VM) with different supported Linux operating systems. To run a few tests:
+
+```bash
+molecule verify -s kvm
+```
 
 To clean up run
 
 ```bash
 molecule destroy -s kvm
+```
+
+There is also a small Molecule setup that mimics a central WireGuard server with a few clients:
+
+```bash
+molecule converge -s kvm-single-server
 ```
 
 License
