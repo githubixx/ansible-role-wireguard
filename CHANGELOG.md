@@ -5,6 +5,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 9.3.0
+
+- add support for Ubuntu 22.04 (Jammy Jellyfish)
+
 ## 9.2.0
 
 - add `wireguard_interface_restart` variable. This allows the user to decide if the WireGuard interface should be restarted or not in case of changes to the interface. The default is (and was) to use `wg syncconf` which applies the changes to the interface without the need to restart the interface. Restarting the interface was only done if `wg`'s `syncconf` command wasn't available. But that's basically only true for very old (and outdated) WireGuard tools. For more information on this have a look at the README (initial [PR](https://github.com/githubixx/ansible-role-wireguard/pull/152) by @lmm-git)

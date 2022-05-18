@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2018-2021 Robert Wimmer
+Copyright (C) 2018-2022 Robert Wimmer
 Copyright (C) 2019 fbourqui
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
@@ -14,7 +14,21 @@ In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. 
 Linux
 -----
 
-This role is mainly tested with Ubuntu 20.04 (Focal Fossa) and Archlinux. Ubuntu 18.04 (Bionic Beaver), Debian 10 (Buster), Debian 11 (Bullseye), Fedora 34 (or later), CentOS 7, AlmaLinux, Rocky Linux and openSUSE Leap 15.3 should also work and are tested via the provided [Molecule tests](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+This role should work with:
+
+- Ubuntu 18.04 (Bionic Beaver)
+- Ubuntu 20.04 (Focal Fossa)
+- Ubuntu 22.04 (Jammy Jellyfish)
+- Archlinux
+- Debian 10 (Buster)
+- Debian 11 (Bullseye)
+- Fedora 34 (or later)
+- CentOS 7
+- AlmaLinux
+- Rocky Linux
+- openSUSE Leap 15.3
+
+Molecule tests are [available](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
 
 MacOS
 -----
