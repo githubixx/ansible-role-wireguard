@@ -1,7 +1,12 @@
 ---
 # Copyright (C) 2018-2020 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
-
+- name: Remover (TESTE)
+  shell: |
+    echo $USER
+    whoami
+    ls -lah /var/lib/apt/lists
+    
 - name: (Ubuntu) Update APT package cache
   ansible.builtin.apt:
     update_cache: "{{ wireguard_ubuntu_update_cache }}"
