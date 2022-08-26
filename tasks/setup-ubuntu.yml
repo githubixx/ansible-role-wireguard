@@ -1,17 +1,13 @@
 ---
 # Copyright (C) 2018-2020 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
-- name: Remover (TESTE)
-  shell: |
-    echo $USER
-    whoami
-    ls -lah /var/lib/apt/lists
-    
 - name: (Ubuntu) Update APT package cache
   ansible.builtin.apt:
     update_cache: "{{ wireguard_ubuntu_update_cache }}"
     cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
-
+  become_user: root
+  become: yes
+  
 - name: (Ubuntu) Tasks for Ubuntu < 19.10
   block:
     - name: (Ubuntu) Install support packages needed for Wireguard (for Ubuntu < 19.10)
