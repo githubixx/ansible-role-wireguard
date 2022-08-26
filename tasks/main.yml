@@ -20,11 +20,6 @@
   tags:
     - wg-install
 
-- name: Install dependecies
-    command: apt install python3-netaddr
-become_user: root
-become: yes
-
 - name: Enable WireGuard kernel module
   modprobe:
     name: wireguard
