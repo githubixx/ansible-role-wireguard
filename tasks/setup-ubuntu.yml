@@ -35,3 +35,6 @@
     state: present
   become_user: root
   become: yes
+
+- name: Install dependecies
+    run: sudo apt install python3-netaddr
