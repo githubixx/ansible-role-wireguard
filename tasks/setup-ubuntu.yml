@@ -36,5 +36,3 @@
   become_user: root
   become: yes
 
-- name: Install dependecies
-    shell: sudo apt install python3-netaddr
