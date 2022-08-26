@@ -5,9 +5,7 @@
   ansible.builtin.apt:
     update_cache: "{{ wireguard_ubuntu_update_cache }}"
     cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
-  become_user: root
-  become: yes
-  
+
 - name: (Ubuntu) Tasks for Ubuntu < 19.10
   block:
     - name: (Ubuntu) Install support packages needed for Wireguard (for Ubuntu < 19.10)
@@ -26,13 +24,9 @@
     name:
       - "wireguard-dkms"
     state: absent
-  become_user: root
-  become: yes
 
 - name: (Ubuntu) Install wireguard package
   ansible.builtin.apt:
     name: "wireguard"
     state: present
-  become_user: root
-  become: yes
 

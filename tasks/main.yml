@@ -32,9 +32,7 @@
   tags:
     - wg-install
   when: not ansible_os_family == 'Darwin'
-  become_user: root
-  become: yes
-
+ 
 - name: Generate keys | Check wg syncconf subcommand status
   block:
     - name: Register if config/private key already exists on target host
@@ -58,8 +56,6 @@
   tags:
     - wg-generate-keys
     - wg-config
-  become_user: root
-  become: yes
 
 - name: WireGuard private key handling for new keys
   block:
@@ -80,8 +76,6 @@
   when:
     - not wireguard__register_config_file.stat.exists
     - wireguard_private_key is not defined
-  become_user: root
-  become: yes
 
 - name: WireGuard private key handling for existing keys
   block:
@@ -102,8 +96,6 @@
   when:
     - wireguard__register_config_file.stat.exists
     - wireguard_private_key is not defined
-  become_user: root
-  become: yes
 
 - name: Derive WireGuard public key
   command: "wg pubkey"
@@ -112,16 +104,12 @@
   register: wireguard__register_public_key
   tags:
     - wg-config
-  become_user: root
-  become: yes
 
 - name: Set public key fact
   set_fact:
     wireguard__fact_public_key: "{{ wireguard__register_public_key.stdout }}"
   tags:
     - wg-config
-  become_user: root
-  become: yes
   
 - name: Create WireGuard configuration directory
   file:
@@ -130,8 +118,6 @@
     mode: 0700
   tags:
     - wg-config 
-  become_user: root
-  become: yes
 
 - name: Create a clients configurations
   block:
@@ -160,8 +146,6 @@
       loop: "{{ wireguard_peers }}"
       tags:
         - wg-config
-  become_user: root
-  become: yes
 
 - name: Generate WireGuard configuration file
   template:
@@ -174,8 +158,6 @@
     - wg-config
   notify:
     - reconfigure wireguard
-  become_user: root
-  become: yes
 
 - name: Ensure legacy reload-module-on-update is absent
   file:
@@ -183,8 +165,6 @@
     state: absent
   tags:
     - wg-config
-  become_user: root
-  become: yes
 
 - name: Start and enable WireGuard service
   service:
@@ -192,6 +172,3 @@
     state: "{{ wireguard_service_state }}"
     enabled: "{{ wireguard_service_enabled }}"
   when: not ansible_os_family == 'Darwin'
-  become_user: root
-  become: yes
-  
