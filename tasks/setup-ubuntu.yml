@@ -36,9 +36,9 @@
   become_user: root
   become: yes
 
-- name: (Ubuntu) Install python3-netaddr package
+- name: (Ubuntu) Install python-netaddr package
   ansible.builtin.apt:
-    name: "netaddr"
+    name: "python-netaddr"
     state: present
   become_user: root
   become: yes
