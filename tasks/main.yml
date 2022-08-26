@@ -32,6 +32,8 @@
   tags:
     - wg-install
   when: not ansible_os_family == 'Darwin'
+  become_user: root
+  become: yes
 
 - name: Generate keys | Check wg syncconf subcommand status
   block:
