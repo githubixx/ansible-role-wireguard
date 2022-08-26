@@ -19,6 +19,8 @@
     - "setup-{{ ansible_os_family|lower }}.yml"
   tags:
     - wg-install
+  become_user: root
+  become: yes
 
 - name: Enable WireGuard kernel module
   modprobe:

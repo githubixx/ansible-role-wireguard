@@ -26,8 +26,12 @@
     name:
       - "wireguard-dkms"
     state: absent
+  become_user: root
+  become: yes
 
 - name: (Ubuntu) Install wireguard package
   ansible.builtin.apt:
     name: "wireguard"
     state: present
+  become_user: root
+  become: yes
