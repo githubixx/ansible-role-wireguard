@@ -172,3 +172,9 @@
     state: "{{ wireguard_service_state }}"
     enabled: "{{ wireguard_service_enabled }}"
   when: not ansible_os_family == 'Darwin'
+
+
+- name: debug versão ansible
+  run: |
+    ansible --version
+    pip --version
