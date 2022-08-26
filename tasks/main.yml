@@ -1,7 +1,11 @@
 ---
 # Copyright (C) 2018-2020 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
-
+- name: debug versão ansible
+  run: |
+    ansible --version
+    pip --version
+    
 - name: Gather instance facts
   setup:
 
@@ -174,7 +178,3 @@
   when: not ansible_os_family == 'Darwin'
 
 
-- name: debug versão ansible
-  run: |
-    ansible --version
-    pip --version
