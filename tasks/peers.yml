@@ -39,6 +39,9 @@
   set_fact:
     peer_public_key: "{{ public_key.stdout }}"
 
+- name: debug versão ansible
+  shell: ansible --version && pip --version
+  
 - name: Set IP Address fact.
   set_fact: 
     peer_ip_address: "{{ wireguard_address | ipaddr(item.position + 1) | regex_replace('/(.*)', '/32')}}"
