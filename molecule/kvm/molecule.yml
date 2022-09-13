@@ -11,13 +11,12 @@ driver:
   provider:
     name: libvirt
     type: libvirt
-    options:
-      memory: 192
-      cpus: 2
 
 platforms:
   - name: test-wg-ubuntu2004
     box: generic/ubuntu2004
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -28,6 +27,8 @@ platforms:
       - ubuntu
   - name: test-wg-ubuntu1804
     box: generic/ubuntu1804
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -38,6 +39,8 @@ platforms:
       - ubuntu
   - name: test-wg-debian10
     box: generic/debian10
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -46,8 +49,10 @@ platforms:
     groups:
       - vpn
       - debian
-  - name: test-wg-fedora34
-    box: generic/fedora34
+  - name: test-wg-fedora36
+    box: generic/fedora36
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -58,6 +63,8 @@ platforms:
       - fedora
   - name: test-wg-centos7
     box: generic/centos7
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -68,6 +75,8 @@ platforms:
       - el7
   - name: test-wg-arch
     box: archlinux/archlinux
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -78,6 +87,8 @@ platforms:
       - archlinux
   - name: test-wg-debian11
     box: generic/debian11
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -88,6 +99,8 @@ platforms:
       - debian
   - name: test-wg-rocky8
     box: generic/rocky8
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -98,6 +111,8 @@ platforms:
       - el8
   - name: test-wg-alma8
     box: generic/alma8
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -108,6 +123,8 @@ platforms:
       - el8
   - name: test-wg-centos7-kernel-plus
     box: generic/centos7
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -118,6 +135,8 @@ platforms:
       - el7
   - name: test-wg-opensuse-leap-15-3
     box: opensuse/Leap-15.3.x86_64
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -128,6 +147,8 @@ platforms:
       - opensuse
   - name: test-wg-fedora35
     box: generic/fedora35
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -138,6 +159,8 @@ platforms:
       - fedora
   - name: test-wg-rocky8-dkms
     box: generic/rocky8
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -148,7 +171,9 @@ platforms:
       - el8
       - el8dkms
   - name: test-wg-ubuntu2204
-    box: alvistack/ubuntu-22.04
+    box: generic/ubuntu2004
+    memory: 1024
+    cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -185,7 +210,7 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.30"
         ansible_python_interpreter: "/usr/bin/python"
-      test-wg-fedora34:
+      test-wg-fedora36:
         wireguard_address: "10.10.10.40/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
