@@ -243,6 +243,9 @@ You can specify further optional settings (they don't have a default and won't b
 
 ```yaml
 wireguard_allowed_ips: ""
+wireguard_byhost_allowed_ips:
+  host1: 10.0.0.2,192.168.1.41,192.168.1.0/24
+
 wireguard_endpoint: "host1.domain.tld"
 wireguard_persistent_keepalive: "30"
 wireguard_dns: "1.1.1.1"
@@ -288,6 +291,7 @@ One of `wireguard_address` (deprecated) or `wireguard_addresses` (recommended) i
 
 Here is a litte example for what I use the playbook: I use WireGuard to setup a fully meshed VPN (every host can directly connect to every other host) and run my Kubernetes (K8s) cluster at Hetzner Cloud (but you should be able to use any hoster you want). So the important components like the K8s controller and worker nodes (which includes the pods) only communicate via encrypted WireGuard VPN. Also (as already mentioned) I've two clients. Both have `kubectl` installed and are able to talk to the internal Kubernetes API server by using WireGuard VPN. One of the two clients also exposes a WireGuard endpoint because the Postfix mailserver in the cloud and my internal Postfix needs to be able to talk to each other. I guess that's maybe a not so common use case for WireGuard :D But it shows what's possible. So let me explain the setup which might help you to use this Ansible role.
 
+with `wireguard_byhost_allowed_ips` you can provide a dict with inventory name in key to custom allowed ip by host
 First, here is a part of my Ansible `hosts` file:
 
 ```ini
