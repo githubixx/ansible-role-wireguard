@@ -43,6 +43,10 @@
       {%- endif %}
 
 - name: Make sure wg syncconf option is available
+  when:
+    - not wireguard_interface_restart
+  tags:
+    - wg-config
   block:
     - name: Get available wg subcommands
       ansible.builtin.command: "wg --help"
@@ -59,14 +63,10 @@
         var: wireguard__syncconf_avail
 
     - name: Fall back to interface restart if wg syncconf is not available
-      ansible.builtin.set_fact:
-        wireguard__restart_interface: true
       when:
         - not wireguard__syncconf_avail
-  when:
-    - not wireguard_interface_restart
-  tags:
-    - wg-config
+      ansible.builtin.set_fact:
+        wireguard__restart_interface: true
 
 - name: Final decision on WireGuard interface restart method
   ansible.builtin.debug:
@@ -86,6 +86,9 @@
     - wg-config
 
 - name: WireGuard private key handling for new keys
+  when:
+    - not wireguard__register_config_file.stat.exists
+    - wireguard_private_key is not defined
   block:
     - name: Generate WireGuard private key
       ansible.builtin.command: "wg genkey"
@@ -101,11 +104,11 @@
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
         - wg-generate-keys
-  when:
-    - not wireguard__register_config_file.stat.exists
-    - wireguard_private_key is not defined
 
 - name: WireGuard private key handling for existing keys
+  when:
+    - wireguard__register_config_file.stat.exists
+    - wireguard_private_key is not defined
   block:
     - name: Read WireGuard config file
       ansible.builtin.slurp:
@@ -121,9 +124,6 @@
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
         - wg-config
-  when:
-    - wireguard__register_config_file.stat.exists
-    - wireguard_private_key is not defined
 
 - name: Derive WireGuard public key
   ansible.builtin.command: "wg pubkey"

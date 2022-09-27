@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (CentOS 7) Tasks for standard kernel
+  when:
+    - wireguard_centos7_installation_method == "standard"
   block:
     - name: (CentOS 7) Install EPEL & ELRepo repository
       ansible.builtin.yum:
@@ -22,8 +24,6 @@
           - "kmod-wireguard"
           - "wireguard-tools"
         state: present
-  when:
-    - wireguard_centos7_installation_method == "standard"
 
 - name: (CentOS 7) Ensure WireGuard DKMS package is removed
   ansible.builtin.yum:
@@ -32,6 +32,8 @@
     state: absent
 
 - name: (CentOS 7) Tasks for kernel-plus
+  when:
+    - wireguard_centos7_installation_method == "kernel-plus"
   block:
     - name: (CentOS 7) Install EPEL repository & yum utils
       ansible.builtin.yum:
@@ -64,6 +66,3 @@
       when:
         - centos7_yum_updates.changes is defined
         - centos7_yum_updates.changes.installed|flatten|select('regex', '^kernel-plus$') is any
-
-  when:
-    - wireguard_centos7_installation_method == "kernel-plus"
