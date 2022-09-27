@@ -2,7 +2,7 @@
 # Copyright (C) 2018-2022 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: restart wireguard
+- name: Restart wireguard
   ansible.builtin.service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: "{{ item }}"
@@ -15,7 +15,7 @@
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
 
-- name: syncconf wireguard
+- name: Syncconf wireguard
   ansible.builtin.shell: |
     set -o errexit
     set -o pipefail
