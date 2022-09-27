@@ -2,7 +2,7 @@
 # Copyright (C) 2018-2022 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: restart wireguard
+- name: Restart wireguard
   ansible.builtin.service:
     name: "wg-quick@{{ wireguard_interface }}"
     state: "{{ item }}"
@@ -15,13 +15,13 @@
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
 
-- name: syncconf wireguard
+- name: Syncconf wireguard
   ansible.builtin.shell: |
     set -o errexit
     set -o pipefail
     set -o nounset
-    systemctl is-active wg-quick@{{ wireguard_interface|quote }} || systemctl start wg-quick@{{ wireguard_interface|quote }}
-    wg syncconf {{ wireguard_interface|quote }} <(wg-quick strip /etc/wireguard/{{ wireguard_interface|quote }}.conf)
+    systemctl is-active wg-quick@{{ wireguard_interface | quote }} || systemctl start wg-quick@{{ wireguard_interface | quote }}
+    wg syncconf {{ wireguard_interface | quote }} <(wg-quick strip /etc/wireguard/{{ wireguard_interface | quote }}.conf)
     exit 0
   args:
     executable: "/bin/bash"

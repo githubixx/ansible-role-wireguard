@@ -8,6 +8,8 @@
     cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
 
 - name: (Ubuntu) Tasks for Ubuntu < 19.10
+  when:
+    - ansible_lsb.major_release is version('19.10', '<')
   block:
     - name: (Ubuntu) Install support packages needed for Wireguard (for Ubuntu < 19.10)
       ansible.builtin.package:
@@ -17,8 +19,6 @@
         packages:
           - software-properties-common
           - linux-headers-{{ ansible_kernel }}
-  when:
-    - ansible_lsb.major_release is version('19.10', '<')
 
 - name: (Ubuntu) Ensure WireGuard DKMS package is removed
   ansible.builtin.apt:

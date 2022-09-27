@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (Rocky Linux 8) Tasks for standard kernel
+  when:
+    - wireguard_rockylinux8_installation_method == "standard"
   block:
     - name: (Rocky Linux 8) Install EPEL & ELRepo repository
       ansible.builtin.yum:
@@ -23,10 +25,10 @@
           - "kmod-wireguard"
           - "wireguard-tools"
         state: present
-  when:
-    - wireguard_rockylinux8_installation_method == "standard"
 
 - name: (Rocky Linux 8) Tasks for non-standard kernel
+  when:
+    - wireguard_rockylinux8_installation_method == "dkms"
   block:
     - name: (Rocky Linux 8) Install jdoss/wireguard COPR repository
       community.general.copr:
@@ -52,5 +54,3 @@
           - "wireguard-dkms"
           - "wireguard-tools"
         state: present
-  when:
-    - wireguard_rockylinux8_installation_method == "dkms"

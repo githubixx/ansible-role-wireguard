@@ -1,3 +1,4 @@
+---
 # Copyright (C) 2018-2022 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -25,8 +26,8 @@ galaxy_info:
         - "8"
     - name: Fedora
       versions:
-        - "34"
         - "35"
+        - "36"
     - name: opensuse
       versions:
         - "15.3"

@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (Debian) Tasks for Debian version <= 10
+  when:
+    - ansible_distribution_major_version is version('11', '<')
   block:
     - name: (Debian) Add WireGuard repository on buster
       ansible.builtin.apt_repository:
@@ -30,8 +32,6 @@
         state: present
       when:
         - ('-cloud-' not in ansible_kernel)
-  when:
-    - ansible_distribution_major_version is version('11', '<')
 
 - name: (Debian) Install WireGuard packages
   ansible.builtin.apt:
