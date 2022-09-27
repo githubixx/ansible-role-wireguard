@@ -5,6 +5,18 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 10.0.0
+
+- remove Fedora 34 + add Fedora 36 to Molecule test
+- remove support for Fedora 35 / add support for Fedora 36
+- add Molecule setup for openSUSE 15.4
+- add Github release action to push new release to Ansible Galaxy
+- add `.yamllint`
+- `tasks/main.yml`: names should start with an uppercase letter
+- `handlers/main.yml`: names should start with an uppercase letter
+- improve the task key order to: name, when, tags, block
+- fix Jinja2 spacing
+
 ## 9.3.0
 
 - add support for Ubuntu 22.04 (Jammy Jellyfish)
