@@ -58,7 +58,7 @@
       ansible.builtin.set_fact:
         wireguard__syncconf_avail: "{{ 'syncconf:' in wireguard__register_subcommands.stdout }}"
 
-    - name: wg syncconf subcommand available
+    - name: Wg syncconf subcommand available
       ansible.builtin.debug:
         var: wireguard__syncconf_avail
 
