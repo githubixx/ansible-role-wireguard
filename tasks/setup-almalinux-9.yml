@@ -1,0 +1,8 @@
+---
+# Copyright (C) 2021-2022 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (AlmaLinux 9) Install wireguard-tools package
+  ansible.builtin.yum:
+    name: wireguard-tools
+    state: present
