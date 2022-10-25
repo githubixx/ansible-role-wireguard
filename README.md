@@ -217,6 +217,8 @@ Now this is basically the same as above BUT now the config says: I want to route
 
 You can specify further optional settings (they don't have a default and won't be set if not specified besides `wireguard_allowed_ips` as already mentioned) also per host in `host_vars/` (or in your Ansible hosts file if you like). The values for the following variables are just examples and no defaults (for more information and examples see [wg-quick.8](https://git.zx2c4.com/WireGuard/about/src/tools/man/wg-quick.8)):
 
+Setting `wireguard_unmanaged_peers_only` to true, will keep the module from creating and managing the peers for you.
+
 ```yaml
 wireguard_allowed_ips: ""
 wireguard_endpoint: "host1.domain.tld"

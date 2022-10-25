@@ -67,6 +67,10 @@ wireguard_interface_restart: false
 # If not set, a new one is generated on a blank configuration.
 # wireguard_private_key:
 
+# Setting this to true, will make this module don't automatically create any
+# peers. You'll have to manually define `wireguard_unmanaged_peers`.
+wireguard_unmanaged_peers_only: false
+
 #######################################
 # Settings only relevant for Ubuntu
 #######################################

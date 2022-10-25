@@ -126,6 +126,8 @@
         - wg-config
 
 - name: Derive WireGuard public key
+  when:
+    - not wireguard_unmanaged_peers_only
   ansible.builtin.command: "wg pubkey"
   args:
     stdin: "{{ wireguard_private_key }}"
@@ -137,6 +139,8 @@
     - wg-config
 
 - name: Set public key fact
+  when:
+    - not wireguard_unmanaged_peers_only
   ansible.builtin.set_fact:
     wireguard__fact_public_key: "{{ wireguard__register_public_key.stdout }}"
   tags:

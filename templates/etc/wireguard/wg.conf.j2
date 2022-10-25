@@ -44,44 +44,46 @@ PostDown = {{ wg_postdown }}
 {% if wireguard_save_config is defined %}
 SaveConfig = {{ wireguard_save_config }}
 {% endif %}
-{% for host in ansible_play_hosts %}
-{%   if host != inventory_hostname %}
+{% if wireguard_unmanaged_peers_only == false %}
+{%   for host in ansible_play_hosts %}
+{%     if host != inventory_hostname %}
 
 [Peer]
 # {{ host }}
 PublicKey = {{hostvars[host].wireguard__fact_public_key}}
-{%     if hostvars[host].wireguard_allowed_ips is defined %}
+{%       if hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
-{%     else %}
+{%       else %}
 AllowedIPs = {{ hostvars[host].wireguard_address.split('/')[0] }}/32
-{%     endif %}
-{%     if hostvars[host].wireguard_persistent_keepalive is defined %}
+{%       endif %}
+{%       if hostvars[host].wireguard_persistent_keepalive is defined %}
 PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
-{%     endif %}
-{%     if (
+{%       endif %}
+{%       if (
          hostvars[host].wireguard_dc is defined and
          wireguard_dc is defined and
          wireguard_dc['name'] != hostvars[host].wireguard_dc['name']
        )
 %}
 Endpoint = {{hostvars[host].wireguard_dc['endpoint']}}:{{hostvars[host].wireguard_dc['port']}}
-{%     elif hostvars[host].wireguard_port is defined %}
-{%       if hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "" %}
+{%       elif hostvars[host].wireguard_port is defined %}
+{%         if hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "" %}
 Endpoint = {{hostvars[host].wireguard_endpoint}}:{{hostvars[host].wireguard_port}}
-{%       else %}
+{%         else %}
 Endpoint = {{host}}:{{hostvars[host].wireguard_port}}
-{%       endif %}
-{%     elif hostvars[host].wireguard_endpoint is defined %}
-{%       if hostvars[host].wireguard_endpoint != "" %}
+{%         endif %}
+{%       elif hostvars[host].wireguard_endpoint is defined %}
+{%         if hostvars[host].wireguard_endpoint != "" %}
 Endpoint = {{hostvars[host].wireguard_endpoint}}:{{wireguard_port}}
-{%       else %}
+{%         else %}
 # No endpoint defined for this peer
-{%       endif %}
-{%     else %}
+{%         endif %}
+{%       else %}
 Endpoint = {{host}}:{{wireguard_port}}
+{%       endif %}
 {%     endif %}
-{%   endif %}
-{% endfor %}
+{%   endfor %}
+{% endif %}
 {% if wireguard_unmanaged_peers is defined %}
 
 # Peers not managed by Ansible from "wireguard_unmanaged_peers" variable
