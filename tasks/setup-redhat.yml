@@ -1,0 +1,63 @@
+---
+# Copyright (C) 2021-2022 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Install EPEL  
+  ansible.builtin.yum:
+    name:
+      - epel-release
+    update_cache: true
+
+
+
+- name: Tasks for standard kernel
+  when:
+    - wireguard_RedHat_installation_method == "standard" or ansible_distribution_major_version >= '9'
+  block:
+    - name: Ensure WireGuard DKMS package is removed
+      ansible.builtin.yum:
+        name:
+          - "wireguard-dkms"
+        state: absent
+
+    
+    - block: 
+        - name: Install  elrepo
+          ansible.builtin.yum:
+            name:
+              - elrepo-release
+        - name: Ensure WireGuard KMOD package installed on version < 9
+          ansible.builtin.yum:
+            name:
+              -  "kmod-wireguard"
+            state: present
+      when: ansible_distribution_major_version < '9'
+
+    - name: Install WireGuard packages
+      ansible.builtin.yum:
+        name:
+          - "wireguard-tools"
+        state: present
+
+- name: Tasks for non-standard kernel
+  when:
+    - wireguard_RedHat_installation_method == "dkms" and  ansible_distribution_major_version < '9'
+  block:
+    - name: Install jdoss/wireguard COPR repository
+      community.general.copr:
+        state: enabled
+        name: jdoss/wireguard
+        chroot: epel-8-{{ ansible_architecture }}
+
+    - name: Ensure WireGuard KMOD package is removed
+      ansible.builtin.yum:
+        name:
+          - "kmod-wireguard"
+        state: absent
+
+    - name: Install WireGuard packages
+      ansible.builtin.yum:
+        name:
+          - "wireguard-dkms"
+          - "wireguard-tools"
+        state: present
