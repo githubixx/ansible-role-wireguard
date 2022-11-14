@@ -27,6 +27,7 @@ This role should work with:
 - AlmaLinux
 - Rocky Linux
 - openSUSE Leap 15.3
+- openSUSE Leap 15.4
 
 Molecule tests are [available](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
 
