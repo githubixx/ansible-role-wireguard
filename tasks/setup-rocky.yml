@@ -1,0 +1,8 @@
+---
+# Copyright (C) 2022 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (Rocky Linux) Install wireguard-tools package
+  ansible.builtin.yum:
+    name: wireguard-tools
+    state: present
