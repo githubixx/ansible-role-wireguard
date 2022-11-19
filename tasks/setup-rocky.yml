@@ -6,3 +6,16 @@
   ansible.builtin.yum:
     name: wireguard-tools
     state: present
+
+- name: Install Systemd-resolved package if DNS is set
+  block: 
+    - name: install Systemd-resolved 
+      ansible.builtin.yum:
+        name: systemd-resolved
+        state: present
+    - name: enable Systemd-resolved
+      ansible.builtin.service:
+        name: systemd-resolved
+        state: started
+        enabled: true
+  when: wireguard_dns is defined
