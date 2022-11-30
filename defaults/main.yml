@@ -68,7 +68,9 @@ wireguard_interface_restart: false
 # wireguard_private_key:
 
 #######################################
-# Settings only relevant for Ubuntu
+# Settings only relevant for:
+# - Ubuntu
+# - elementary OS
 #######################################
 
 # Set to "false" if package cache should not be updated

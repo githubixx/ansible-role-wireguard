@@ -145,7 +145,9 @@ There are also a few Linux distribution specific settings:
 
 ```yaml
 #######################################
-# Settings only relevant for Ubuntu
+# Settings only relevant for:
+# - Ubuntu
+# - elementary OS
 #######################################
 
 # Set to "false" if package cache should not be updated
