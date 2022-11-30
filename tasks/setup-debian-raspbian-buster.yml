@@ -33,7 +33,7 @@
   ansible.builtin.apt:
     name:
       - "raspberrypi-kernel"
-    state: latest
+    state: latest  # noqa package-latest
   register: wireguard__register_kernel_update
 
 - name: (Raspbian) Reboot after kernel update (Ansible >= 2.8)
@@ -76,7 +76,7 @@
   ansible.builtin.apt:
     name:
       - "raspberrypi-kernel-headers"
-    state: latest
+    state: latest  # noqa package-latest
 
 - name: (Raspbian) Install WireGuard packages
   ansible.builtin.apt:

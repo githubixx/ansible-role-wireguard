@@ -1,0 +1,13 @@
+---
+# Copyright (C) 2022 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (elementary OS) Update APT package cache
+  ansible.builtin.apt:
+    update_cache: "{{ wireguard_ubuntu_update_cache }}"
+    cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
+
+- name: (elementary OS) Install wireguard package
+  ansible.builtin.apt:
+    name: "wireguard"
+    state: present
