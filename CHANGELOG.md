@@ -5,6 +5,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 11.1.0
+
+- add support for elementary OS 6
+- ignore some minor linter warnings
+
 ## 11.0.0
 
 - add support for Rocky Linux 9 (original PR from @vincentDcmps: https://github.com/githubixx/ansible-role-wireguard/pull/163)
