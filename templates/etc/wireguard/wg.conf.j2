@@ -6,7 +6,7 @@
 
 [Interface]
 # {{ inventory_hostname }}
-Address = {{ wireguard_address }}
+Address = {{ wireguard_address }}{% if wireguard_address_v6 is defined %}, {{ wireguard_address_v6 }}{% endif %} 
 PrivateKey = {{ wireguard_private_key }}
 ListenPort = {{ wireguard_port }}
 {% if wireguard_dns is defined %}
@@ -53,7 +53,7 @@ PublicKey = {{hostvars[host].wireguard__fact_public_key}}
 {%     if hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
 {%     else %}
-AllowedIPs = {{ hostvars[host].wireguard_address.split('/')[0] }}/32
+AllowedIPs = {{ hostvars[host].wireguard_address.split('/')[0] }}/32{% if hostvars[host].wireguard_address_v6 is defined %}, {{hostvars[host].wireguard_address_v6.split('/')[0]}}/128{% endif %} 
 {%     endif %}
 {%     if hostvars[host].wireguard_persistent_keepalive is defined %}
 PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
