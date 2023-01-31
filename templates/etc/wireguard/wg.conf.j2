@@ -50,6 +50,23 @@ SaveConfig = {{ wireguard_save_config }}
 [Peer]
 # {{ host }}
 PublicKey = {{hostvars[host].wireguard__fact_public_key}}
+{%     if  (
+         inventory_hostname in hostvars[host].wireguard_pre_shared_keys and
+         host in wireguard_pre_shared_keys
+       )
+%}
+{%       if hostvars[host].wireguard_pre_shared_keys[inventory_hostname] > wireguard_pre_shared_keys[host] %}
+PresharedKey = {{hostvars[host].wireguard_pre_shared_keys[inventory_hostname]}}
+{%       else %}
+PresharedKey = {{wireguard_pre_shared_keys[host]}}
+{%       endif %}
+{%     elif inventory_hostname in hostvars[host].wireguard_pre_shared_keys %}
+PresharedKey = {{hostvars[host].wireguard_pre_shared_keys[inventory_hostname]}}
+{%     elif host in wireguard_pre_shared_keys %}
+PresharedKey = {{wireguard_pre_shared_keys[host]}}
+{%     else %}
+# No pre shared key defined
+{%     endif %}
 {%     if hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
 {%     else %}
