@@ -124,10 +124,10 @@
 
     - name: Set pre shared keys fact (new)
       ansible.builtin.set_fact:
-        wireguard_pre_shared_keys: "{{ wireguard_pre_shared_keys | default({}) | combine({item.item: item.stdout}) }}"
+        wireguard__internal_preshared_keys: "{{ wireguard__internal_preshared_keys | default({}) | combine({item.item: item.stdout}) }}"
       with_items: "{{ wireguard__register_pre_shared_keys.results }}"
-      when: hostvars[item.item].wireguard_pre_shared_keys is not defined or item.item not in hostvars[item.item].wireguard_pre_shared_keys
-      no_log: "{{ ansible_verbosity < 3 }}"
+      when: hostvars[item.item].wireguard__internal_preshared_keys is not defined or item.item not in hostvars[item.item].wireguard__internal_preshared_keys
+      no_log: '{{ ansible_verbosity < 3 }}'
       tags:
         - wg-generate-keys
 
@@ -165,16 +165,16 @@
 
     - name: Set internal pre shared key facts
       ansible.builtin.set_fact:
-        wireguard__register_pre_shared_keys_hosts: "{{ wireguard__register_config['content'] | b64decode | regex_findall('\\[Peer\\].*\\n#\\s(.*)') }}"
-        wireguard__register_pre_shared_keys_psks: "{{ wireguard__register_config['content'] | b64decode | regex_findall('\\[Peer\\](?:\\n.*?)*PresharedKey\\s=\\s(.*)') }}"
+        wireguard__internal_pre_shared_keys_hosts: "{{ wireguard__register_config['content'] | b64decode | regex_findall('\\[Peer\\].*\\n#\\s(.*)') }}"
+        wireguard__internal_pre_shared_keys_psks: "{{ wireguard__register_config['content'] | b64decode | regex_findall('\\[Peer\\](?:\\n.*?)*PresharedKey\\s=\\s(.*)') }}"
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
         - wg-config
 
     - name: Set pre shared key fact
       ansible.builtin.set_fact:
-        wireguard_pre_shared_keys: "{{ wireguard_pre_shared_keys | default({}) | combine({item: wireguard__register_pre_shared_keys_psks[idx]}) }}"
-      loop: "{{ wireguard__register_pre_shared_keys_hosts }}"
+        wireguard__internal_preshared_keys: "{{ wireguard__internal_preshared_keys | default({}) | combine({item: wireguard__internal_pre_shared_keys_psks[idx]}) }}"
+      loop: "{{ wireguard__internal_pre_shared_keys_hosts }}"
       loop_control:
         index_var: idx
       no_log: '{{ ansible_verbosity < 3 }}'

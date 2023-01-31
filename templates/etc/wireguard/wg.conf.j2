@@ -51,19 +51,19 @@ SaveConfig = {{ wireguard_save_config }}
 # {{ host }}
 PublicKey = {{hostvars[host].wireguard__fact_public_key}}
 {%     if  (
-         inventory_hostname in hostvars[host].wireguard_pre_shared_keys and
-         host in wireguard_pre_shared_keys
+         inventory_hostname in hostvars[host].wireguard__internal_preshared_keys and
+         host in wireguard__internal_preshared_keys
        )
 %}
-{%       if hostvars[host].wireguard_pre_shared_keys[inventory_hostname] > wireguard_pre_shared_keys[host] %}
-PresharedKey = {{hostvars[host].wireguard_pre_shared_keys[inventory_hostname]}}
+{%       if hostvars[host].wireguard__internal_preshared_keys[inventory_hostname] > wireguard__internal_preshared_keys[host] %}
+PresharedKey = {{hostvars[host].wireguard__internal_preshared_keys[inventory_hostname]}}
 {%       else %}
-PresharedKey = {{wireguard_pre_shared_keys[host]}}
+PresharedKey = {{wireguard__internal_preshared_keys[host]}}
 {%       endif %}
-{%     elif inventory_hostname in hostvars[host].wireguard_pre_shared_keys %}
-PresharedKey = {{hostvars[host].wireguard_pre_shared_keys[inventory_hostname]}}
-{%     elif host in wireguard_pre_shared_keys %}
-PresharedKey = {{wireguard_pre_shared_keys[host]}}
+{%     elif inventory_hostname in hostvars[host].wireguard__internal_preshared_keys %}
+PresharedKey = {{hostvars[host].wireguard__internal_preshared_keys[inventory_hostname]}}
+{%     elif host in wireguard__internal_preshared_keys %}
+PresharedKey = {{wireguard__internal_preshared_keys[host]}}
 {%     else %}
 # No pre shared key defined
 {%     endif %}
