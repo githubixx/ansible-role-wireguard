@@ -51,6 +51,8 @@ SaveConfig = {{ wireguard_save_config }}
 # {{ host }}
 PublicKey = {{hostvars[host].wireguard__fact_public_key}}
 {%     if  (
+         hostvars[host].wireguard__internal_preshared_keys is defined and
+         wireguard__internal_preshared_keys is defined and
          inventory_hostname in hostvars[host].wireguard__internal_preshared_keys and
          host in wireguard__internal_preshared_keys
        )
@@ -60,9 +62,9 @@ PresharedKey = {{hostvars[host].wireguard__internal_preshared_keys[inventory_hos
 {%       else %}
 PresharedKey = {{wireguard__internal_preshared_keys[host]}}
 {%       endif %}
-{%     elif inventory_hostname in hostvars[host].wireguard__internal_preshared_keys %}
+{%     elif hostvars[host].wireguard__internal_preshared_keys is defined and inventory_hostname in hostvars[host].wireguard__internal_preshared_keys %}
 PresharedKey = {{hostvars[host].wireguard__internal_preshared_keys[inventory_hostname]}}
-{%     elif host in wireguard__internal_preshared_keys %}
+{%     elif wireguard__internal_preshared_keys is defined and host in wireguard__internal_preshared_keys %}
 PresharedKey = {{wireguard__internal_preshared_keys[host]}}
 {%     else %}
 # No pre shared key defined
