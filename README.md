@@ -137,6 +137,9 @@ wireguard_interface_restart: false
 # course a very sensitive value you might consider a tool like Ansible Vault
 # to store it encrypted.
 # wireguard_private_key:
+
+# Set to "false" if package cache should not be updated
+wireguard_update_cache: "true"
 ```
 
 There are also a few Linux distribution specific settings:
@@ -148,8 +151,9 @@ There are also a few Linux distribution specific settings:
 # - elementary OS
 #######################################
 
-# Set to "false" if package cache should not be updated
-wireguard_ubuntu_update_cache: "true"
+# Set to "false" if package cache should not be updated.
+# DEPRECATED: This variable will be removed with the next major release. Please use "wireguard_update_cache" instead.
+wireguard_ubuntu_update_cache: "{{ wireguard_update_cache }}"
 
 # Set package cache valid time
 wireguard_ubuntu_cache_valid_time: "3600"

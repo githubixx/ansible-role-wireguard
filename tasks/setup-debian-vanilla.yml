@@ -8,3 +8,4 @@
     name:
       - "wireguard"
     state: present
+    update_cache: "{{ wireguard_update_cache }}"

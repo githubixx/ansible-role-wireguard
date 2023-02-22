@@ -5,6 +5,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 13.1.0
+- new variable `wireguard_update_cache` to control if package manager caches should be updated before the installation (https://github.com/githubixx/ansible-role-wireguard/pull/179)
+ - variable `wireguard_ubuntu_update_cache` is deprecated and will be removed in the next release
+
 ## 13.0.1
 
 - [fix](https://github.com/githubixx/ansible-role-wireguard/pull/182) in README
