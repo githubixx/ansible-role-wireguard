@@ -21,7 +21,7 @@ This role should work with:
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Archlinux
 - Debian 11 (Bullseye)
-- Fedora 34 (or later)
+- Fedora 36
 - CentOS 7
 - AlmaLinux
 - Rocky Linux
