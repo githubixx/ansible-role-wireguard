@@ -17,7 +17,7 @@
 - hosts: archlinux
   remote_user: vagrant
   become: true
-  gather_facts: true
+  gather_facts: false
   tasks:
     - name: Init pacman
       ansible.builtin.raw: |
@@ -25,6 +25,13 @@
         pacman-key --populate archlinux
       changed_when: false
       failed_when: false
+
+    - name: Install Python
+      ansible.builtin.raw: |
+        pacman -S --noconfirm python
+      args:
+        executable: /bin/bash
+      changed_when: false
 
 - hosts: proxmox
   remote_user: vagrant
