@@ -5,6 +5,14 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 12.0.0
+
+- remove Fedora 35 support (reached EOL)
+- remove openSUSE 15.3 support (reached EOL)
+- remove Debian 10 (Buster) support (readed EOL)
+- fix Molecule prepare for Archlinux
+- fix `ansible-lint` issue in `tasks/setup-debian-raspbian-buster.yml`
+
 ## 11.1.0
 
 - add support for elementary OS 6

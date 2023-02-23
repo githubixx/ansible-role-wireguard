@@ -60,6 +60,7 @@
   async: 1
   poll: 0
   ignore_unreachable: true
+  changed_when: false
   when:
     - ansible_version.full is version('2.8.0', '<')
     - wireguard__register_kernel_update is changed

@@ -18,7 +18,6 @@ galaxy_info:
         - "jammy"
     - name: Debian
       versions:
-        - "buster"
         - "bullseye"
     - name: EL
       versions:
@@ -27,11 +26,10 @@ galaxy_info:
         - "9"
     - name: Fedora
       versions:
-        - "35"
         - "36"
     - name: opensuse
       versions:
-        - "15.3"
+        - "15.4"
   galaxy_tags:
     - networking
     - security

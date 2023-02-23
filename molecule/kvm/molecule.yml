@@ -37,18 +37,6 @@ platforms:
     groups:
       - vpn
       - ubuntu
-  - name: test-wg-debian10
-    box: generic/debian10
-    memory: 1024
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.30
-    groups:
-      - vpn
-      - debian
   - name: test-wg-fedora36
     box: generic/fedora36
     memory: 1024
@@ -133,30 +121,6 @@ platforms:
     groups:
       - vpn
       - el7
-  - name: test-wg-opensuse-leap-15-3
-    box: opensuse/Leap-15.3.x86_64
-    memory: 1024
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.110
-    groups:
-      - vpn
-      - opensuse
-  - name: test-wg-fedora35
-    box: generic/fedora35
-    memory: 1024
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.120
-    groups:
-      - vpn
-      - fedora
   - name: test-wg-rocky8-dkms
     box: generic/rocky8
     memory: 1024
@@ -239,12 +203,6 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.20"
-      test-wg-debian10:
-        wireguard_address: "10.10.10.30/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.30"
-        ansible_python_interpreter: "/usr/bin/python"
       test-wg-fedora36:
         wireguard_address: "10.10.10.40/24"
         wireguard_port: 51820
@@ -285,16 +243,6 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.100"
         wireguard_centos7_installation_method: "kernel-plus"
-      test-wg-opensuse-leap-15-3:
-        wireguard_address: "10.10.10.110/24"
-        wireguard_port: 51822
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.110"
-      test-wg-fedora35:
-        wireguard_address: "10.10.10.120/24"
-        wireguard_port: 51823
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.120"
       test-wg-rocky8-dkms:
         wireguard_address: "10.10.10.130/24"
         wireguard_port: 51820
