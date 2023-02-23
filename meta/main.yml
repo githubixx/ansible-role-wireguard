@@ -18,7 +18,6 @@ galaxy_info:
         - "jammy"
     - name: Debian
       versions:
-        - "buster"
         - "bullseye"
     - name: EL
       versions:
