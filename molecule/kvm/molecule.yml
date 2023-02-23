@@ -121,18 +121,6 @@ platforms:
     groups:
       - vpn
       - el7
-  - name: test-wg-opensuse-leap-15-3
-    box: opensuse/Leap-15.3.x86_64
-    memory: 1024
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.110
-    groups:
-      - vpn
-      - opensuse
   - name: test-wg-fedora35
     box: generic/fedora35
     memory: 1024
@@ -267,11 +255,6 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.100"
         wireguard_centos7_installation_method: "kernel-plus"
-      test-wg-opensuse-leap-15-3:
-        wireguard_address: "10.10.10.110/24"
-        wireguard_port: 51822
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.110"
       test-wg-fedora35:
         wireguard_address: "10.10.10.120/24"
         wireguard_port: 51823

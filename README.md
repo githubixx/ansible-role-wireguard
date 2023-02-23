@@ -20,13 +20,11 @@ This role should work with:
 - Ubuntu 20.04 (Focal Fossa)
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Archlinux
-- Debian 10 (Buster)
 - Debian 11 (Bullseye)
 - Fedora 34 (or later)
 - CentOS 7
 - AlmaLinux
 - Rocky Linux
-- openSUSE Leap 15.3
 - openSUSE Leap 15.4
 
 Best effort:
