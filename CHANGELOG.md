@@ -5,6 +5,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 13.0.0
+
+- add IPv6 support (contribution by @DiscowZombie)
+- introduce `wireguard_addresses` variable (contribution by @DiscowZombie)
+
 ## 12.0.0
 
 - remove Fedora 35 support (reached EOL)
