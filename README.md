@@ -187,7 +187,7 @@ wireguard_rockylinux8_installation_method: "standard"
 Every host in `host_vars/` should configure at least one address via `wireguard_address` or `wireguard_addresses`. The `wireguard_address` can only contain one IPv4, thus it's recommended to use the `wireguard_addresses` variable that can contain an array of both IPv4 and IPv6 addresses.
 
 ```yaml
-wireguard_address:
+wireguard_addresses:
   - "10.8.0.101/24"
 ```
 
