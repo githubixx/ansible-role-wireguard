@@ -1,9 +1,13 @@
 <!--
-Copyright (C) 2018-2022 Robert Wimmer
+Copyright (C) 2018-2023 Robert Wimmer
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
 # Changelog
+
+## 13.0.1
+
+- [fix](https://github.com/githubixx/ansible-role-wireguard/pull/182) in README
 
 ## 13.0.0
 
