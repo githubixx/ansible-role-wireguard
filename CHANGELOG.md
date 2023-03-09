@@ -5,6 +5,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 14.0.0
+
+- add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
+
 ## 13.0.1
 
 - [fix](https://github.com/githubixx/ansible-role-wireguard/pull/182) in README

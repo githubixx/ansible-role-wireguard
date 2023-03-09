@@ -169,6 +169,7 @@ wireguard_centos7_installation_method: "standard"
 
 # The default seconds to wait for machine to reboot and respond
 wireguard_centos7_kernel_plus_reboot_timeout: "600"
+wireguard_centos7_standard_reboot_timeout: "600"
 
 #########################################
 # Settings only relevant for RockyLinux 8
