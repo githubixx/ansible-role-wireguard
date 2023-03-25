@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2021-2022 Robert Wimmer
+# Copyright (C) 2021-2023 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - hosts: opensuse
@@ -25,6 +25,9 @@
         pacman-key --populate archlinux
       changed_when: false
       failed_when: false
+
+    - name: Updating pacman cache
+      raw: pacman -Sy
 
     - name: Install Python
       ansible.builtin.raw: |
