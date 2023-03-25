@@ -182,6 +182,18 @@ platforms:
     groups:
       - vpn
       - el9
+  - name: test-wg-oracle9
+    box: generic/oracle9
+    memory: 1024
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.180
+    groups:
+      - vpn
+      - el9
 
 provisioner:
   name: ansible
@@ -269,6 +281,11 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.170"
+      test-wg-oracle9:
+        wireguard_address: "10.10.10.180/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.180"
 
 scenario:
   name: kvm
