@@ -7,3 +7,4 @@
     name:
       - "wireguard-tools"
     state: present
+    update_cache: "{{ wireguard_update_cache }}"
