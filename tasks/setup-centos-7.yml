@@ -27,10 +27,11 @@
       register: wireguard__centos7_yum_updates
 
     - name: (CentOS 7) Reboot Instance to update kernel
+      when:
+        - wireguard_centos7_standard_reboot
+        - wireguard__centos7_yum_updates.changed
       ansible.builtin.reboot:
         reboot_timeout: "{{ wireguard_centos7_standard_reboot_timeout }}"
-      when:
-        - wireguard__centos7_yum_updates.changed is true
 
 - name: (CentOS 7) Ensure WireGuard DKMS package is removed
   ansible.builtin.yum:
@@ -38,7 +39,7 @@
       - "wireguard-dkms"
     state: absent
 
-- name: (CentOS 7) Tasks for kernel-plus
+- name: (CentOS 7 - kernel-plus) Tasks for kernel-plus
   when:
     - wireguard_centos7_installation_method == "kernel-plus"
   block:
@@ -49,17 +50,17 @@
           - yum-utils
         update_cache: true
 
-    - name: (CentOS 7) Enable CentosPlus repo
+    - name: (CentOS 7 - kernel-plus) Enable CentosPlus repo
       ansible.builtin.command: yum-config-manager --setopt=centosplus.includepkgs=kernel-plus --enablerepo=centosplus --save
       changed_when: false
 
-    - name: (CentOS 7) Update to kernel-plus
+    - name: (CentOS 7 - kernel-plus) Update to kernel-plus
       ansible.builtin.replace:
         path: /etc/sysconfig/kernel
         regexp: '^DEFAULTKERNEL=kernel$'
         replace: 'DEFAULTKERNEL=kernel-plus'
 
-    - name: (CentOS 7) Install WireGuard packages
+    - name: (CentOS 7 - kernel-plus) Install WireGuard packages
       ansible.builtin.yum:
         name:
           - "kernel-plus"
@@ -67,9 +68,10 @@
         state: present
       register: wireguard__centos7_yum_updates
 
-    - name: (CentOS 7) Reboot Instance to update kernel
-      ansible.builtin.reboot:
-        reboot_timeout: "{{ wireguard_centos7_kernel_plus_reboot_timeout }}"
+    - name: (CentOS 7 - kernel-plus) Reboot Instance to update kernel
       when:
+        - wireguard_centos7_kernel_plus_reboot
         - wireguard__centos7_yum_updates.changes is defined
         - wireguard__centos7_yum_updates.changes.installed|flatten|select('regex', '^kernel-plus$') is any
+      ansible.builtin.reboot:
+        reboot_timeout: "{{ wireguard_centos7_kernel_plus_reboot_timeout }}"

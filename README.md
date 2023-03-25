@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2018-2022 Robert Wimmer
+Copyright (C) 2018-2023 Robert Wimmer
 Copyright (C) 2019 fbourqui
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
@@ -161,14 +161,25 @@ wireguard_ubuntu_cache_valid_time: "3600"
 # Set wireguard_centos7_installation_method to "kernel-plus"
 # to use the kernel-plus kernel, which includes a built-in,
 # signed WireGuard module.
-# UTILIZING KERNEL-PLUS WILL PERFORM A SYSTEM REBOOT DURING SETUP!!
 #
 # The default of "standard" will use the standard kernel and
 # the ELRepo module for WireGuard.
 wireguard_centos7_installation_method: "standard"
 
+# Reboot host if necessary if the "kernel-plus" kernel is in use
+wireguard_centos7_kernel_plus_reboot: true
+
 # The default seconds to wait for machine to reboot and respond
+# if "kernel-plus" is in use. Is only relevant if
+# "wireguard_centos7_kernel_plus_reboot" is set to "true".
 wireguard_centos7_kernel_plus_reboot_timeout: "600"
+
+# Reboot host if necessary if the standard kernel is in use
+wireguard_centos7_standard_reboot: true
+
+# The default seconds to wait for machine to reboot and respond
+# if "standard" kernel is in use. Is only relevant if
+# "wireguard_centos7_standard_reboot" is set to "true".
 wireguard_centos7_standard_reboot_timeout: "600"
 
 #########################################
