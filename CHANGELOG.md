@@ -11,6 +11,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - CentOS7: Add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
 - **BREAKING** Introduce `wireguard_update_cache` variable to control if package manager caches should be updated before the installation (contribution by @sebix). Before this release the package manager cache wasn't updated for AlmaLinux 9, Archlinux, Fedora and openSUSE. With `wireguard_update_cache` set to `true` by default those OSes are now also update the package manager cache. If you don't want that set `wireguard_update_cache` to `false` for the host in question.
 - variable `wireguard_ubuntu_update_cache` is deprecated
+- add support for Oracle Linux 9 (contribution by @cola-zero)
 
 ## 13.0.1
 
