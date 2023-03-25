@@ -9,6 +9,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - **BREAKING** CentOS7: Introduce `wireguard_centos7_kernel_plus_reboot` and `wireguard_centos7_standard_reboot` variables. Both are set to "true" by default. This will cause the host to be rebooted in case the "wireguard" kernel module was installed the very first time. If `wireguard_centos7_installation_method: "kernel-plus"` is set and the host wasn't booted with a `kernel-plus` kernel already you most probably need to reboot. For the `standard` kernel this might not be needed.
 - CentOS7: Add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
+- introduce `wireguard_update_cache` variable to control if package manager caches should be updated before the installation (contribution by @sebix)
+- variable `wireguard_ubuntu_update_cache` is deprecated and will be removed in the next release
 
 ## 13.0.1
 
