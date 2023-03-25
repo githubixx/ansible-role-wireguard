@@ -138,7 +138,8 @@ wireguard_interface_restart: false
 # to store it encrypted.
 # wireguard_private_key:
 
-# Set to "false" if package cache should not be updated
+# Set to "false" if package cache should not be updated (only relevant if
+# the package manager in question supports this option)
 wireguard_update_cache: "true"
 ```
 
@@ -151,8 +152,8 @@ There are also a few Linux distribution specific settings:
 # - elementary OS
 #######################################
 
+# DEPRECATED: Please use "wireguard_update_cache" instead.
 # Set to "false" if package cache should not be updated.
-# DEPRECATED: This variable will be removed with the next major release. Please use "wireguard_update_cache" instead.
 wireguard_ubuntu_update_cache: "{{ wireguard_update_cache }}"
 
 # Set package cache valid time
