@@ -11,7 +11,7 @@
         name:
           - epel-release
           - elrepo-release
-        update_cache: true
+        update_cache: "{{ wireguard_update_cache }}"
 
     - name: (Rocky Linux 8) Ensure WireGuard DKMS package is removed
       ansible.builtin.yum:
@@ -40,7 +40,7 @@
       ansible.builtin.yum:
         name:
           - epel-release
-        update_cache: true
+        update_cache: "{{ wireguard_update_cache }}"
 
     - name: (Rocky Linux 8) Ensure WireGuard KMOD package is removed
       ansible.builtin.yum:

@@ -2,6 +2,10 @@
 # Copyright (C) 2018-2022 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+- name: (Archlinux) Refresh the master package lists
+  community.general.pacman:
+    update_cache: "{{ wireguard_update_cache }}"
+
 - name: (Archlinux) Install wireguard-tools package
   community.general.pacman:
     name: wireguard-tools

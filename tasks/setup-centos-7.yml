@@ -11,12 +11,12 @@
         name:
           - epel-release
           - https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm
-        update_cache: true
+        update_cache: "{{ wireguard_update_cache }}"
 
     - name: (CentOS 7) Install yum-plugin-elrepo
       ansible.builtin.yum:
         name: yum-plugin-elrepo
-        update_cache: true
+        update_cache: "{{ wireguard_update_cache }}"
 
     - name: (CentOS 7) Install WireGuard packages
       ansible.builtin.yum:
@@ -48,7 +48,7 @@
         name:
           - epel-release
           - yum-utils
-        update_cache: true
+        update_cache: "{{ wireguard_update_cache }}"
 
     - name: (CentOS 7 - kernel-plus) Enable CentosPlus repo
       ansible.builtin.command: yum-config-manager --setopt=centosplus.includepkgs=kernel-plus --enablerepo=centosplus --save

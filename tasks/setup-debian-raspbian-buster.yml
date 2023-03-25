@@ -27,7 +27,7 @@
   ansible.builtin.apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
     state: present
-    update_cache: true
+    update_cache: "{{ wireguard_update_cache }}"
 
 - name: (Raspbian) Install latest kernel
   ansible.builtin.apt:
