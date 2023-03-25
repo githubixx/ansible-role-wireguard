@@ -22,7 +22,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - remove Fedora 35 support (reached EOL)
 - remove openSUSE 15.3 support (reached EOL)
-- remove Debian 10 (Buster) support (readed EOL)
+- remove Debian 10 (Buster) support (reached EOL)
 - fix Molecule prepare for Archlinux
 - fix `ansible-lint` issue in `tasks/setup-debian-raspbian-buster.yml`
 
@@ -34,7 +34,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ## 11.0.0
 
 - add support for Rocky Linux 9 (original PR from @vincentDcmps: https://github.com/githubixx/ansible-role-wireguard/pull/163)
-- add support for AlamaLinux 9 (original PR from @trunet: https://github.com/githubixx/ansible-role-wireguard/pull/164)
+- add support for AlmaLinux 9 (original PR from @trunet: https://github.com/githubixx/ansible-role-wireguard/pull/164)
 - add `EL9` to `meta/main.yml`
 - require Ansible >= `2.11` as Rocky Linux is only supported with this version or above
 - `ansible-lint`: use `community.general.pacman` module instead of `ansible.builtin.pacman` for Archlinux setup
