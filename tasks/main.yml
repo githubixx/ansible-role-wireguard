@@ -80,6 +80,7 @@
       {%- endif %}
   tags:
     - skip_ansible_lint
+    - wg-config
 
 - name: Register if config/private key already exists on target host
   ansible.builtin.stat:
