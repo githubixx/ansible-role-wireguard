@@ -1,4 +1,14 @@
 ---
+- name: (RedHat 8) Install EPEL Release GPG key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
+
+- name: (RedHat 8) Install ELRepo GPG key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+
 - name: (RedHat 8) Install EPEL & ELRepo repository
   ansible.builtin.yum:
     name:
