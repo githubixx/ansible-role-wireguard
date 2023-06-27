@@ -1,0 +1,20 @@
+---
+- name: (RedHat 8) Install EPEL & ELRepo repository
+  ansible.builtin.yum:
+    name:
+      - epel-release
+      - elrepo-release
+    update_cache: "{{ wireguard_update_cache }}"
+
+- name: (RedHat 8) Ensure WireGuard DKMS package is removed
+  ansible.builtin.yum:
+    name:
+      - "wireguard-dkms"
+    state: absent
+
+- name: (RedHat 8) Install WireGuard packages
+  ansible.builtin.yum:
+    name:
+      - "kmod-wireguard"
+      - "wireguard-tools"
+    state: present
