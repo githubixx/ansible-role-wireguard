@@ -2,8 +2,8 @@
 - name: (RedHat 8) Install EPEL & ELRepo repository
   ansible.builtin.yum:
     name:
-      - epel-release
-      - elrepo-release
+      - https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+      - https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm
     update_cache: "{{ wireguard_update_cache }}"
 
 - name: (RedHat 8) Ensure WireGuard DKMS package is removed
