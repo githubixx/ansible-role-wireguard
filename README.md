@@ -7,7 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ansible-role-wireguard
 ======================
 
-This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. The latest release is [available via Ansible Galaxy](https://galaxy.ansible.com/githubixx/ansible_role_wireguard).  I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster.
+This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. The latest release is [available via Ansible Galaxy](https://galaxy.ansible.com/ui/standalone/roles/githubixx/ansible_role_wireguard/).  I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster.
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
