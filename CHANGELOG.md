@@ -10,6 +10,12 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Breaking:
 
 - removed support for Ubuntu 18.04 (reached end of life)
+- removed support for Fedora 36 (reached end of life)
+
+Feature:
+
+- add support for Fedora 37
+- add support for Fedora 38
 
 Molecule:
 
