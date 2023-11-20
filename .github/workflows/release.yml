@@ -1,4 +1,7 @@
 ---
+# Copyright (C) 2018-2023 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # This workflow requires a GALAXY_API_KEY secret present in the GitHub
 # repository or organization.
 #
