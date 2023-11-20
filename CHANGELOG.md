@@ -24,6 +24,10 @@ Molecule:
 - rename `kvm` scenario to `default`
 - rename `kvm-single-server` scenario to `single-server`
 
+Other:
+
+- fix `ansible-lint` issues
+
 ## 14.0.0
 
 Breaking:
