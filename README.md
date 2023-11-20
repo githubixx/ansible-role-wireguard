@@ -541,7 +541,7 @@ molecule destroy
 There is also a small Molecule setup that mimics a central WireGuard server with a few clients:
 
 ```bash
-molecule converge -s kvm-single-server
+molecule converge -s single-server
 ```
 
 License

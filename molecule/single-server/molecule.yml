@@ -72,7 +72,7 @@ provisioner:
         wireguard_endpoint: ""
 
 scenario:
-  name: kvm-single-server
+  name: single-server
   test_sequence:
     - prepare
     - converge
