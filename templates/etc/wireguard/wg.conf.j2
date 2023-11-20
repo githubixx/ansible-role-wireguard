@@ -55,7 +55,7 @@ SaveConfig = {{ wireguard_save_config }}
 {%   if host != inventory_hostname %}
 
 [Peer]
-# {{ host }}
+# Name = {{ host }}
 PublicKey = {{hostvars[host].wireguard__fact_public_key}}
 {%     if hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
@@ -105,7 +105,7 @@ Endpoint = {{host}}:{{wireguard_port}}
 # Peers not managed by Ansible from "wireguard_unmanaged_peers" variable
 {% for peer in wireguard_unmanaged_peers.keys() %}
 [Peer]
-# {{ peer }}
+# Name = {{ peer }}
 PublicKey = {{ wireguard_unmanaged_peers[peer].public_key }}
 {%     if wireguard_unmanaged_peers[peer].preshared_key is defined %}
 PresharedKey = {{ wireguard_unmanaged_peers[peer].preshared_key }}
