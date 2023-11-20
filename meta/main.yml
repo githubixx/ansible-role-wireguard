@@ -13,7 +13,6 @@ galaxy_info:
     - name: ArchLinux
     - name: Ubuntu
       versions:
-        - "bionic"
         - "focal"
         - "jammy"
     - name: Debian

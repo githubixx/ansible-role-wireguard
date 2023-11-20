@@ -16,7 +16,6 @@ Linux
 
 This role should work with:
 
-- Ubuntu 18.04 (Bionic Beaver)
 - Ubuntu 20.04 (Focal Fossa)
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Archlinux

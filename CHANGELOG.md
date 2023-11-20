@@ -5,13 +5,27 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 15.0.0
+
+Breaking:
+
+- removed support for Ubuntu 18.04 (reached end of life)
+
 ## 14.0.0
 
-- **BREAKING** CentOS7: Introduce `wireguard_centos7_kernel_plus_reboot` and `wireguard_centos7_standard_reboot` variables. Both are set to "true" by default. This will cause the host to be rebooted in case the "wireguard" kernel module was installed the very first time. If `wireguard_centos7_installation_method: "kernel-plus"` is set and the host wasn't booted with a `kernel-plus` kernel already you most probably need to reboot. For the `standard` kernel this might not be needed.
-- CentOS7: Add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
-- **BREAKING** Introduce `wireguard_update_cache` variable to control if package manager caches should be updated before the installation (contribution by @sebix). Before this release the package manager cache wasn't updated for AlmaLinux 9, Archlinux, Fedora and openSUSE. With `wireguard_update_cache` set to `true` by default those OSes are now also update the package manager cache. If you don't want that set `wireguard_update_cache` to `false` for the host in question.
-- variable `wireguard_ubuntu_update_cache` is deprecated
+Breaking:
+
+- CentOS 7: Introduce `wireguard_centos7_kernel_plus_reboot` and `wireguard_centos7_standard_reboot` variables. Both are set to "true" by default. This will cause the host to be rebooted in case the "wireguard" kernel module was installed the very first time. If `wireguard_centos7_installation_method: "kernel-plus"` is set and the host wasn't booted with a `kernel-plus` kernel already you most probably need to reboot. For the `standard` kernel this might not be needed.
+- CentOS 7: Add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
+- Introduce `wireguard_update_cache` variable to control if package manager caches should be updated before the installation (contribution by @sebix). Before this release the package manager cache wasn't updated for AlmaLinux 9, Archlinux, Fedora and openSUSE. With `wireguard_update_cache` set to `true` by default those OSes are now also update the package manager cache. If you don't want that set `wireguard_update_cache` to `false` for the host in question.
+
+Feature:
+
 - add support for Oracle Linux 9 (contribution by @cola-zero)
+
+Deprecation:
+
+- variable `wireguard_ubuntu_update_cache` is deprecated
 
 ## 13.0.1
 

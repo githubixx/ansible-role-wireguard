@@ -25,18 +25,6 @@ platforms:
     groups:
       - vpn
       - ubuntu
-  - name: test-wg-ubuntu1804
-    box: generic/ubuntu1804
-    memory: 1024
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 192.168.10.20
-    groups:
-      - vpn
-      - ubuntu
   - name: test-wg-fedora36
     box: generic/fedora36
     memory: 1024
@@ -210,11 +198,6 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.10"
-      test-wg-ubuntu1804:
-        wireguard_address: "10.10.10.20/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.20"
       test-wg-fedora36:
         wireguard_address: "10.10.10.40/24"
         wireguard_port: 51820
