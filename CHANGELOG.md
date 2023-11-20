@@ -13,7 +13,8 @@ Breaking:
 
 Molecule:
 
-- Molecule: rename `kvm` scenario to `default`
+- rename `kvm` scenario to `default`
+- rename `kvm-single-server` scenario to `single-server`
 
 ## 14.0.0
 
