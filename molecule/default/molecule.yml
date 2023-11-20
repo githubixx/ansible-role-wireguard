@@ -15,7 +15,7 @@ driver:
 platforms:
   - name: test-wg-ubuntu2004
     box: generic/ubuntu2004
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -51,7 +51,7 @@ platforms:
       - fedora
   - name: test-wg-centos7
     box: generic/centos7
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -63,7 +63,7 @@ platforms:
       - el7
   - name: test-wg-arch
     box: archlinux/archlinux
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -75,7 +75,7 @@ platforms:
       - archlinux
   - name: test-wg-debian11
     box: generic/debian11
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -87,7 +87,7 @@ platforms:
       - debian
   - name: test-wg-rocky8
     box: generic/rocky8
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -99,7 +99,7 @@ platforms:
       - el8
   - name: test-wg-alma8
     box: generic/alma8
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -111,7 +111,7 @@ platforms:
       - el8
   - name: test-wg-centos7-kernel-plus
     box: generic/centos7
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -123,7 +123,7 @@ platforms:
       - el7
   - name: test-wg-rocky8-dkms
     box: generic/rocky8
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -136,7 +136,7 @@ platforms:
       - el8dkms
   - name: test-wg-ubuntu2204
     box: generic/ubuntu2004
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -148,7 +148,7 @@ platforms:
       - ubuntu
   - name: test-wg-opensuse-leap-15-4
     box: opensuse/Leap-15.4.x86_64
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -160,7 +160,7 @@ platforms:
       - opensuse
   - name: test-wg-rocky9
     box: generic/rocky9
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -172,7 +172,7 @@ platforms:
       - el9
   - name: test-wg-alma9
     box: generic/alma9
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -184,7 +184,7 @@ platforms:
       - el9
   - name: test-wg-oracle9
     box: generic/oracle9
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
