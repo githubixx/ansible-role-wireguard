@@ -85,6 +85,18 @@ platforms:
     groups:
       - vpn
       - debian
+  - name: test-wg-debian12
+    box: generic/debian12
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.110
+    groups:
+      - vpn
+      - debian
   - name: test-wg-rocky8
     box: generic/rocky8
     memory: 1536
@@ -251,6 +263,12 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.70"
+        ansible_python_interpreter: "/usr/bin/python3"
+      test-wg-debian12:
+        wireguard_address: "10.10.10.110/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.110"
         ansible_python_interpreter: "/usr/bin/python3"
       test-wg-rocky8:
         wireguard_address: "10.10.10.80/24"
