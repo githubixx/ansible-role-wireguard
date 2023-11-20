@@ -2,7 +2,8 @@
 # Copyright (C) 2023 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- hosts: all
+- name: Setup WireGuard
+  hosts: all
   remote_user: vagrant
   become: true
   gather_facts: true

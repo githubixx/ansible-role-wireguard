@@ -2,7 +2,8 @@
 # Copyright (C) 2021-2023 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- hosts: opensuse
+- name: Prepare opensuse hosts
+  hosts: opensuse
   remote_user: vagrant
   become: true
   gather_facts: true
@@ -14,7 +15,8 @@
       changed_when: false
       failed_when: false
 
-- hosts: archlinux
+- name: Prepare Archlinux hosts
+  hosts: archlinux
   remote_user: vagrant
   become: true
   gather_facts: false
@@ -27,7 +29,9 @@
       failed_when: false
 
     - name: Updating pacman cache
-      raw: pacman -Sy
+      ansible.builtin.raw: pacman -Sy
+      changed_when: false
+      failed_when: false
 
     - name: Install Python
       ansible.builtin.raw: |
@@ -36,7 +40,8 @@
         executable: /bin/bash
       changed_when: false
 
-- hosts: proxmox
+- name: Prepare Proxmox hosts
+  hosts: proxmox
   remote_user: vagrant
   become: true
   gather_facts: true
@@ -46,7 +51,8 @@
         name: /var/lib/apt/lists/lock
         state: absent
 
-- hosts: ubuntu
+- name: Prepare Ubuntu hosts
+  hosts: ubuntu
   remote_user: vagrant
   become: true
   gather_facts: true
@@ -56,7 +62,8 @@
         update_cache: true
         cache_valid_time: 3600
 
-- hosts: el8dkms
+- name: Prepare Enterprise Linux 8 hosts (DKMS)
+  hosts: el8dkms
   remote_user: vagrant
   become: true
   gather_facts: true
