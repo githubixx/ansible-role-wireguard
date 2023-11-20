@@ -16,6 +16,7 @@ Feature:
 
 - add support for Fedora 37
 - add support for Fedora 38
+- add support for openSUSE 15.5
 
 Molecule:
 

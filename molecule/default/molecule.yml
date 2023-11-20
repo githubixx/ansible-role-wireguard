@@ -158,6 +158,18 @@ platforms:
     groups:
       - vpn
       - opensuse
+  - name: test-wg-opensuse-leap-15-5
+    box: opensuse/Leap-15.5.x86_64
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.190
+    groups:
+      - vpn
+      - opensuse
   - name: test-wg-rocky9
     box: generic/rocky9
     memory: 1536
@@ -272,6 +284,11 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.150"
+      test-wg-opensuse-leap-15-5:
+        wireguard_address: "10.10.10.190/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.190"
       test-wg-rocky9:
         wireguard_address: "10.10.10.160/24"
         wireguard_port: 51820
