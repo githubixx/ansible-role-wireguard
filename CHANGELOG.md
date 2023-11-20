@@ -18,6 +18,7 @@ Feature:
 - add support for Fedora 38
 - add support for openSUSE 15.5
 - add support for Debian 12
+- prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration
 
 Molecule:
 
