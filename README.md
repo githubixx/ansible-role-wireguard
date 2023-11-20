@@ -523,19 +523,19 @@ This role has a small test setup that is created using [Molecule](https://github
 Afterwards molecule can be executed:
 
 ```bash
-molecule converge -s kvm
+molecule converge
 ```
 
 This will setup quite a few virtual machines (VM) with different supported Linux operating systems. To run a few tests:
 
 ```bash
-molecule verify -s kvm
+molecule verify
 ```
 
 To clean up run
 
 ```bash
-molecule destroy -s kvm
+molecule destroy
 ```
 
 There is also a small Molecule setup that mimics a central WireGuard server with a few clients:

@@ -11,6 +11,10 @@ Breaking:
 
 - removed support for Ubuntu 18.04 (reached end of life)
 
+Molecule:
+
+- Molecule: rename `kvm` scenario to `default`
+
 ## 14.0.0
 
 Breaking:

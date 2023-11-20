@@ -271,7 +271,7 @@ provisioner:
         wireguard_endpoint: "192.168.10.180"
 
 scenario:
-  name: kvm
+  name: default
   test_sequence:
     - prepare
     - converge
