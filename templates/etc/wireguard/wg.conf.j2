@@ -52,7 +52,7 @@ PostDown = {{ wg_postdown }}
 SaveConfig = {{ wireguard_save_config }}
 {% endif %}
 {% for host in ansible_play_hosts %}
-{%   if host != inventory_hostname %}
+{%   if host != inventory_hostname and (wireguard_include_peers is not defined or host in wireguard_include_peers) %}
 
 [Peer]
 # Name = {{ host }}
@@ -104,6 +104,7 @@ Endpoint = {{host}}:{{wireguard_port}}
 
 # Peers not managed by Ansible from "wireguard_unmanaged_peers" variable
 {% for peer in wireguard_unmanaged_peers.keys() %}
+{%   if wireguard_include_peers is not defined or peer in wireguard_include_peers %}
 [Peer]
 # Name = {{ peer }}
 PublicKey = {{ wireguard_unmanaged_peers[peer].public_key }}
@@ -119,5 +120,6 @@ Endpoint = {{ wireguard_unmanaged_peers[peer].endpoint }}
 {%     if wireguard_unmanaged_peers[peer].persistent_keepalive is defined %}
 PersistentKeepalive = {{ wireguard_unmanaged_peers[peer].persistent_keepalive }}
 {%     endif %}
+{%    endif %}
 {%   endfor %}
 {% endif %}
