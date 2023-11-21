@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2018-2022 Robert Wimmer
+# Copyright (C) 2018-2023 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: Restart wireguard
@@ -23,6 +23,9 @@
     systemctl is-active wg-quick@{{ wireguard_interface | quote }} || systemctl start wg-quick@{{ wireguard_interface | quote }}
     wg syncconf {{ wireguard_interface | quote }} <(wg-quick strip /etc/wireguard/{{ wireguard_interface | quote }}.conf)
     exit 0
+  register: wireguard__syncconf_out
+  changed_when: false
+  failed_when: wireguard__syncconf_out.rc != 0
   args:
     executable: "/bin/bash"
   when:

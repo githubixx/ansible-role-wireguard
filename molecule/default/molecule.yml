@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2020-2022 Robert Wimmer
+# Copyright (C) 2020-2023 Robert Wimmer
 # Copyright (C) 2020 Pierre Ozoux
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -15,7 +15,7 @@ driver:
 platforms:
   - name: test-wg-ubuntu2004
     box: generic/ubuntu2004
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -25,9 +25,9 @@ platforms:
     groups:
       - vpn
       - ubuntu
-  - name: test-wg-ubuntu1804
-    box: generic/ubuntu1804
-    memory: 1024
+  - name: test-wg-fedora37
+    box: generic/fedora37
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -36,22 +36,22 @@ platforms:
         ip: 192.168.10.20
     groups:
       - vpn
-      - ubuntu
-  - name: test-wg-fedora36
-    box: generic/fedora36
-    memory: 1024
+      - fedora
+  - name: test-wg-fedora38
+    box: generic/fedora38
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.40
+        ip: 192.168.10.30
     groups:
       - vpn
       - fedora
   - name: test-wg-centos7
     box: generic/centos7
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -63,7 +63,7 @@ platforms:
       - el7
   - name: test-wg-arch
     box: archlinux/archlinux
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -75,7 +75,7 @@ platforms:
       - archlinux
   - name: test-wg-debian11
     box: generic/debian11
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -85,9 +85,21 @@ platforms:
     groups:
       - vpn
       - debian
+  - name: test-wg-debian12
+    box: generic/debian12
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.110
+    groups:
+      - vpn
+      - debian
   - name: test-wg-rocky8
     box: generic/rocky8
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -99,7 +111,7 @@ platforms:
       - el8
   - name: test-wg-alma8
     box: generic/alma8
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -109,9 +121,10 @@ platforms:
     groups:
       - vpn
       - el8
+      - almalinux8
   - name: test-wg-centos7-kernel-plus
     box: generic/centos7
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -123,7 +136,7 @@ platforms:
       - el7
   - name: test-wg-rocky8-dkms
     box: generic/rocky8
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -135,8 +148,8 @@ platforms:
       - el8
       - el8dkms
   - name: test-wg-ubuntu2204
-    box: generic/ubuntu2004
-    memory: 1024
+    box: generic/ubuntu2204
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -148,7 +161,7 @@ platforms:
       - ubuntu
   - name: test-wg-opensuse-leap-15-4
     box: opensuse/Leap-15.4.x86_64
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -158,9 +171,21 @@ platforms:
     groups:
       - vpn
       - opensuse
+  - name: test-wg-opensuse-leap-15-5
+    box: opensuse/Leap-15.5.x86_64
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.10.190
+    groups:
+      - vpn
+      - opensuse
   - name: test-wg-rocky9
     box: generic/rocky9
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -172,7 +197,7 @@ platforms:
       - el9
   - name: test-wg-alma9
     box: generic/alma9
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -184,7 +209,7 @@ platforms:
       - el9
   - name: test-wg-oracle9
     box: generic/oracle9
-    memory: 1024
+    memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
@@ -210,16 +235,17 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.10"
-      test-wg-ubuntu1804:
+      test-wg-fedora37:
         wireguard_address: "10.10.10.20/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.20"
-      test-wg-fedora36:
-        wireguard_address: "10.10.10.40/24"
+        wireguard_interface_restart: true
+      test-wg-fedora38:
+        wireguard_address: "10.10.10.30/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.40"
+        wireguard_endpoint: "192.168.10.30"
         wireguard_interface_restart: true
       test-wg-centos7:
         wireguard_address: "10.10.10.50/24"
@@ -238,6 +264,12 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.70"
+        ansible_python_interpreter: "/usr/bin/python3"
+      test-wg-debian12:
+        wireguard_address: "10.10.10.110/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.110"
         ansible_python_interpreter: "/usr/bin/python3"
       test-wg-rocky8:
         wireguard_address: "10.10.10.80/24"
@@ -271,6 +303,11 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "192.168.10.150"
+      test-wg-opensuse-leap-15-5:
+        wireguard_address: "10.10.10.190/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "192.168.10.190"
       test-wg-rocky9:
         wireguard_address: "10.10.10.160/24"
         wireguard_port: 51820
@@ -288,7 +325,7 @@ provisioner:
         wireguard_endpoint: "192.168.10.180"
 
 scenario:
-  name: kvm
+  name: default
   test_sequence:
     - prepare
     - converge
