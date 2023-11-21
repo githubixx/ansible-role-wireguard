@@ -18,12 +18,13 @@ Feature:
 - add support for Fedora 38
 - add support for openSUSE 15.5
 - add support for Debian 12
-- prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration
+- prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration (contribution by @tarag)
 
 Molecule:
 
 - rename `kvm` scenario to `default`
 - rename `kvm-single-server` scenario to `single-server`
+- upgrade OS and reboot in prepare before converge for Almalinux
 
 Other:
 
