@@ -121,6 +121,7 @@ platforms:
     groups:
       - vpn
       - el8
+      - almalinux8
   - name: test-wg-centos7-kernel-plus
     box: generic/centos7
     memory: 1536

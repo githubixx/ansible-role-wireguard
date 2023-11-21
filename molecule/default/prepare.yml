@@ -75,3 +75,21 @@
         dnf --enablerepo=elrepo-kernel install -y kernel-ml
       changed_when: false
       failed_when: false
+
+    - name: Reboot for kernel updates
+      ansible.builtin.reboot:
+
+- name: Prepare Almalinux 8 hosts
+  hosts: almalinux8
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install ELRepo mainline kernel
+      ansible.builtin.raw: |
+        dnf -y upgrade
+      changed_when: false
+      failed_when: false
+
+    - name: Reboot for kernel updates
+      ansible.builtin.reboot:
