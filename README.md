@@ -20,11 +20,16 @@ This role should work with:
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Archlinux
 - Debian 11 (Bullseye)
-- Fedora 36
+- Debian 12 (Bookworm)
+- Fedora 37
+- Fedora 38
 - CentOS 7
-- AlmaLinux
-- Rocky Linux
+- AlmaLinux 8
+- AlmaLinux 9
+- Rocky Linux 8
+- Rocky Linux 9
 - openSUSE Leap 15.4
+- openSUSE Leap 15.5
 - Oracle Linux 9
 
 Best effort:
@@ -257,13 +262,6 @@ wireguard_postup:
 wireguard_postdown:
   - ...
 wireguard_save_config: "true"
-wireguard_unmanaged_peers:
-  client.example.com:
-    public_key: 5zsSBeZZ8P9pQaaJvY9RbELQulcwC5VBXaZ93egzOlI=
-    # preshared_key: ... e.g. from ansible-vault?
-    allowed_ips: 10.0.0.3/32
-    endpoint: client.example.com:51820
-    persistent_keepalive: 0
 ```
 
 `wireguard_(preup|predown|postup|postdown)` are specified as lists. Here are two examples:
@@ -282,6 +280,18 @@ wireguard_preup:
 ```
 
 The commands are executed in order as described in [wg-quick.8](https://git.zx2c4.com/wireguard-tools/about/src/man/wg-quick.8).
+
+Additionally one can add "unmanaged" peers. Those peers are not handled by Ansible and not part of the `vpn` Ansible host group e.g.:
+
+```yaml
+wireguard_unmanaged_peers:
+  client.example.com:
+    public_key: 5zsSBeZZ8P9pQaaJvY9RbELQulcwC5VBXaZ93egzOlI=
+    # preshared_key: ... e.g. from ansible-vault?
+    allowed_ips: 10.0.0.3/32
+    endpoint: client.example.com:51820
+    persistent_keepalive: 0
+```
 
 One of `wireguard_address` (deprecated) or `wireguard_addresses` (recommended) is required as already mentioned. It's the IPs of the interface name defined with `wireguard_interface` variable (`wg0` by default). Every host needs at least one unique VPN IP of course. If you don't set `wireguard_endpoint` the playbook will use the hostname defined in the `vpn` hosts group (the Ansible inventory hostname). If you set `wireguard_endpoint` to `""` (empty string) that peer won't have a endpoint. That means that this host can only access hosts that have a `wireguard_endpoint`. That's useful for clients that don't expose any services to the VPN and only want to access services on other hosts. So if you only define one host with `wireguard_endpoint` set and all other hosts have `wireguard_endpoint` set to `""` (empty string) that basically means you've only clients besides one which in that case is the WireGuard server. The third possibility is to set `wireguard_endpoint` to some hostname. E.g. if you have different hostnames for the private and public DNS of that host and need different DNS entries for that case setting `wireguard_endpoint` becomes handy. Take for example the IP above: `wireguard_address: "10.8.0.101"`. That's a private IP and I've created a DNS entry for that private IP like `host01.i.domain.tld` (`i` for internal in that case). For the public IP I've created a DNS entry like `host01.p.domain.tld` (`p` for public). The `wireguard_endpoint` needs to be a interface that the other members in the `vpn` group can connect to. So in that case I would set `wireguard_endpoint` to `host01.p.domain.tld` because WireGuard normally needs to be able to connect to the public IP of the other host(s).
 
