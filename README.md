@@ -7,7 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ansible-role-wireguard
 ======================
 
-This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. The latest release is [available via Ansible Galaxy](https://galaxy.ansible.com/ui/standalone/roles/githubixx/ansible_role_wireguard/) e.g. I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster.
+This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster.
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
@@ -70,7 +70,73 @@ Nevertheless the `PreUp`, `PreDown`, `PostUp` and `PostDown` hooks may be a good
 Changelog
 ---------
 
-see [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob/master/CHANGELOG.md)
+**Change history:**
+
+See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob/master/CHANGELOG.md)
+
+**Changes in the last two versions:**
+
+15.0.0
+
+Breaking:
+
+- removed support for Ubuntu 18.04 (reached end of life)
+- removed support for Fedora 36 (reached end of life)
+
+Feature:
+
+- add support for Fedora 37
+- add support for Fedora 38
+- add support for openSUSE 15.5
+- add support for Debian 12
+- prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration (contribution by @tarag)
+
+Molecule:
+
+- rename `kvm` scenario to `default`
+- rename `kvm-single-server` scenario to `single-server`
+- upgrade OS and reboot in prepare before converge for Almalinux
+
+Other:
+
+- fix `ansible-lint` issues
+
+14.0.0
+
+Breaking:
+
+- CentOS 7: Introduce `wireguard_centos7_kernel_plus_reboot` and `wireguard_centos7_standard_reboot` variables. Both are set to "true" by default. This will cause the host to be rebooted in case the "wireguard" kernel module was installed the very fir
+st time. If `wireguard_centos7_installation_method: "kernel-plus"` is set and the host wasn't booted with a `kernel-plus` kernel already you most probably need to reboot. For the `standard` kernel this might not be needed.
+- CentOS 7: Add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
+- Introduce `wireguard_update_cache` variable to control if package manager caches should be updated before the installation (contribution by @sebix). Before this release the package manager cache wasn't updated for AlmaLinux 9, Archlinux, Fedora and openSUSE. With `wireguard_update_cache` set to `true` by default those OSes are now also update the package manager cache. If you don't want that set `wireguard_update_cache` to `false` for the host in question.
+
+Feature:
+
+- add support for Oracle Linux 9 (contribution by @cola-zero)
+
+Deprecation:
+
+- variable `wireguard_ubuntu_update_cache` is deprecated
+
+Installation
+------------
+
+- Directly download from Github (change into Ansible role directory before cloning):
+`git clone https://github.com/githubixx/ansible-role-wireguard.git githubixx.ansible_role_wireguard`
+
+- Via `ansible-galaxy` command and download directly from Ansible Galaxy:
+`ansible-galaxy install role githubixx.ansible_role_wireguard`
+
+- Create a `requirements.yml` file with the following content (this will download the role from Github) and install with
+`ansible-galaxy role install -r requirements.yml`:
+
+```yaml
+---
+roles:
+  - name: githubixx.ansible_role_wireguard
+    src: https://github.com/githubixx/ansible-role-wireguard.git
+    version: 15.0.0
+```
 
 Role Variables
 --------------
