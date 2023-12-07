@@ -2,7 +2,7 @@
 # Copyright (C) 2023 Timmerman Jens 
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: (CentOS 9) Install EPEL & ELRepo repository
+- name: (CentOS 9) Install EPEL
   ansible.builtin.yum:
     name:
       - epel-release
