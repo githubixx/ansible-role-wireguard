@@ -4,7 +4,13 @@
 
 - name: Gather instance facts
   ansible.builtin.setup:
-
+  
+- name: Ensure Ansible control node has netaddr package
+  delegate_to: localhost
+  ansible.builtin.pip:
+    name: netaddr
+    state: present
+    
 - name: Include tasks depending on OS
   ansible.builtin.include_tasks:
     file: "{{ item }}"
