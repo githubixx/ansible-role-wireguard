@@ -31,7 +31,10 @@
   failed_when: wireguard__register_module_enabled is failure
   tags:
     - wg-install
-  when: not ansible_os_family == 'Darwin'
+    - wg-install-kernel-module
+  when:
+    - not ansible_os_family == 'Darwin'
+    - wireguard_install_kernel_module
 
 - name: Set default for WireGuard interface restart behavior
   ansible.builtin.set_fact:
