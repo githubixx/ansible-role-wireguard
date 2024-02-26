@@ -163,6 +163,9 @@ wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'whee
 # The default mode of the wg.conf file
 wireguard_conf_mode: 0600
 
+# Whether any change to the wg.conf file should be backup
+wireguard_conf_backup: false
+
 # The default state of the wireguard service
 wireguard_service_enabled: "yes"
 wireguard_service_state: "started"
