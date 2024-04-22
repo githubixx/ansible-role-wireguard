@@ -5,6 +5,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+Feature:
+
+- Introduce `wireguard_conf_backup` to keep track of configuration changes. Default to "false"
+
 ## 15.0.0
 
 Breaking:

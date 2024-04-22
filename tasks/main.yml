@@ -162,6 +162,7 @@
     owner: "{{ wireguard_conf_owner }}"
     group: "{{ wireguard_conf_group }}"
     mode: "{{ wireguard_conf_mode }}"
+    backup: "{{ wireguard_conf_backup }}"
   no_log: '{{ ansible_verbosity < 3 }}'
   tags:
     - wg-config
