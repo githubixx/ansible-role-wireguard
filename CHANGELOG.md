@@ -74,8 +74,8 @@ Deprecation:
 
 ## 11.0.0
 
-- add support for Rocky Linux 9 (original PR from @vincentDcmps: https://github.com/githubixx/ansible-role-wireguard/pull/163)
-- add support for AlmaLinux 9 (original PR from @trunet: https://github.com/githubixx/ansible-role-wireguard/pull/164)
+- add support for Rocky Linux 9 (original PR from @vincentDcmps: [#163](https://github.com/githubixx/ansible-role-wireguard/pull/163))
+- add support for AlmaLinux 9 (original PR from @trunet: [#164](https://github.com/githubixx/ansible-role-wireguard/pull/164))
 - add `EL9` to `meta/main.yml`
 - require Ansible >= `2.11` as Rocky Linux is only supported with this version or above
 - `ansible-lint`: use `community.general.pacman` module instead of `ansible.builtin.pacman` for Archlinux setup
