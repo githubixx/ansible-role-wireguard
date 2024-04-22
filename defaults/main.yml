@@ -74,6 +74,12 @@ wireguard_interface_restart: false
 # the package manager in question supports this option)
 wireguard_update_cache: "true"
 
+# Normally the role installs and activates the wireguard kernel module where
+# appropriate.  In some cases we might not be able load kernel modules, like
+# unprivileged LXC guests.  If you set this to false you have to ensure
+# the wireguard module is available in the kernel!
+wireguard_install_kernel_module: true
+
 #######################################
 # Settings only relevant for:
 # - Ubuntu
