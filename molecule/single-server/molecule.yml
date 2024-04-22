@@ -16,7 +16,7 @@ driver:
 
 platforms:
   - name: test-wg-ubuntu2004
-    box: generic/ubuntu2004
+    box: alvistack/ubuntu-20.04
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -26,7 +26,7 @@ platforms:
       - vpn
       - ubuntu
   - name: test-wg-debian11
-    box: generic/debian11
+    box: alvistack/debian-12
     interfaces:
       - auto_config: true
         network_name: private_network
