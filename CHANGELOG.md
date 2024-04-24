@@ -5,6 +5,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 16.0.2
+
+- **OTHER**
+  - revert change in `.github/workflows/release.yml`
+
 ## 16.0.1
 
 - **OTHER**
