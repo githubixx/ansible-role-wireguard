@@ -21,8 +21,7 @@ This role should work with:
 - Archlinux
 - Debian 11 (Bullseye)
 - Debian 12 (Bookworm)
-- Fedora 37
-- Fedora 38
+- Fedora 39
 - CentOS 7
 - AlmaLinux 8
 - AlmaLinux 9
