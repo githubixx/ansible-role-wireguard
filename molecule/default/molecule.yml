@@ -14,14 +14,14 @@ driver:
 
 platforms:
   - name: test-wg-ubuntu2004
-    box: ubuntu/focal64
+    box: alvistack/ubuntu-20.04
     memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.10
+        ip: 172.16.10.10
     groups:
       - vpn
       - ubuntu
@@ -33,7 +33,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.30
+        ip: 172.16.10.20
     groups:
       - vpn
       - fedora
@@ -45,7 +45,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.50
+        ip: 172.16.10.30
     groups:
       - vpn
       - el7
@@ -57,7 +57,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.60
+        ip: 172.16.10.40
     groups:
       - vpn
       - archlinux
@@ -69,7 +69,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.70
+        ip: 172.16.10.50
     groups:
       - vpn
       - debian
@@ -81,19 +81,19 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.110
+        ip: 172.16.10.60
     groups:
       - vpn
       - debian
   - name: test-wg-rocky8
-    box: rockylinux/8
+    box: generic/rocky8
     memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.80
+        ip: 172.16.10.70
     groups:
       - vpn
       - el8
@@ -105,7 +105,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.90
+        ip: 172.16.10.80
     groups:
       - vpn
       - el8
@@ -118,32 +118,32 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.100
+        ip: 172.16.10.90
     groups:
       - vpn
       - el7
   - name: test-wg-rocky8-dkms
-    box: rockylinux/8
+    box: generic/rocky8
     memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.130
+        ip: 172.16.10.100
     groups:
       - vpn
       - el8
       - el8dkms
   - name: test-wg-ubuntu2204
-    box: ubuntu/jammy64
+    box: alvistack/ubuntu-22.04
     memory: 1536
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.140
+        ip: 172.16.10.110
     groups:
       - vpn
       - ubuntu
@@ -155,7 +155,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.150
+        ip: 172.16.10.120
     groups:
       - vpn
       - opensuse
@@ -167,7 +167,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.190
+        ip: 172.16.10.130
     groups:
       - vpn
       - opensuse
@@ -179,7 +179,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.160
+        ip: 172.16.10.140
     groups:
       - vpn
       - el9
@@ -191,7 +191,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.170
+        ip: 172.16.10.150
     groups:
       - vpn
       - el9
@@ -203,7 +203,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: static
-        ip: 192.168.10.180
+        ip: 172.16.10.160
     groups:
       - vpn
       - el9
@@ -222,89 +222,89 @@ provisioner:
         wireguard_address: "10.10.10.10/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.10"
+        wireguard_endpoint: "172.16.10.10"
       test-wg-fedora39:
+        wireguard_address: "10.10.10.20/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "172.16.10.20"
+        wireguard_interface_restart: true
+      test-wg-centos7:
         wireguard_address: "10.10.10.30/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.30"
+        wireguard_endpoint: "172.16.10.30"
         wireguard_interface_restart: true
-      test-wg-centos7:
+      test-wg-arch:
+        wireguard_address: "10.10.10.40/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "172.16.10.40"
+        ansible_python_interpreter: "/usr/bin/python"
+      test-wg-debian11:
         wireguard_address: "10.10.10.50/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.50"
-        wireguard_interface_restart: true
-      test-wg-arch:
+        wireguard_endpoint: "172.16.10.50"
+        ansible_python_interpreter: "/usr/bin/python3"
+      test-wg-debian12:
         wireguard_address: "10.10.10.60/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.60"
-        ansible_python_interpreter: "/usr/bin/python"
-      test-wg-debian11:
+        wireguard_endpoint: "172.16.10.60"
+        ansible_python_interpreter: "/usr/bin/python3"
+      test-wg-rocky8:
         wireguard_address: "10.10.10.70/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.70"
-        ansible_python_interpreter: "/usr/bin/python3"
-      test-wg-debian12:
-        wireguard_address: "10.10.10.110/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.110"
-        ansible_python_interpreter: "/usr/bin/python3"
-      test-wg-rocky8:
+        wireguard_endpoint: "172.16.10.70"
+      test-wg-alma8:
         wireguard_address: "10.10.10.80/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.80"
-      test-wg-alma8:
-        wireguard_address: "10.10.10.90/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.90"
+        wireguard_endpoint: "172.16.10.80"
       test-wg-centos7-kernel-plus:
-        wireguard_address: "10.10.10.100/24"
+        wireguard_address: "10.10.10.90/24"
         wireguard_port: 51821
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.100"
+        wireguard_endpoint: "172.16.10.90"
         wireguard_centos7_installation_method: "kernel-plus"
       test-wg-rocky8-dkms:
+        wireguard_address: "10.10.10.100/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "172.16.10.100"
+        wireguard_rockylinux8_installation_method: "dkms"
+      test-wg-ubuntu2204:
+        wireguard_address: "10.10.10.110/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "172.16.10.110"
+      test-wg-opensuse-leap-15-4:
+        wireguard_address: "10.10.10.120/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "172.16.10.120"
+      test-wg-opensuse-leap-15-5:
         wireguard_address: "10.10.10.130/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.130"
-        wireguard_rockylinux8_installation_method: "dkms"
-      test-wg-ubuntu2204:
+        wireguard_endpoint: "172.16.10.130"
+      test-wg-rocky9:
         wireguard_address: "10.10.10.140/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.140"
-      test-wg-opensuse-leap-15-4:
+        wireguard_endpoint: "172.16.10.140"
+      test-wg-alma9:
         wireguard_address: "10.10.10.150/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.150"
-      test-wg-opensuse-leap-15-5:
-        wireguard_address: "10.10.10.190/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.190"
-      test-wg-rocky9:
+        wireguard_endpoint: "172.16.10.150"
+      test-wg-oracle9:
         wireguard_address: "10.10.10.160/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.160"
-      test-wg-alma9:
-        wireguard_address: "10.10.10.170/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.170"
-      test-wg-oracle9:
-        wireguard_address: "10.10.10.180/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "192.168.10.180"
+        wireguard_endpoint: "172.16.10.160"
 
 scenario:
   name: default
