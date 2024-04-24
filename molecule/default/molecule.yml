@@ -252,6 +252,7 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.60"
+        wireguard_conf_backup: true
         ansible_python_interpreter: "/usr/bin/python3"
       test-wg-rocky8:
         wireguard_address: "10.10.10.70/24"
@@ -280,6 +281,7 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.110"
+        wireguard_conf_backup: true
       test-wg-opensuse-leap-15-4:
         wireguard_address: "10.10.10.120/24"
         wireguard_port: 51820
