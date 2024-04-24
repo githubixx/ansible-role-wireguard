@@ -86,7 +86,7 @@ platforms:
       - vpn
       - debian
   - name: test-wg-rocky8
-    box: generic/rocky8
+    box: rockylinux/8
     memory: 1536
     cpus: 2
     interfaces:
@@ -123,7 +123,7 @@ platforms:
       - vpn
       - el7
   - name: test-wg-rocky8-dkms
-    box: generic/rocky8
+    box: rockylinux/8
     memory: 1536
     cpus: 2
     interfaces:
@@ -172,7 +172,7 @@ platforms:
       - vpn
       - opensuse
   - name: test-wg-rocky9
-    box: generic/rocky9
+    box: rockylinux/9
     memory: 1536
     cpus: 2
     interfaces:
