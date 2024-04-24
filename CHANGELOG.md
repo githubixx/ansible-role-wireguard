@@ -5,50 +5,57 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
-Feature:
+## 16.0.0
 
-- Introduce `wireguard_conf_backup` to keep track of configuration changes. Default to "false"
+- **BREAKING**
+  - removed support for Fedora 37/38 (reached end of life)
+
+- **FEATURE**
+  - add support for Fedora 39
+  - introduce `wireguard_conf_backup` variable to keep track of configuration changes. Default to `false`. (contribution by @shk3bq4d)
+  - introduce `wireguard_install_kernel_module`. Allows to skip loading the `wireguard` kernel module. Default to `true` (which was the previous behavior). (contribution by @gregorydlogan)
+
+- **Molecule**
+  - use different IP addresses
+  - use `generic` Vagrant boxes for Rocky Linux
+  - use `alvistack` Vagrant boxes for Ubuntu
+  - use official Rocky Linux 9 Vagrant box
+  - use official AlmaLinux Vagrant boxes
+  - move `memory` and `cpus` parameter to Vagrant boxes
 
 ## 15.0.0
 
-Breaking:
+- **BREAKING**
+  - removed support for Ubuntu 18.04 (reached end of life)
+  - removed support for Fedora 36 (reached end of life)
 
-- removed support for Ubuntu 18.04 (reached end of life)
-- removed support for Fedora 36 (reached end of life)
+- **FEATURE**
+  - add support for Fedora 37
+  - add support for Fedora 38
+  - add support for openSUSE 15.5
+  - add support for Debian 12
+  - prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration (contribution by @tarag)
 
-Feature:
+- **MOLECULE**
+  - rename `kvm` scenario to `default`
+  - rename `kvm-single-server` scenario to `single-server`
+  - upgrade OS and reboot in prepare before converge for Almalinux
 
-- add support for Fedora 37
-- add support for Fedora 38
-- add support for openSUSE 15.5
-- add support for Debian 12
-- prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration (contribution by @tarag)
-
-Molecule:
-
-- rename `kvm` scenario to `default`
-- rename `kvm-single-server` scenario to `single-server`
-- upgrade OS and reboot in prepare before converge for Almalinux
-
-Other:
-
-- fix `ansible-lint` issues
+- **OTHER**
+  - fix `ansible-lint` issues
 
 ## 14.0.0
 
-Breaking:
+- **BREAKING**
+  - CentOS 7: Introduce `wireguard_centos7_kernel_plus_reboot` and `wireguard_centos7_standard_reboot` variables. Both are set to "true" by default. This will cause the host to be rebooted in case the "wireguard" kernel module was installed the very first time. If `wireguard_centos7_installation_method: "kernel-plus"` is set and the host wasn't booted with a `kernel-plus` kernel already you most probably need to reboot. For the `standard` kernel this might not be needed.
+  - CentOS 7: Add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
+  - Introduce `wireguard_update_cache` variable to control if package manager caches should be updated before the installation (contribution by @sebix). Before this release the package manager cache wasn't updated for AlmaLinux 9, Archlinux, Fedora and openSUSE. With `wireguard_update_cache` set to `true` by default those OSes are now also update the package manager cache. If you don't want that set `wireguard_update_cache` to `false` for the host in question.
 
-- CentOS 7: Introduce `wireguard_centos7_kernel_plus_reboot` and `wireguard_centos7_standard_reboot` variables. Both are set to "true" by default. This will cause the host to be rebooted in case the "wireguard" kernel module was installed the very first time. If `wireguard_centos7_installation_method: "kernel-plus"` is set and the host wasn't booted with a `kernel-plus` kernel already you most probably need to reboot. For the `standard` kernel this might not be needed.
-- CentOS 7: Add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
-- Introduce `wireguard_update_cache` variable to control if package manager caches should be updated before the installation (contribution by @sebix). Before this release the package manager cache wasn't updated for AlmaLinux 9, Archlinux, Fedora and openSUSE. With `wireguard_update_cache` set to `true` by default those OSes are now also update the package manager cache. If you don't want that set `wireguard_update_cache` to `false` for the host in question.
+- **FEATURE**
+  - add support for Oracle Linux 9 (contribution by @cola-zero)
 
-Feature:
-
-- add support for Oracle Linux 9 (contribution by @cola-zero)
-
-Deprecation:
-
-- variable `wireguard_ubuntu_update_cache` is deprecated
+- **DEPRECATION**
+  - variable `wireguard_ubuntu_update_cache` is deprecated
 
 ## 13.0.1
 
@@ -74,8 +81,8 @@ Deprecation:
 
 ## 11.0.0
 
-- add support for Rocky Linux 9 (original PR from @vincentDcmps: https://github.com/githubixx/ansible-role-wireguard/pull/163)
-- add support for AlmaLinux 9 (original PR from @trunet: https://github.com/githubixx/ansible-role-wireguard/pull/164)
+- add support for Rocky Linux 9 (original PR from @vincentDcmps: [#163](https://github.com/githubixx/ansible-role-wireguard/pull/163))
+- add support for AlmaLinux 9 (original PR from @trunet: [#164](https://github.com/githubixx/ansible-role-wireguard/pull/164))
 - add `EL9` to `meta/main.yml`
 - require Ansible >= `2.11` as Rocky Linux is only supported with this version or above
 - `ansible-lint`: use `community.general.pacman` module instead of `ansible.builtin.pacman` for Archlinux setup

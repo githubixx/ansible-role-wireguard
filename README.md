@@ -4,15 +4,13 @@ Copyright (C) 2019 fbourqui
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-ansible-role-wireguard
-======================
+# ansible-role-wireguard
 
 This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster.
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).
 
-Linux
------
+## Linux
 
 This role should work with:
 
@@ -21,8 +19,7 @@ This role should work with:
 - Archlinux
 - Debian 11 (Bullseye)
 - Debian 12 (Bookworm)
-- Fedora 37
-- Fedora 38
+- Fedora 39
 - CentOS 7
 - AlmaLinux 8
 - AlmaLinux 9
@@ -32,14 +29,13 @@ This role should work with:
 - openSUSE Leap 15.5
 - Oracle Linux 9
 
-Best effort:
+## Best effort
 
 - elementary OS 6
 
 Molecule tests are [available](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
 
-MacOS
------
+## MacOS
 
 While this playbook configures, enables and starts a `systemd` service on Linux in a such a way that no additional action is needed, on MacOS it installs the required packages and it just generates the correct `wg0.conf` file that is then placed in the specified `wireguard_remote_directory` (`/opt/local/etc/wireguard` by default). In order to run the VPN, then, you need to:
 
@@ -55,71 +51,64 @@ sudo wg-quick down wg0
 
 or you can install the [official app](https://apps.apple.com/it/app/wireguard/id1451685025?l=en&mt=12) and import the `wg0.conf` file.
 
-Versions
---------
+## Versions
 
 I tag every release and try to stay with [semantic versioning](http://semver.org). If you want to use the role I recommend to checkout the latest tag. The master branch is basically development while the tags mark stable releases. But in general I try to keep master in good shape too.
 
-Requirements
-------------
+## Requirements
 
 By default port `51820` (protocol UDP) should be accessible from the outside. But you can adjust the port by changing the variable `wireguard_port`. Also IP forwarding needs to be enabled e.g. via `echo 1 > /proc/sys/net/ipv4/ip_forward`. I decided not to implement this task in this Ansible role. IMHO that should be handled elsewhere.
 You can use my [ansible-role-harden-linux](https://github.com/githubixx/ansible-role-harden-linux) e.g. Besides changing sysctl entries (which you need to enable IP forwarding) it also manages firewall settings among other things.
 Nevertheless the `PreUp`, `PreDown`, `PostUp` and `PostDown` hooks may be a good place to do some network related stuff before a WireGuard interface comes up or goes down.
 
-Changelog
----------
+## Changelog
 
 **Change history:**
 
 See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob/master/CHANGELOG.md)
 
-**Changes in the last two versions:**
+**Recent changes:**
 
-15.0.0
+## 16.0.0
 
-Breaking:
+- **BREAKING**
+  - removed support for Fedora 37/38 (reached end of life)
 
-- removed support for Ubuntu 18.04 (reached end of life)
-- removed support for Fedora 36 (reached end of life)
+- **FEATURE**
+  - add support for Fedora 39
+  - introduce `wireguard_conf_backup` variable to keep track of configuration changes. Default to `false`. (contribution by @shk3bq4d)
+  - introduce `wireguard_install_kernel_module`. Allows to skip loading the `wireguard` kernel module. Default to `true` (which was the previous behavior). (contribution by @gregorydlogan)
 
-Feature:
+- **Molecule**
+  - use different IP addresses
+  - use `generic` Vagrant boxes for Rocky Linux
+  - use `alvistack` Vagrant boxes for Ubuntu
+  - use official Rocky Linux 9 Vagrant box
+  - use official AlmaLinux Vagrant boxes
+  - move `memory` and `cpus` parameter to Vagrant boxes
 
-- add support for Fedora 37
-- add support for Fedora 38
-- add support for openSUSE 15.5
-- add support for Debian 12
-- prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration (contribution by @tarag)
+## 15.0.0
 
-Molecule:
+- **BREAKING**
+  - removed support for Ubuntu 18.04 (reached end of life)
+  - removed support for Fedora 36 (reached end of life)
 
-- rename `kvm` scenario to `default`
-- rename `kvm-single-server` scenario to `single-server`
-- upgrade OS and reboot in prepare before converge for Almalinux
+- **FEATURE**
+  - add support for Fedora 37
+  - add support for Fedora 38
+  - add support for openSUSE 15.5
+  - add support for Debian 12
+  - prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration (contribution by @tarag)
 
-Other:
+- **MOLECULE**
+  - rename `kvm` scenario to `default`
+  - rename `kvm-single-server` scenario to `single-server`
+  - upgrade OS and reboot in prepare before converge for Almalinux
 
-- fix `ansible-lint` issues
+- **OTHER**
+  - fix `ansible-lint` issues
 
-14.0.0
-
-Breaking:
-
-- CentOS 7: Introduce `wireguard_centos7_kernel_plus_reboot` and `wireguard_centos7_standard_reboot` variables. Both are set to "true" by default. This will cause the host to be rebooted in case the "wireguard" kernel module was installed the very fir
-st time. If `wireguard_centos7_installation_method: "kernel-plus"` is set and the host wasn't booted with a `kernel-plus` kernel already you most probably need to reboot. For the `standard` kernel this might not be needed.
-- CentOS 7: Add reboot to the standard mode to make sure the WireGuard kernel module is available (contribution by @mofelee)
-- Introduce `wireguard_update_cache` variable to control if package manager caches should be updated before the installation (contribution by @sebix). Before this release the package manager cache wasn't updated for AlmaLinux 9, Archlinux, Fedora and openSUSE. With `wireguard_update_cache` set to `true` by default those OSes are now also update the package manager cache. If you don't want that set `wireguard_update_cache` to `false` for the host in question.
-
-Feature:
-
-- add support for Oracle Linux 9 (contribution by @cola-zero)
-
-Deprecation:
-
-- variable `wireguard_ubuntu_update_cache` is deprecated
-
-Installation
-------------
+## Installation
 
 - Directly download from Github (change into Ansible role directory before cloning):
 `git clone https://github.com/githubixx/ansible-role-wireguard.git githubixx.ansible_role_wireguard`
@@ -135,11 +124,10 @@ Installation
 roles:
   - name: githubixx.ansible_role_wireguard
     src: https://github.com/githubixx/ansible-role-wireguard.git
-    version: 15.0.0
+    version: 16.0.0
 ```
 
-Role Variables
---------------
+## Role Variables
 
 These variables can be changed in `group_vars/` e.g.:
 
@@ -523,8 +511,7 @@ Endpoint = server.at.home.p.domain.tld:51820
 
 The other WireGuard config files (`wg0.conf` by default) looks similar but of course `[Interface]` includes the config of that specific host and the `[Peer]` entries lists the config of the other hosts.
 
-Example Playbooks
------------------
+## Example Playbooks
 
 ```yaml
 - hosts: vpn
@@ -540,8 +527,7 @@ Example Playbooks
       tags: role-wireguard
 ```
 
-Example inventory using two different WireGuard interfaces on host "multi"
---------------------------------------------------------------------------
+## Example inventory using two different WireGuard interfaces on host "multi"
 
 This is a complex example using yaml inventory format:
 
@@ -600,8 +586,7 @@ Sample playbooks for example above:
     - githubixx.ansible_role_wireguard
 ```
 
-Testing
--------
+## Testing
 
 This role has a small test setup that is created using [Molecule](https://github.com/ansible-community/molecule), libvirt (vagrant-libvirt) and QEMU/KVM. Please see my blog post [Testing Ansible roles with Molecule, libvirt (vagrant-libvirt) and QEMU/KVM](https://www.tauceti.blog/posts/testing-ansible-roles-with-molecule-libvirt-vagrant-qemu-kvm/) how to setup. The test configuration is [here](https://github.com/githubixx/ansible-role-wireguard/tree/master/molecule/default).
 
@@ -629,12 +614,10 @@ There is also a small [Molecule setup](https://github.com/githubixx/ansible-role
 molecule converge -s single-server
 ```
 
-License
--------
+## License
 
 [GNU General Public License v3.0 or later](https://spdx.org/licenses/GPL-3.0-or-later.html)
 
-Author Information
-------------------
+## Author Information
 
 [http://www.tauceti.blog](http://www.tauceti.blog)
