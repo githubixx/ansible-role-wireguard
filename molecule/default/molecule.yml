@@ -14,7 +14,7 @@ driver:
 
 platforms:
   - name: test-wg-ubuntu2004
-    box: generic/ubuntu2004
+    box: alvistack/ubuntu-20.04
     memory: 1536
     cpus: 2
     interfaces:
@@ -148,7 +148,7 @@ platforms:
       - el8
       - el8dkms
   - name: test-wg-ubuntu2204
-    box: generic/ubuntu2204
+    box: alvistack/ubuntu-22.04
     memory: 1536
     cpus: 2
     interfaces:
