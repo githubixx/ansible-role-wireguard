@@ -98,7 +98,7 @@ platforms:
       - vpn
       - el8
   - name: test-wg-alma8
-    box: generic/alma8
+    box: almalinux/8
     memory: 1536
     cpus: 2
     interfaces:
@@ -184,7 +184,7 @@ platforms:
       - vpn
       - el9
   - name: test-wg-alma9
-    box: generic/alma9
+    box: almalinux/9
     memory: 1536
     cpus: 2
     interfaces:
