@@ -25,7 +25,7 @@ platforms:
       - vpn
       - ubuntu
   - name: test-wg-debian12
-    box: alvistack/debian-12
+    box: generic/debian12
     memory: 1536
     cpus: 2
     interfaces:
