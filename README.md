@@ -69,6 +69,12 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
+## 16.0.1
+
+- **OTHER**
+  - update `.github/workflows/release.yml`
+  - update `meta/main.yml`
+
 ## 16.0.0
 
 - **BREAKING**
