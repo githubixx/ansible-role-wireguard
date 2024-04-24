@@ -5,6 +5,12 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 16.0.1
+
+- **OTHER**
+  - update `.github/workflows/release.yml`
+  - update `meta/main.yml`
+
 ## 16.0.0
 
 - **BREAKING**
