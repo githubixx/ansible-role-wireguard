@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (Fedora) Install WireGuard packages
+  when:
+    - ansible_pkg_mgr != "atomic_container"
   ansible.builtin.yum:
     name:
       - "wireguard-tools"
