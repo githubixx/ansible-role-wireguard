@@ -15,7 +15,9 @@ Address = {{ wg_addr }}
 {%  endfor %}
 {% endif %}
 PrivateKey = {{ wireguard_private_key }}
+{% if wireguard_endpoint is defined and wireguard_endpoint != "" %}
 ListenPort = {{ wireguard_port }}
+{% endif %}
 {% if wireguard_dns is defined %}
 DNS = {{ wireguard_dns }}
 {% endif %}
@@ -52,7 +54,7 @@ PostDown = {{ wg_postdown }}
 SaveConfig = {{ wireguard_save_config }}
 {% endif %}
 {% for host in ansible_play_hosts %}
-{%   if host != inventory_hostname %}
+{%   if host != inventory_hostname and ((hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "") or (wireguard_endpoint is defined and wireguard_endpoint != "")) %}
 
 [Peer]
 # Name = {{ host }}
@@ -73,7 +75,7 @@ AllowedIPs = {{ wg_addr.split('/')[0] }}/128
 {%      endfor %}
 {%      endif %}
 {%     endif %}
-{%     if hostvars[host].wireguard_persistent_keepalive is defined %}
+{%     if hostvars[host].wireguard_persistent_keepalive is defined and hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "" %}
 PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
 {%     endif %}
 {%     if (
