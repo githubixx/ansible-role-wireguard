@@ -5,6 +5,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 17.0.0
+
+- **BREAKING**
+  - removed support for openSUSE 15.4 (reached end of life)
+
 ## 16.0.2
 
 - **OTHER**

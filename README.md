@@ -25,7 +25,6 @@ This role should work with:
 - AlmaLinux 9
 - Rocky Linux 8
 - Rocky Linux 9
-- openSUSE Leap 15.4
 - openSUSE Leap 15.5
 - Oracle Linux 9
 

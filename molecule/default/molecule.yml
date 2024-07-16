@@ -147,18 +147,6 @@ platforms:
     groups:
       - vpn
       - ubuntu
-  - name: test-wg-opensuse-leap-15-4
-    box: opensuse/Leap-15.4.x86_64
-    memory: 1536
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 172.16.10.120
-    groups:
-      - vpn
-      - opensuse
   - name: test-wg-opensuse-leap-15-5
     box: opensuse/Leap-15.5.x86_64
     memory: 1536
@@ -282,11 +270,6 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.110"
         wireguard_conf_backup: true
-      test-wg-opensuse-leap-15-4:
-        wireguard_address: "10.10.10.120/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "172.16.10.120"
       test-wg-opensuse-leap-15-5:
         wireguard_address: "10.10.10.130/24"
         wireguard_port: 51820
