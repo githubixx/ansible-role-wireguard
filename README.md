@@ -69,6 +69,14 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
+## 17.0.0
+
+- **BREAKING**
+  - removed support for openSUSE 15.4 (reached end of life)
+
+- **FEATURE**
+  - add support for Ubuntu 24.04
+
 ## 16.0.2
 
 - **OTHER**
@@ -98,27 +106,6 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
   - use official AlmaLinux Vagrant boxes
   - move `memory` and `cpus` parameter to Vagrant boxes
 
-## 15.0.0
-
-- **BREAKING**
-  - removed support for Ubuntu 18.04 (reached end of life)
-  - removed support for Fedora 36 (reached end of life)
-
-- **FEATURE**
-  - add support for Fedora 37
-  - add support for Fedora 38
-  - add support for openSUSE 15.5
-  - add support for Debian 12
-  - prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration (contribution by @tarag)
-
-- **MOLECULE**
-  - rename `kvm` scenario to `default`
-  - rename `kvm-single-server` scenario to `single-server`
-  - upgrade OS and reboot in prepare before converge for Almalinux
-
-- **OTHER**
-  - fix `ansible-lint` issues
-
 ## Installation
 
 - Directly download from Github (change into Ansible role directory before cloning):
@@ -135,7 +122,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 roles:
   - name: githubixx.ansible_role_wireguard
     src: https://github.com/githubixx/ansible-role-wireguard.git
-    version: 16.0.0
+    version: 17.0.0
 ```
 
 ## Role Variables
