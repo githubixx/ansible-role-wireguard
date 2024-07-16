@@ -10,6 +10,9 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - **BREAKING**
   - removed support for openSUSE 15.4 (reached end of life)
 
+- **FEATURE**
+  - add support for Ubuntu 24.04
+
 ## 16.0.2
 
 - **OTHER**
