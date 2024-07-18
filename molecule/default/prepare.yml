@@ -40,17 +40,6 @@
         executable: /bin/bash
       changed_when: false
 
-- name: Prepare Proxmox hosts
-  hosts: proxmox
-  remote_user: vagrant
-  become: true
-  gather_facts: true
-  tasks:
-    - name: (Proxmox) Delete /var/lib/apt/lists/lock
-      ansible.builtin.file:
-        name: /var/lib/apt/lists/lock
-        state: absent
-
 - name: Prepare Ubuntu hosts
   hosts: ubuntu
   remote_user: vagrant
