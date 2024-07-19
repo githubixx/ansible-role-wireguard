@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2018-2023 Robert Wimmer
+Copyright (C) 2018-2024 Robert Wimmer
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
@@ -8,11 +8,18 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ## 17.0.0
 
 - **BREAKING**
-  - removed support for openSUSE 15.4 (reached end of life)
+  - removed support for `openSUSE 15.4` (reached end of life)
 
 - **FEATURE**
-  - add support for Ubuntu 24.04
+  - add support for `Ubuntu 24.04`
+  - add support for `openSUSE 15.6`
 
+- **MOLECULE**
+  - remove outdated `Proxmox` code
+  - replace Vagrant box `rockylinux/9` with `bento/rockylinux-9`
+  - use `ansible.builtin.package` for AlmaLinux
+  - remove `AlmaLinux 8`, `Rocky Linux 8` and `CentOS 7` (outdated Python makes it hard to test with Ansible)
+ 
 ## 16.0.2
 
 - **OTHER**
@@ -34,7 +41,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
   - introduce `wireguard_conf_backup` variable to keep track of configuration changes. Default to `false`. (contribution by @shk3bq4d)
   - introduce `wireguard_install_kernel_module`. Allows to skip loading the `wireguard` kernel module. Default to `true` (which was the previous behavior). (contribution by @gregorydlogan)
 
-- **Molecule**
+- **MOLECULE**
   - use different IP addresses
   - use `generic` Vagrant boxes for Rocky Linux
   - use `alvistack` Vagrant boxes for Ubuntu
