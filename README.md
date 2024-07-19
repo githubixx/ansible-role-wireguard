@@ -34,7 +34,7 @@ This role should work with:
 - elementary OS 6
 - CentOS 7 (end of life since end June 2024)
 
-Molecule tests are [available](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+Molecule tests are [available](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partially but is only best effort.
 
 ## MacOS
 
@@ -113,7 +113,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 `git clone https://github.com/githubixx/ansible-role-wireguard.git githubixx.ansible_role_wireguard`
 
 - Via `ansible-galaxy` command and download directly from Ansible Galaxy:
-`ansible-galaxy install role githubixx.ansible_role_wireguard`
+`ansible-galaxy role install githubixx.ansible_role_wireguard`
 
 - Create a `requirements.yml` file with the following content (this will download the role from Github) and install with
 `ansible-galaxy role install -r requirements.yml`:
