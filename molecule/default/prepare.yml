@@ -6,12 +6,11 @@
   hosts: opensuse
   remote_user: vagrant
   become: true
-  gather_facts: true
+  gather_facts: false
   tasks:
-    - name: Remove backports repositories
+    - name: Install Python 3.9
       ansible.builtin.raw: |
-        zypper rr repo-backports-debug-update
-        zypper rr repo-backports-update
+        zypper install --no-confirm --no-recommends python39
       changed_when: false
       failed_when: false
 
@@ -40,17 +39,6 @@
         executable: /bin/bash
       changed_when: false
 
-- name: Prepare Proxmox hosts
-  hosts: proxmox
-  remote_user: vagrant
-  become: true
-  gather_facts: true
-  tasks:
-    - name: (Proxmox) Delete /var/lib/apt/lists/lock
-      ansible.builtin.file:
-        name: /var/lib/apt/lists/lock
-        state: absent
-
 - name: Prepare Ubuntu hosts
   hosts: ubuntu
   remote_user: vagrant
@@ -62,17 +50,31 @@
         update_cache: true
         cache_valid_time: 3600
 
+- name: Prepare Enterprise Linux 8 hosts
+  hosts: rocky8
+  remote_user: vagrant
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Install ELRepo mainline kernel
+      ansible.builtin.raw: |
+        dnf --assumeyes install python39
+      changed_when: false
+      failed_when: false
+
+    - name: Reboot for kernel updates
+      ansible.builtin.reboot:
+
 - name: Prepare Enterprise Linux 8 hosts (DKMS)
   hosts: el8dkms
   remote_user: vagrant
   become: true
-  gather_facts: true
+  gather_facts: false
   tasks:
     - name: Install ELRepo mainline kernel
       ansible.builtin.raw: |
-        rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
-        dnf install -y https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm
-        dnf --enablerepo=elrepo-kernel install -y kernel-ml
+        dnf --assumeyes --enablerepo=elrepo-kernel install kernel-ml
+        dnf --assumeyes install python39
       changed_when: false
       failed_when: false
 
@@ -83,11 +85,12 @@
   hosts: almalinux8
   remote_user: vagrant
   become: true
-  gather_facts: true
+  gather_facts: false
   tasks:
-    - name: Install ELRepo mainline kernel
+    - name: Install Python 3.9
       ansible.builtin.raw: |
-        dnf -y upgrade
+        dnf --assumeyes upgrade
+        dnf --assumeyes install python39
       changed_when: false
       failed_when: false
 

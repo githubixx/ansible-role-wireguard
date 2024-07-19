@@ -16,24 +16,25 @@ This role should work with:
 
 - Ubuntu 20.04 (Focal Fossa)
 - Ubuntu 22.04 (Jammy Jellyfish)
+- Ubuntu 24.04 (Noble Numbat)
 - Archlinux
 - Debian 11 (Bullseye)
 - Debian 12 (Bookworm)
 - Fedora 39
-- CentOS 7
-- AlmaLinux 8
 - AlmaLinux 9
-- Rocky Linux 8
 - Rocky Linux 9
-- openSUSE Leap 15.4
 - openSUSE Leap 15.5
+- openSUSE Leap 15.6
 - Oracle Linux 9
 
 ## Best effort
 
+- AlmaLinux 8
+- Rocky Linux 8
 - elementary OS 6
+- CentOS 7 (end of life since end June 2024)
 
-Molecule tests are [available](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
+Molecule tests are [available](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partially but is only best effort.
 
 ## MacOS
 
@@ -69,6 +70,14 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
+## 17.0.0
+
+- **BREAKING**
+  - removed support for openSUSE 15.4 (reached end of life)
+
+- **FEATURE**
+  - add support for Ubuntu 24.04
+
 ## 16.0.2
 
 - **OTHER**
@@ -98,34 +107,13 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
   - use official AlmaLinux Vagrant boxes
   - move `memory` and `cpus` parameter to Vagrant boxes
 
-## 15.0.0
-
-- **BREAKING**
-  - removed support for Ubuntu 18.04 (reached end of life)
-  - removed support for Fedora 36 (reached end of life)
-
-- **FEATURE**
-  - add support for Fedora 37
-  - add support for Fedora 38
-  - add support for openSUSE 15.5
-  - add support for Debian 12
-  - prefix host name comment with `Name =` for [wg-info](https://github.com/asdil12/wg-info) in WireGuard interface configuration (contribution by @tarag)
-
-- **MOLECULE**
-  - rename `kvm` scenario to `default`
-  - rename `kvm-single-server` scenario to `single-server`
-  - upgrade OS and reboot in prepare before converge for Almalinux
-
-- **OTHER**
-  - fix `ansible-lint` issues
-
 ## Installation
 
 - Directly download from Github (change into Ansible role directory before cloning):
 `git clone https://github.com/githubixx/ansible-role-wireguard.git githubixx.ansible_role_wireguard`
 
 - Via `ansible-galaxy` command and download directly from Ansible Galaxy:
-`ansible-galaxy install role githubixx.ansible_role_wireguard`
+`ansible-galaxy role install githubixx.ansible_role_wireguard`
 
 - Create a `requirements.yml` file with the following content (this will download the role from Github) and install with
 `ansible-galaxy role install -r requirements.yml`:
@@ -135,7 +123,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 roles:
   - name: githubixx.ansible_role_wireguard
     src: https://github.com/githubixx/ansible-role-wireguard.git
-    version: 16.0.0
+    version: 17.0.0
 ```
 
 ## Role Variables

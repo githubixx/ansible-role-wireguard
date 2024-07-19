@@ -37,18 +37,6 @@ platforms:
     groups:
       - vpn
       - fedora
-  - name: test-wg-centos7
-    box: generic/centos7
-    memory: 1536
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 172.16.10.30
-    groups:
-      - vpn
-      - el7
   - name: test-wg-arch
     box: archlinux/archlinux
     memory: 1536
@@ -85,8 +73,8 @@ platforms:
     groups:
       - vpn
       - debian
-  - name: test-wg-rocky8
-    box: generic/rocky8
+  - name: test-wg-opensuse-leap-15-6
+    box: opensuse/Leap-15.6.x86_64
     memory: 1536
     cpus: 2
     interfaces:
@@ -96,45 +84,7 @@ platforms:
         ip: 172.16.10.70
     groups:
       - vpn
-      - el8
-  - name: test-wg-alma8
-    box: almalinux/8
-    memory: 1536
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 172.16.10.80
-    groups:
-      - vpn
-      - el8
-      - almalinux8
-  - name: test-wg-centos7-kernel-plus
-    box: generic/centos7
-    memory: 1536
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 172.16.10.90
-    groups:
-      - vpn
-      - el7
-  - name: test-wg-rocky8-dkms
-    box: generic/rocky8
-    memory: 1536
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 172.16.10.100
-    groups:
-      - vpn
-      - el8
-      - el8dkms
+      - opensuse
   - name: test-wg-ubuntu2204
     box: alvistack/ubuntu-22.04
     memory: 1536
@@ -147,8 +97,8 @@ platforms:
     groups:
       - vpn
       - ubuntu
-  - name: test-wg-opensuse-leap-15-4
-    box: opensuse/Leap-15.4.x86_64
+  - name: test-wg-ubuntu2404
+    box: alvistack/ubuntu-24.04
     memory: 1536
     cpus: 2
     interfaces:
@@ -158,7 +108,7 @@ platforms:
         ip: 172.16.10.120
     groups:
       - vpn
-      - opensuse
+      - ubuntu
   - name: test-wg-opensuse-leap-15-5
     box: opensuse/Leap-15.5.x86_64
     memory: 1536
@@ -172,7 +122,7 @@ platforms:
       - vpn
       - opensuse
   - name: test-wg-rocky9
-    box: rockylinux/9
+    box: bento/rockylinux-9
     memory: 1536
     cpus: 2
     interfaces:
@@ -229,12 +179,6 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.20"
         wireguard_interface_restart: true
-      test-wg-centos7:
-        wireguard_address: "10.10.10.30/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "172.16.10.30"
-        wireguard_interface_restart: true
       test-wg-arch:
         wireguard_address: "10.10.10.40/24"
         wireguard_port: 51820
@@ -254,35 +198,20 @@ provisioner:
         wireguard_endpoint: "172.16.10.60"
         wireguard_conf_backup: true
         ansible_python_interpreter: "/usr/bin/python3"
-      test-wg-rocky8:
+      test-wg-opensuse-leap-15-6:
         wireguard_address: "10.10.10.70/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.70"
-      test-wg-alma8:
-        wireguard_address: "10.10.10.80/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "172.16.10.80"
-      test-wg-centos7-kernel-plus:
-        wireguard_address: "10.10.10.90/24"
-        wireguard_port: 51821
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "172.16.10.90"
-        wireguard_centos7_installation_method: "kernel-plus"
-      test-wg-rocky8-dkms:
-        wireguard_address: "10.10.10.100/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "172.16.10.100"
-        wireguard_rockylinux8_installation_method: "dkms"
+        wireguard_conf_backup: true
+        ansible_python_interpreter: "/usr/bin/python3.9"
       test-wg-ubuntu2204:
         wireguard_address: "10.10.10.110/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.110"
         wireguard_conf_backup: true
-      test-wg-opensuse-leap-15-4:
+      test-wg-ubuntu2404:
         wireguard_address: "10.10.10.120/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
@@ -292,6 +221,7 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.130"
+        ansible_python_interpreter: "/usr/bin/python3.9"
       test-wg-rocky9:
         wireguard_address: "10.10.10.140/24"
         wireguard_port: 51820
