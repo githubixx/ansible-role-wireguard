@@ -21,17 +21,17 @@ This role should work with:
 - Debian 11 (Bullseye)
 - Debian 12 (Bookworm)
 - Fedora 39
-- AlmaLinux 8
 - AlmaLinux 9
-- Rocky Linux 8
 - Rocky Linux 9
 - openSUSE Leap 15.5
 - Oracle Linux 9
 
 ## Best effort
 
-- CentOS 7 (it's end of life since end June 2024)
+- AlmaLinux 8
+- Rocky Linux 8
 - elementary OS 6
+- CentOS 7 (end of life since end June 2024)
 
 Molecule tests are [available](https://github.com/githubixx/ansible-role-wireguard#testing) (see further down below). It should also work with `Raspbian Buster` but for this one there is no test available. MacOS (see below) should also work partitially but is only best effort.
 
