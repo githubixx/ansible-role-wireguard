@@ -73,10 +73,17 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 ## 17.0.0
 
 - **BREAKING**
-  - removed support for openSUSE 15.4 (reached end of life)
+  - removed support for `openSUSE 15.4` (reached end of life)
 
 - **FEATURE**
-  - add support for Ubuntu 24.04
+  - add support for `Ubuntu 24.04`
+  - add support for `openSUSE 15.6`
+
+- **MOLECULE**
+  - remove outdated `Proxmox` code
+  - replace Vagrant box `rockylinux/9` with `bento/rockylinux-9`
+  - use `ansible.builtin.package` for AlmaLinux
+  - remove `AlmaLinux 8`, `Rocky Linux 8` and `CentOS 7` (outdated Python makes it hard to test with Ansible)
 
 ## 16.0.2
 
