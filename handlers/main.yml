@@ -33,3 +33,23 @@
     - not ansible_os_family == 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
+
+- name: Generating Netplan Configuration
+  ansible.builtin.command: netplan generate
+  listen: reconfigure netplan
+  notify: netplan apply config
+  become: true
+
+- name: Applying Netplan Configuration
+  ansible.builtin.command: netplan apply
+  listen: netplan apply config
+  notify: restart systemd-networkd
+  become: true
+
+- name: Restart systemd-networkd
+  ansible.builtin.systemd:
+    name: systemd-networkd
+    state: restarted
+  listen: restart systemd-networkd
+  become: true
+  when: wireguard_interface_restart
