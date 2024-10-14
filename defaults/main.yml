@@ -133,3 +133,9 @@ wireguard_centos7_standard_reboot_timeout: "600"
 # The default of "standard" will install the kernel module
 # with kmod-wireguard from ELRepo.
 wireguard_rockylinux8_installation_method: "standard"
+
+#########################################
+# Settings for netplan
+#########################################
+# Set to "true" if you want to use netplan to configure WireGuard.
+wireguard_use_netplan: false
