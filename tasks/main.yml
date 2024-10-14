@@ -87,7 +87,7 @@
 
 - name: Register if config/private key already exists on target host
   ansible.builtin.stat:
-    path: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    path: "{{ wireguard_use_netplan | ternary('/etc/netplan/70-wireguard.yaml', wireguard_remote_directory + '/' + wireguard_interface + '.conf') }}"
   register: wireguard__register_config_file
   tags:
     - wg-generate-keys
@@ -120,7 +120,7 @@
   block:
     - name: Read WireGuard config file
       ansible.builtin.slurp:
-        src: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+        src: "{{ wireguard_use_netplan | ternary('/etc/netplan/70-wireguard.yaml', wireguard_remote_directory + '/' + wireguard_interface + '.conf') }}"
       register: wireguard__register_config
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
@@ -128,7 +128,11 @@
 
     - name: Set private key fact
       ansible.builtin.set_fact:
-        wireguard_private_key: "{{ wireguard__register_config['content'] | b64decode | regex_findall('PrivateKey = (.*)') | first }}"
+        wireguard_private_key: >-
+          {{ wireguard__register_config['content'] | b64decode |
+             regex_findall(wireguard_use_netplan |
+             ternary('key:\s*(.*)$', 'PrivateKey\s*=\s*(.*)$'), multiline=True) |
+             first }}
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
         - wg-config
@@ -157,6 +161,7 @@
     mode: 0700
   tags:
     - wg-config
+  when: not wireguard_use_netplan
 
 - name: Generate WireGuard configuration file
   ansible.builtin.template:
@@ -169,8 +174,24 @@
   no_log: '{{ ansible_verbosity < 3 }}'
   tags:
     - wg-config
+  when: not wireguard_use_netplan
   notify:
     - reconfigure wireguard
+
+- name: Generate WireGuard configuration file for netplan
+  ansible.builtin.template:
+    src: etc/netplan/wireguard.yaml.j2
+    dest: "/etc/netplan/70-wireguard.yaml"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: "{{ wireguard_conf_backup }}"
+  no_log: '{{ ansible_verbosity < 3 }}'
+  tags:
+    - wg-config
+  when: wireguard_use_netplan
+  notify:
+    - reconfigure netplan
 
 - name: Ensure legacy reload-module-on-update is absent
   ansible.builtin.file:
@@ -184,4 +205,6 @@
     name: "wg-quick@{{ wireguard_interface }}"
     state: "{{ wireguard_service_state }}"
     enabled: "{{ wireguard_service_enabled }}"
-  when: not ansible_os_family == 'Darwin'
+  when:
+    - not ansible_os_family == 'Darwin'
+    - not wireguard_use_netplan
