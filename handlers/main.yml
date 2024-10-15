@@ -38,13 +38,19 @@
   ansible.builtin.command: netplan generate
   listen: reconfigure netplan
   notify: netplan apply config
+  changed_when: true
   become: true
+  when:
+    - wireguard_ubuntu_use_netplan
 
 - name: Applying Netplan Configuration
   ansible.builtin.command: netplan apply
   listen: netplan apply config
   notify: restart systemd-networkd
+  changed_when: true
   become: true
+  when:
+    - wireguard_ubuntu_use_netplan
 
 - name: Restart systemd-networkd
   ansible.builtin.systemd:
@@ -52,4 +58,6 @@
     state: restarted
   listen: restart systemd-networkd
   become: true
-  when: wireguard_interface_restart
+  when:
+    - wireguard_ubuntu_use_netplan
+    - wireguard_interface_restart
