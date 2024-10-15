@@ -160,7 +160,7 @@
 
 - name: Generate WireGuard configuration file
   ansible.builtin.template:
-    src: etc/wireguard/wg.conf.j2
+    src: "{{ wireguard_conf_template }}"
     dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
     owner: "{{ wireguard_conf_owner }}"
     group: "{{ wireguard_conf_group }}"
