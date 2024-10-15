@@ -195,7 +195,7 @@
 
 - name: Generate WireGuard configuration file for netplan
   ansible.builtin.template:
-    src: etc/netplan/wireguard.yaml.j2
+    src: etc/netplan/wg0.yaml.j2
     dest: >-
       {{- wireguard_ubuntu_netplan_remote_directory + '/' +
         wireguard_ubuntu_netplan_conf_priority | string + '-' +
