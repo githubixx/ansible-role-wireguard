@@ -6,7 +6,7 @@
 - name: (Fedora) Install WireGuard packages
   when:
     - ansible_pkg_mgr != "atomic_container"
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name:
       - "wireguard-tools"
     state: present
