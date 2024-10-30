@@ -22,7 +22,7 @@ wireguard_conf_owner: root
 wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'wheel' }}"
 
 # The default mode of the wg.conf file
-wireguard_conf_mode: 0600
+wireguard_conf_mode: "0600"
 
 # Whether any change to the wg.conf file should be backup
 wireguard_conf_backup: false

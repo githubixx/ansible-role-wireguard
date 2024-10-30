@@ -154,7 +154,7 @@
   ansible.builtin.file:
     dest: "{{ wireguard_remote_directory }}"
     state: directory
-    mode: 0700
+    mode: "0700"
   tags:
     - wg-config
 
