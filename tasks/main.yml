@@ -45,6 +45,7 @@
       false
       {%- endif %}
   tags:
+    - wg-config
     - skip_ansible_lint
 
 - name: Make sure wg syncconf option is available
