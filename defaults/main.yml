@@ -93,6 +93,15 @@ wireguard_ubuntu_update_cache: "{{ wireguard_update_cache }}"
 # Set package cache valid time
 wireguard_ubuntu_cache_valid_time: "3600"
 
+# Set to "true" if you want to use netplan to configure WireGuard.
+wireguard_ubuntu_use_netplan: false
+
+# Netplan directory to store WireGuard configuration on the remote hosts
+wireguard_ubuntu_netplan_remote_directory: "/etc/netplan"
+
+# Netplan configuration file priority
+wireguard_ubuntu_netplan_conf_priority: "70"
+
 #######################################
 # Settings only relevant for CentOS 7
 #######################################
