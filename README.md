@@ -141,6 +141,7 @@ These variables can be changed in `group_vars/` e.g.:
 # Directory to store WireGuard configuration on the remote hosts
 wireguard_remote_directory: "/etc/wireguard"              # On Linux
 # wireguard_remote_directory: "/opt/local/etc/wireguard"  # On MacOS
+# wireguard_remote_directory: "/etc/netplan"              # On Ubuntu if wireguard_ubuntu_use_netplan is true
 
 # The default port WireGuard will listen if not specified otherwise.
 wireguard_port: "51820"
@@ -232,6 +233,9 @@ wireguard_ubuntu_update_cache: "{{ wireguard_update_cache }}"
 
 # Set package cache valid time
 wireguard_ubuntu_cache_valid_time: "3600"
+
+# Set to "true" if netplan should be used to configure WireGuard interfaces
+wireguard_ubuntu_use_netplan: false
 
 #######################################
 # Settings only relevant for CentOS 7
