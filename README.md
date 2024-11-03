@@ -198,6 +198,9 @@ wireguard_service_state: "started"
 # If you have a more dynamic routing setup then setting this to "true" might be
 # the safest way to go. Also if you want to avoid the possibility creating some
 # hard to detect side effects this option should be considered.
+# If using netplan to configure WireGuard interfaces this option should be set
+# to "true" if netplan configuration should be applied, otherwise it will
+# just be generated.
 wireguard_interface_restart: false
 
 # Normally the role automatically creates a private key the very first time

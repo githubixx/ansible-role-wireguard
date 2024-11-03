@@ -50,6 +50,7 @@
 - name: Make sure wg syncconf option is available
   when:
     - not wireguard_interface_restart
+    - not wireguard_ubuntu_use_netplan
   tags:
     - wg-config
   block:

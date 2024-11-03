@@ -51,6 +51,7 @@
   become: true
   when:
     - wireguard_ubuntu_use_netplan
+    - wireguard_interface_restart
 
 - name: Restart systemd-networkd
   ansible.builtin.systemd:
