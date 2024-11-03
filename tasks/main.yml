@@ -87,14 +87,7 @@
 
 - name: Register if config/private key already exists on target host
   ansible.builtin.stat:
-    path: >-
-      {{ wireguard_ubuntu_use_netplan | ternary(
-        wireguard_ubuntu_netplan_remote_directory + '/' +
-        wireguard_ubuntu_netplan_conf_priority | string + '-' +
-        wireguard_interface + '.yaml',
-        wireguard_remote_directory + '/' +
-        wireguard_interface + '.conf'
-      ) }}
+    path: "{{ wireguard_remote_directory }}/{{ wireguard_conf_filename }}"
   register: wireguard__register_config_file
   tags:
     - wg-generate-keys
@@ -128,14 +121,7 @@
   block:
     - name: Read WireGuard config file
       ansible.builtin.slurp:
-        src: >-
-          {{ wireguard_ubuntu_use_netplan | ternary(
-            wireguard_ubuntu_netplan_remote_directory + '/' +
-            wireguard_ubuntu_netplan_conf_priority | string + '-' +
-            wireguard_interface + '.yaml',
-            wireguard_remote_directory + '/' +
-            wireguard_interface + '.conf'
-          ) }}
+        src: "{{ wireguard_remote_directory }}/{{ wireguard_conf_filename }}"
       register: wireguard__register_config
       no_log: '{{ ansible_verbosity < 3 }}'
       tags:
@@ -180,8 +166,8 @@
 
 - name: Generate WireGuard configuration file
   ansible.builtin.template:
-    src: etc/wireguard/wg.conf.j2
-    dest: "{{ wireguard_remote_directory }}/{{ wireguard_interface }}.conf"
+    src: "etc/{{ 'wireguard/wg.conf.j2' if not wireguard_ubuntu_use_netplan else 'netplan/wg.yaml.j2' }}"
+    dest: "{{ wireguard_remote_directory }}/{{ wireguard_conf_filename }}"
     owner: "{{ wireguard_conf_owner }}"
     group: "{{ wireguard_conf_group }}"
     mode: "{{ wireguard_conf_mode }}"
@@ -189,27 +175,8 @@
   no_log: '{{ ansible_verbosity < 3 }}'
   tags:
     - wg-config
-  when: not wireguard_ubuntu_use_netplan
   notify:
-    - reconfigure wireguard
-
-- name: Generate WireGuard configuration file for netplan
-  ansible.builtin.template:
-    src: etc/netplan/wg0.yaml.j2
-    dest: >-
-      {{- wireguard_ubuntu_netplan_remote_directory + '/' +
-        wireguard_ubuntu_netplan_conf_priority | string + '-' +
-        wireguard_interface + '.yaml' -}}
-    owner: "{{ wireguard_conf_owner }}"
-    group: "{{ wireguard_conf_group }}"
-    mode: "{{ wireguard_conf_mode }}"
-    backup: "{{ wireguard_conf_backup }}"
-  no_log: '{{ ansible_verbosity < 3 }}'
-  tags:
-    - wg-config
-  when: wireguard_ubuntu_use_netplan
-  notify:
-    - reconfigure netplan
+    - "reconfigure {{ 'wireguard' if not wireguard_ubuntu_use_netplan else 'netplan' }}"
 
 - name: Ensure legacy reload-module-on-update is absent
   ansible.builtin.file:
