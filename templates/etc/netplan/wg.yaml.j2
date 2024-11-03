@@ -17,7 +17,9 @@ network:
 {%   endfor %}
 {% endif %}
       key: {{ wireguard_private_key }}
+{% if wireguard_endpoint is not defined or wireguard_endpoint != "" %}
       port: {{ wireguard_port }}
+{% endif %}
 {% if wireguard_mtu is defined %}
       mtu: {{ wireguard_mtu }}
 {% endif %}
@@ -29,7 +31,7 @@ network:
 {% endif %}
       peers:
 {% for host in ansible_play_hosts %}
-{%   if host != inventory_hostname %}
+{%   if host != inventory_hostname and ((hostvars[host].wireguard_endpoint is not defined or hostvars[host].wireguard_endpoint != "") or (wireguard_endpoint is not defined or wireguard_endpoint != "")) %}
         - # Name = {{ host }}
           keys:
             public: {{ hostvars[host].wireguard__fact_public_key }}
@@ -55,7 +57,7 @@ network:
 {%         endfor %}
 {%       endif %}
 {%     endif %}
-{%     if hostvars[host].wireguard_persistent_keepalive is defined %}
+{%     if hostvars[host].wireguard_persistent_keepalive is defined and (hostvars[host].wireguard_endpoint is not defined or hostvars[host].wireguard_endpoint != "") %}
           keepalive: {{ hostvars[host].wireguard_persistent_keepalive }}
 {%     endif %}
 {%     if (hostvars[host].wireguard_dc is defined and wireguard_dc is defined and wireguard_dc['name'] != hostvars[host].wireguard_dc['name']) %}
