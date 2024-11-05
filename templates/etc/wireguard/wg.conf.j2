@@ -100,26 +100,24 @@ Endpoint = {{host}}:{{wireguard_port}}
 {%     endif %}
 {%   endif %}
 {% endfor %}
-
 {% if wireguard_unmanaged_peers is defined %}
+
 # Peers not managed by Ansible from "wireguard_unmanaged_peers" variable
-{%   for peer in wireguard_unmanaged_peers.keys() %}
-{%     if (wireguard_unmanaged_peers[peer].endpoint is defined and wireguard_unmanaged_peers[peer].endpoint != "") or (wireguard_endpoint is defined and wireguard_endpoint != "") %}
+{% for peer in wireguard_unmanaged_peers.keys() %}
 [Peer]
 # Name = {{ peer }}
 PublicKey = {{ wireguard_unmanaged_peers[peer].public_key }}
-{%       if wireguard_unmanaged_peers[peer].preshared_key is defined %}
+{%     if wireguard_unmanaged_peers[peer].preshared_key is defined %}
 PresharedKey = {{ wireguard_unmanaged_peers[peer].preshared_key }}
-{%       endif %}
-{%       if wireguard_unmanaged_peers[peer].allowed_ips is defined %}
+{%     endif %}
+{%     if wireguard_unmanaged_peers[peer].allowed_ips is defined %}
 AllowedIPs = {{ wireguard_unmanaged_peers[peer].allowed_ips }}
-{%       endif %}
-{%       if wireguard_unmanaged_peers[peer].endpoint is defined %}
+{%     endif %}
+{%     if wireguard_unmanaged_peers[peer].endpoint is defined %}
 Endpoint = {{ wireguard_unmanaged_peers[peer].endpoint }}
-{%       endif %}
-{%       if wireguard_unmanaged_peers[peer].persistent_keepalive is defined %}
+{%     endif %}
+{%     if wireguard_unmanaged_peers[peer].persistent_keepalive is defined %}
 PersistentKeepalive = {{ wireguard_unmanaged_peers[peer].persistent_keepalive }}
-{%       endif %}
 {%     endif %}
 {%   endfor %}
 {% endif %}
