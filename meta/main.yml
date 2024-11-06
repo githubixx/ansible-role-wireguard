@@ -32,6 +32,7 @@ galaxy_info:
     - name: opensuse
       versions:
         - "15.5"
+        - "15.6"
   galaxy_tags:
     - networking
     - security
