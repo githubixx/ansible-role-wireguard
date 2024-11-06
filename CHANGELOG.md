@@ -9,7 +9,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - **FIXES**
   - add missing `wg-config` tag ([Issue #211](https://github.com/githubixx/ansible-role-wireguard/issues/211))
-  - hide peers with empty endpoints ([Issue #101](https://github.com/githubixx/ansible-role-wireguard/issues/101))
+  - hide peers with empty endpoints ([Issue #101](https://github.com/githubixx/ansible-role-wireguard/issues/101) - contribution by @Miroka96)
 
 - **FEATURE**
   - add support for `Fedora 40`
