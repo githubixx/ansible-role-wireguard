@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2020 Ruben Di Battista
+# Copyright (C) 2020-2024 Ruben Di Battista
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (MacOS) Install wireguard package
