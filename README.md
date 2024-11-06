@@ -70,6 +70,21 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
+## 17.1.0
+
+- **FIXES**
+  - add missing `wg-config` tag ([Issue #211](https://github.com/githubixx/ansible-role-wireguard/issues/211))
+  - hide peers with empty endpoints ([Issue #101](https://github.com/githubixx/ansible-role-wireguard/issues/101))
+
+- **FEATURE**
+  - add support for `Fedora 40`
+  - add [Netplan](https://netplan.io/) support for Ubuntu (contribution by @kbcz1989)
+
+- **OTHER**
+  - update `.yamllint`
+  - fix `ansible-lint` issues
+  - update `.gitignore`
+
 ## 17.0.0
 
 - **BREAKING**
@@ -84,35 +99,6 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
   - replace Vagrant box `rockylinux/9` with `bento/rockylinux-9`
   - use `ansible.builtin.package` for AlmaLinux
   - remove `AlmaLinux 8`, `Rocky Linux 8` and `CentOS 7` (outdated Python makes it hard to test with Ansible)
-
-## 16.0.2
-
-- **OTHER**
-  - revert change in `.github/workflows/release.yml`
-
-## 16.0.1
-
-- **OTHER**
-  - update `.github/workflows/release.yml`
-  - update `meta/main.yml`
-
-## 16.0.0
-
-- **BREAKING**
-  - removed support for Fedora 37/38 (reached end of life)
-
-- **FEATURE**
-  - add support for Fedora 39
-  - introduce `wireguard_conf_backup` variable to keep track of configuration changes. Default to `false`. (contribution by @shk3bq4d)
-  - introduce `wireguard_install_kernel_module`. Allows to skip loading the `wireguard` kernel module. Default to `true` (which was the previous behavior). (contribution by @gregorydlogan)
-
-- **Molecule**
-  - use different IP addresses
-  - use `generic` Vagrant boxes for Rocky Linux
-  - use `alvistack` Vagrant boxes for Ubuntu
-  - use official Rocky Linux 9 Vagrant box
-  - use official AlmaLinux Vagrant boxes
-  - move `memory` and `cpus` parameter to Vagrant boxes
 
 ## Installation
 
