@@ -2,6 +2,15 @@
 # Copyright (C) 2018-2023 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+- name: Check if Netplan is supported
+  ansible.builtin.assert:
+    that:
+      - ansible_distribution == "Ubuntu"
+      - ansible_distribution_version is version('17.10', '>=')
+    fail_msg: "Netplan is only supported on Ubuntu 17.10 and later versions"
+    success_msg: "Netplan is supported on this system"
+  when: wireguard_ubuntu_use_netplan
+
 - name: (Ubuntu) Update APT package cache
   ansible.builtin.apt:
     update_cache: "{{ wireguard_ubuntu_update_cache }}"

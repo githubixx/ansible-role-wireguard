@@ -139,8 +139,14 @@ These variables can be changed in `group_vars/` e.g.:
 
 ```yaml
 # Directory to store WireGuard configuration on the remote hosts
-wireguard_remote_directory: "/etc/wireguard"              # On Linux
-# wireguard_remote_directory: "/opt/local/etc/wireguard"  # On MacOS
+wireguard_remote_directory: >-
+  {%- if wireguard_ubuntu_use_netplan -%}
+  /etc/netplan
+  {%- elif ansible_os_family == 'Darwin' -%}
+  /opt/local/etc/wireguard
+  {%- else -%}
+  /etc/wireguard
+  {%- endif %}
 
 # The default port WireGuard will listen if not specified otherwise.
 wireguard_port: "51820"
@@ -197,6 +203,9 @@ wireguard_service_state: "started"
 # If you have a more dynamic routing setup then setting this to "true" might be
 # the safest way to go. Also if you want to avoid the possibility creating some
 # hard to detect side effects this option should be considered.
+# If using netplan to configure WireGuard interfaces this option should be set
+# to "true" if netplan configuration should be applied, otherwise it will
+# just be generated.
 wireguard_interface_restart: false
 
 # Normally the role automatically creates a private key the very first time
@@ -232,6 +241,9 @@ wireguard_ubuntu_update_cache: "{{ wireguard_update_cache }}"
 
 # Set package cache valid time
 wireguard_ubuntu_cache_valid_time: "3600"
+
+# Set to "true" if netplan should be used to configure WireGuard interfaces
+wireguard_ubuntu_use_netplan: false
 
 #######################################
 # Settings only relevant for CentOS 7

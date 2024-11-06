@@ -7,7 +7,14 @@
 #######################################
 
 # Directory to store WireGuard configuration on the remote hosts
-wireguard_remote_directory: "{{ '/etc/wireguard' if not ansible_os_family == 'Darwin' else '/opt/local/etc/wireguard' }}"
+wireguard_remote_directory: >-
+  {%- if wireguard_ubuntu_use_netplan -%}
+  /etc/netplan
+  {%- elif ansible_os_family == 'Darwin' -%}
+  /opt/local/etc/wireguard
+  {%- else -%}
+  /etc/wireguard
+  {%- endif %}
 
 # The default port WireGuard will listen if not specified otherwise.
 wireguard_port: "51820"
@@ -17,6 +24,12 @@ wireguard_interface: "wg0"
 
 # The default owner of the wg.conf file
 wireguard_conf_owner: root
+
+# By default a WireGuard configuration file in "wireguard_remote_directory"
+# directory will be created that is called like the value of "wireguard_interface"
+# plus ".conf". If "wireguard_ubuntu_use_netplan" is set to "true" this should
+# be changed to "70-{{ wireguard_interface }}.yaml" e.g.
+wireguard_conf_filename: "{{ wireguard_interface }}.conf"
 
 # The default group of the wg.conf file
 wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'wheel' }}"
@@ -92,6 +105,9 @@ wireguard_ubuntu_update_cache: "{{ wireguard_update_cache }}"
 
 # Set package cache valid time
 wireguard_ubuntu_cache_valid_time: "3600"
+
+# Set to "true" if you want to use netplan to configure WireGuard.
+wireguard_ubuntu_use_netplan: false
 
 #######################################
 # Settings only relevant for CentOS 7
