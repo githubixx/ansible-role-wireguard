@@ -5,6 +5,21 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 17.1.0
+
+- **FIXES**
+  - add missing `wg-config` tag ([Issue #211](https://github.com/githubixx/ansible-role-wireguard/issues/211))
+  - hide peers with empty endpoints ([Issue #101](https://github.com/githubixx/ansible-role-wireguard/issues/101) - contribution by @Miroka96)
+
+- **FEATURE**
+  - add support for `Fedora 40`
+  - add [Netplan](https://netplan.io/) support for Ubuntu (contribution by @kbcz1989)
+
+- **OTHER**
+  - update `.yamllint`
+  - fix `ansible-lint` issues
+  - update `.gitignore`
+
 ## 17.0.0
 
 - **BREAKING**
