@@ -1,9 +1,18 @@
 ---
+# Copyright (C) 2018-2024 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
 extends: default
 
 rules:
   line-length:
     max: 150
     level: warning
-
   comments-indentation: disable
+  comments:
+    min-spaces-from-content: 1
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true

@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2018-2023 Robert Wimmer
+# Copyright (C) 2018-2024 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: Gather instance facts
@@ -45,6 +45,7 @@
       false
       {%- endif %}
   tags:
+    - wg-config
     - skip_ansible_lint
 
 - name: Make sure wg syncconf option is available
@@ -160,7 +161,7 @@
   ansible.builtin.file:
     dest: "{{ wireguard_remote_directory }}"
     state: directory
-    mode: 0700
+    mode: "0700"
   tags:
     - wg-config
   when: not wireguard_ubuntu_use_netplan

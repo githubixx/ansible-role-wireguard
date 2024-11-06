@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2018-2023 Robert Wimmer
+# Copyright (C) 2018-2024 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #######################################
@@ -35,7 +35,7 @@ wireguard_conf_filename: "{{ wireguard_interface }}.conf"
 wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'wheel' }}"
 
 # The default mode of the wg.conf file
-wireguard_conf_mode: 0600
+wireguard_conf_mode: "0600"
 
 # Whether any change to the wg.conf file should be backup
 wireguard_conf_backup: false

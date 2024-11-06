@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2020 Roman Danko
+# Copyright (C) 2020-2024 Roman Danko
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (CentOS 7) Tasks for standard kernel

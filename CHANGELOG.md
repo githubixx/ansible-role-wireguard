@@ -19,7 +19,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
   - replace Vagrant box `rockylinux/9` with `bento/rockylinux-9`
   - use `ansible.builtin.package` for AlmaLinux
   - remove `AlmaLinux 8`, `Rocky Linux 8` and `CentOS 7` (outdated Python makes it hard to test with Ansible)
- 
+
 ## 16.0.2
 
 - **OTHER**

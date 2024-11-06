@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2022 Masahiro Koga
+# Copyright (C) 2022-2024 Masahiro Koga
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (OracleLinux) Install wireguard-tools package

@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2020-2023 Robert Wimmer
+# Copyright (C) 2020-2024 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (openSUSE Leap) Install WireGuard packages
