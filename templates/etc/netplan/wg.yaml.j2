@@ -3,7 +3,7 @@ network:
   version: 2
   renderer: networkd
   tunnels:
-    wg0:
+    {{ wireguard_interface }}:
       mode: wireguard
       # {{ inventory_hostname }}
 {% if wireguard_address is defined %}

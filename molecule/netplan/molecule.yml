@@ -78,6 +78,7 @@ provisioner:
         wireguard_endpoint: "172.16.10.30"
         wireguard_ubuntu_use_netplan: true
         wireguard_conf_filename: "70-wg0.yaml"
+        wireguard_interface_restart: true
 
 scenario:
   name: netplan

@@ -139,9 +139,14 @@ These variables can be changed in `group_vars/` e.g.:
 
 ```yaml
 # Directory to store WireGuard configuration on the remote hosts
-wireguard_remote_directory: "/etc/wireguard"              # On Linux
-# wireguard_remote_directory: "/opt/local/etc/wireguard"  # On MacOS
-# wireguard_remote_directory: "/etc/netplan"              # On Ubuntu if wireguard_ubuntu_use_netplan is true
+wireguard_remote_directory: >-
+  {%- if wireguard_ubuntu_use_netplan -%}
+  /etc/netplan
+  {%- elif ansible_os_family == 'Darwin' -%}
+  /opt/local/etc/wireguard
+  {%- else -%}
+  /etc/wireguard
+  {%- endif %}
 
 # The default port WireGuard will listen if not specified otherwise.
 wireguard_port: "51820"
