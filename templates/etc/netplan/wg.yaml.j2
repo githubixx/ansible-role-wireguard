@@ -31,7 +31,7 @@ network:
 {% endif %}
       peers:
 {% for host in ansible_play_hosts %}
-{%   if host != inventory_hostname and hostvars[host].wireguard_as_spoke != true and ((hostvars[host].wireguard_endpoint is not defined or hostvars[host].wireguard_endpoint != "") or (wireguard_endpoint is not defined or wireguard_endpoint != "")) %}
+{%   if host != inventory_hostname and (wireguard_as_spoke != true or hostvars[host].wireguard_as_spoke != true) and ((hostvars[host].wireguard_endpoint is not defined or hostvars[host].wireguard_endpoint != "") or (wireguard_endpoint is not defined or wireguard_endpoint != "")) %}
         - # Name = {{ host }}
           keys:
             public: {{ hostvars[host].wireguard__fact_public_key }}
