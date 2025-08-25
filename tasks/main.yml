@@ -38,12 +38,7 @@
 
 - name: Set default for WireGuard interface restart behavior
   ansible.builtin.set_fact:
-    wireguard__restart_interface: >-
-      {%- if wireguard_interface_restart -%}
-      true
-      {%- else -%}
-      false
-      {%- endif %}
+    wireguard__restart_interface: "{{ wireguard_interface_restart | bool }}"
   tags:
     - wg-config
     - skip_ansible_lint
