@@ -1,0 +1,47 @@
+---
+- name: Verify hub and spoke topology
+  hosts: all
+  vars:
+    wireguard__config_path: "{{ wireguard_remote_directory }}/{{ wireguard_conf_filename }}"
+  tasks:
+    - name: Count configured WireGuard peers in configuration
+      ansible.builtin.shell: |
+        set -o errexit
+        set -o pipefail
+        set -o nounset
+        grep -c '^\[Peer\]' {{ wireguard__config_path }}
+      register: wireguard__peer_count_config
+      args:
+        executable: "/bin/bash"
+      changed_when: false
+
+    - name: Count WireGuard peers from wg tool
+      ansible.builtin.shell: |
+        set -o errexit
+        set -o pipefail
+        set -o nounset
+        wg show {{ wireguard_interface }} peers | tr ' ' '\n' | awk 'NF' | wc -l
+      register: wireguard__peer_count_runtime
+      args:
+        executable: "/bin/bash"
+      changed_when: false
+
+    - name: Ensure expected peers are present in configuration
+      ansible.builtin.shell: |
+        set -o errexit
+        set -o pipefail
+        set -o nounset
+        grep -F '# Name = {{ item }}' {{ wireguard__config_path }}
+      loop: "{{ wireguard_expected_peers | default([]) }}"
+      args:
+        executable: "/bin/bash"
+      changed_when: false
+
+    - name: Assert peer counts match expectation
+      ansible.builtin.assert:
+        that:
+          - wireguard_expected_peers is defined
+          - wireguard_expected_peer_count is defined
+          - (wireguard_expected_peer_count | int) == (wireguard_expected_peers | default([]) | length)
+          - (wireguard_expected_peer_count | int) == (wireguard__peer_count_config.stdout | int)
+          - (wireguard_expected_peer_count | int) == (wireguard__peer_count_runtime.stdout | int)
