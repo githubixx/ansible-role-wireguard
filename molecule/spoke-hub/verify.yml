@@ -1,6 +1,8 @@
 ---
 - name: Verify hub and spoke topology
   hosts: all
+  vars_files:
+    - ../../defaults/main.yml
   vars:
     wireguard__config_path: "{{ wireguard_remote_directory }}/{{ wireguard_conf_filename }}"
   tasks:

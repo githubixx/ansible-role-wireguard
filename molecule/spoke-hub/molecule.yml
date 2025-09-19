@@ -5,14 +5,14 @@ dependency:
 driver:
   name: vagrant
   provider:
-    name: libvirt
-    type: libvirt
+    name: virtualbox
+    type: virtualbox
 
 platforms:
   - name: test-wg-spokehub-hub
-    box: alvistack/ubuntu-22.04
-    memory: 1536
-    cpus: 2
+    box: bento/ubuntu-22.04
+    memory: 1024
+    cpus: 1
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -22,9 +22,9 @@ platforms:
       - vpn
       - ubuntu
   - name: test-wg-spokehub-spoke01
-    box: alvistack/ubuntu-22.04
-    memory: 1536
-    cpus: 2
+    box: bento/ubuntu-22.04
+    memory: 1024
+    cpus: 1
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -34,9 +34,9 @@ platforms:
       - vpn
       - ubuntu
   - name: test-wg-spokehub-spoke02
-    box: alvistack/ubuntu-22.04
-    memory: 1536
-    cpus: 2
+    box: bento/ubuntu-22.04
+    memory: 1024
+    cpus: 1
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -70,7 +70,7 @@ provisioner:
       test-wg-spokehub-spoke01:
         wireguard_address: "10.30.0.2/24"
         wireguard_port: 51820
-        wireguard_endpoint: ""
+        wireguard_endpoint: "172.16.20.20"
         wireguard_persistent_keepalive: "30"
         wireguard_as_spoke: true
         wireguard_expected_peer_count: 1
@@ -79,7 +79,7 @@ provisioner:
       test-wg-spokehub-spoke02:
         wireguard_address: "10.30.0.3/24"
         wireguard_port: 51820
-        wireguard_endpoint: ""
+        wireguard_endpoint: "172.16.20.30"
         wireguard_persistent_keepalive: "30"
         wireguard_as_spoke: true
         wireguard_expected_peer_count: 1
