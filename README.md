@@ -335,7 +335,7 @@ One of `wireguard_address` (deprecated) or `wireguard_addresses` (recommended) i
 
 ## Example
 
-Here is a litte example for what I use the playbook: I use WireGuard to setup a fully meshed VPN (every host can directly connect to every other host) and run my Kubernetes (K8s) cluster at Hetzner Cloud (but you should be able to use any hoster you want). So the important components like the K8s controller and worker nodes (which includes the pods) only communicate via encrypted WireGuard VPN. Also (as already mentioned) I've two clients. Both have `kubectl` installed and are able to talk to the internal Kubernetes API server by using WireGuard VPN. One of the two clients also exposes a WireGuard endpoint because the Postfix mailserver in the cloud and my internal Postfix needs to be able to talk to each other. I guess that's maybe a not so common use case for WireGuard :D But it shows what's possible. So let me explain the setup which might help you to use this Ansible role.
+Here is a little example for what I use the playbook: I use WireGuard to setup a fully meshed VPN (every host can directly connect to every other host) and run my Kubernetes (K8s) cluster at Hetzner Cloud (but you should be able to use any hoster you want). So the important components like the K8s controller and worker nodes (which includes the pods) only communicate via encrypted WireGuard VPN. Also (as already mentioned) I've two clients. Both have `kubectl` installed and are able to talk to the internal Kubernetes API server by using WireGuard VPN. One of the two clients also exposes a WireGuard endpoint because the Postfix mailserver in the cloud and my internal Postfix needs to be able to talk to each other. I guess that's maybe a not so common use case for WireGuard :D But it shows what's possible. So let me explain the setup which might help you to use this Ansible role.
 
 First, here is a part of my Ansible `hosts` file:
 
@@ -565,7 +565,7 @@ Sample playbooks for example above:
 
 ## Testing
 
-This role has a small test setup that is created using [Molecule](https://github.com/ansible-community/molecule), libvirt (vagrant-libvirt) and QEMU/KVM. Please see my blog post [Testing Ansible roles with Molecule, libvirt (vagrant-libvirt) and QEMU/KVM](https://www.tauceti.blog/posts/testing-ansible-roles-with-molecule-libvirt-vagrant-qemu-kvm/) how to setup. The test configuration is [here](https://github.com/githubixx/ansible-role-wireguard/tree/master/molecule/default).
+This role has a small test setup that is created using [Molecule](https://github.com/ansible-community/molecule), libvirt (vagrant-libvirt) and QEMU/KVM. Please see my blog post [Testing Ansible roles with Molecule, libvirt (vagrant-libvirt) and QEMU/KVM](https://www.tauceti.blog/posts/testing-ansible-roles-with-molecule-libvirt-vagrant-qemu-kvm/) how to setup. The test configuration is here: [ansible-role-wireguard/molecule/default](https://github.com/githubixx/ansible-role-wireguard/tree/master/molecule/default).
 
 Afterwards molecule can be executed:
 
