@@ -16,7 +16,6 @@ In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. 
 
 This role should work with:
 
-- Ubuntu 20.04 (Focal Fossa)
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Ubuntu 24.04 (Noble Numbat)
 - Archlinux
@@ -25,8 +24,7 @@ This role should work with:
 - Fedora 39
 - AlmaLinux 9
 - Rocky Linux 9
-- openSUSE Leap 15.5
-- openSUSE Leap 15.6
+- openSUSE Leap
 - Oracle Linux 9
 
 ### Linux - Best effort
