@@ -7,19 +7,19 @@
     - wireguard_centos7_installation_method == "standard"
   block:
     - name: (CentOS 7) Install EPEL & ELRepo repository
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name:
           - epel-release
           - https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm
         update_cache: "{{ wireguard_update_cache }}"
 
     - name: (CentOS 7) Install yum-plugin-elrepo
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: yum-plugin-elrepo
         update_cache: "{{ wireguard_update_cache }}"
 
     - name: (CentOS 7) Install WireGuard packages
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name:
           - "kmod-wireguard"
           - "wireguard-tools"
@@ -34,7 +34,7 @@
         reboot_timeout: "{{ wireguard_centos7_standard_reboot_timeout }}"
 
 - name: (CentOS 7) Ensure WireGuard DKMS package is removed
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name:
       - "wireguard-dkms"
     state: absent
@@ -44,7 +44,7 @@
     - wireguard_centos7_installation_method == "kernel-plus"
   block:
     - name: (CentOS 7) Install EPEL repository & yum utils
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name:
           - epel-release
           - yum-utils
@@ -61,7 +61,7 @@
         replace: 'DEFAULTKERNEL=kernel-plus'
 
     - name: (CentOS 7 - kernel-plus) Install WireGuard packages
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name:
           - "kernel-plus"
           - "wireguard-tools"
