@@ -13,6 +13,18 @@ driver:
     type: libvirt
 
 platforms:
+  - name: test-wg-debian13
+    box:  boxen/debian-13
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.10.30
+    groups:
+      - vpn
+      - debian
   - name: test-wg-fedora42
     box: alvistack/fedora-42
     memory: 1536
