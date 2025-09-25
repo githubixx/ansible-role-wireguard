@@ -7,6 +7,7 @@
 #######################################
 
 # Directory to store WireGuard configuration on the remote hosts
+# noqa jinja[spacing]
 wireguard_remote_directory: >-
   {%- if wireguard_ubuntu_use_netplan -%}
   /etc/netplan
