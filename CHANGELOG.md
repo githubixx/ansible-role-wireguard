@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2018-2024 Robert Wimmer
+Copyright (C) 2018-2025 Robert Wimmer
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
