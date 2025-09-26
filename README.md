@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2018-2024 Robert Wimmer
+Copyright (C) 2018-2025 Robert Wimmer
 Copyright (C) 2019 fbourqui
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
@@ -16,17 +16,16 @@ In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. 
 
 This role should work with:
 
-- Ubuntu 20.04 (Focal Fossa)
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Ubuntu 24.04 (Noble Numbat)
 - Archlinux
 - Debian 11 (Bullseye)
 - Debian 12 (Bookworm)
-- Fedora 39
+- Debian 13 (Trixie)
+- Fedora 42
 - AlmaLinux 9
 - Rocky Linux 9
-- openSUSE Leap 15.5
-- openSUSE Leap 15.6
+- openSUSE Leap
 - Oracle Linux 9
 
 ### Linux - Best effort
@@ -34,7 +33,6 @@ This role should work with:
 - AlmaLinux 8
 - Rocky Linux 8
 - elementary OS 6
-- CentOS 7 (end of life since end June 2024)
 
 ### MacOS
 
@@ -70,35 +68,23 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
-## 17.1.0
-
-- **FIXES**
-  - add missing `wg-config` tag ([Issue #211](https://github.com/githubixx/ansible-role-wireguard/issues/211))
-  - hide peers with empty endpoints ([Issue #101](https://github.com/githubixx/ansible-role-wireguard/issues/101) - contribution by @Miroka96)
-
-- **FEATURE**
-  - add support for `Fedora 40`
-  - add [Netplan](https://netplan.io/) support for Ubuntu (contribution by @kbcz1989)
-
-- **OTHER**
-  - update `.yamllint`
-  - fix `ansible-lint` issues
-  - update `.gitignore`
-
-## 17.0.0
+## 18.0.0
 
 - **BREAKING**
-  - removed support for `openSUSE 15.4` (reached end of life)
+  - removed support for `CentOS 7` (reached end of life)
+  - removed support for `Ubuntu 20.04` (reached end of life)
+  - removed support for `Fedora 39/40` (reached end of life)
+  - removed support for `openSUSE Leap 15.5` (reached end of life)
 
 - **FEATURE**
-  - add support for `Ubuntu 24.04`
-  - add support for `openSUSE 15.6`
+  - add support for `Debian 13` (Trixie)
+  - add support for `Fedora 42`
 
-- **MOLECULE**
-  - remove outdated `Proxmox` code
-  - replace Vagrant box `rockylinux/9` with `bento/rockylinux-9`
-  - use `ansible.builtin.package` for AlmaLinux
-  - remove `AlmaLinux 8`, `Rocky Linux 8` and `CentOS 7` (outdated Python makes it hard to test with Ansible)
+- **OTHER**
+  - remove unneeded task for `Ubuntu 19.10`
+  - `defaults/main.yml`: add `noqa jinja[spacing]` to ignore `ansible-lint` warning
+  - replace `ansible.builtin.yum` with `ansible.builtin.dnf`
+  - update `.gitignore`
 
 ## Installation
 
@@ -116,7 +102,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 roles:
   - name: githubixx.ansible_role_wireguard
     src: https://github.com/githubixx/ansible-role-wireguard.git
-    version: 17.0.0
+    version: 18.0.0
 ```
 
 ## Role Variables
@@ -231,34 +217,6 @@ wireguard_ubuntu_cache_valid_time: "3600"
 # Set to "true" if netplan should be used to configure WireGuard interfaces
 wireguard_ubuntu_use_netplan: false
 
-#######################################
-# Settings only relevant for CentOS 7
-#######################################
-
-# Set wireguard_centos7_installation_method to "kernel-plus"
-# to use the kernel-plus kernel, which includes a built-in,
-# signed WireGuard module.
-#
-# The default of "standard" will use the standard kernel and
-# the ELRepo module for WireGuard.
-wireguard_centos7_installation_method: "standard"
-
-# Reboot host if necessary if the "kernel-plus" kernel is in use
-wireguard_centos7_kernel_plus_reboot: true
-
-# The default seconds to wait for machine to reboot and respond
-# if "kernel-plus" is in use. Is only relevant if
-# "wireguard_centos7_kernel_plus_reboot" is set to "true".
-wireguard_centos7_kernel_plus_reboot_timeout: "600"
-
-# Reboot host if necessary if the standard kernel is in use
-wireguard_centos7_standard_reboot: true
-
-# The default seconds to wait for machine to reboot and respond
-# if "standard" kernel is in use. Is only relevant if
-# "wireguard_centos7_standard_reboot" is set to "true".
-wireguard_centos7_standard_reboot_timeout: "600"
-
 #########################################
 # Settings only relevant for RockyLinux 8
 #########################################
@@ -364,7 +322,7 @@ One of `wireguard_address` (deprecated) or `wireguard_addresses` (recommended) i
 
 ## Example
 
-Here is a litte example for what I use the playbook: I use WireGuard to setup a fully meshed VPN (every host can directly connect to every other host) and run my Kubernetes (K8s) cluster at Hetzner Cloud (but you should be able to use any hoster you want). So the important components like the K8s controller and worker nodes (which includes the pods) only communicate via encrypted WireGuard VPN. Also (as already mentioned) I've two clients. Both have `kubectl` installed and are able to talk to the internal Kubernetes API server by using WireGuard VPN. One of the two clients also exposes a WireGuard endpoint because the Postfix mailserver in the cloud and my internal Postfix needs to be able to talk to each other. I guess that's maybe a not so common use case for WireGuard :D But it shows what's possible. So let me explain the setup which might help you to use this Ansible role.
+Here is a little example for what I use the playbook: I use WireGuard to setup a fully meshed VPN (every host can directly connect to every other host) and run my Kubernetes (K8s) cluster at Hetzner Cloud (but you should be able to use any hoster you want). So the important components like the K8s controller and worker nodes (which includes the pods) only communicate via encrypted WireGuard VPN. Also (as already mentioned) I've two clients. Both have `kubectl` installed and are able to talk to the internal Kubernetes API server by using WireGuard VPN. One of the two clients also exposes a WireGuard endpoint because the Postfix mailserver in the cloud and my internal Postfix needs to be able to talk to each other. I guess that's maybe a not so common use case for WireGuard :D But it shows what's possible. So let me explain the setup which might help you to use this Ansible role.
 
 First, here is a part of my Ansible `hosts` file:
 
@@ -594,7 +552,7 @@ Sample playbooks for example above:
 
 ## Testing
 
-This role has a small test setup that is created using [Molecule](https://github.com/ansible-community/molecule), libvirt (vagrant-libvirt) and QEMU/KVM. Please see my blog post [Testing Ansible roles with Molecule, libvirt (vagrant-libvirt) and QEMU/KVM](https://www.tauceti.blog/posts/testing-ansible-roles-with-molecule-libvirt-vagrant-qemu-kvm/) how to setup. The test configuration is [here](https://github.com/githubixx/ansible-role-wireguard/tree/master/molecule/default).
+This role has a small test setup that is created using [Molecule](https://github.com/ansible-community/molecule), libvirt (vagrant-libvirt) and QEMU/KVM. Please see my blog post [Testing Ansible roles with Molecule, libvirt (vagrant-libvirt) and QEMU/KVM](https://www.tauceti.blog/posts/testing-ansible-roles-with-molecule-libvirt-vagrant-qemu-kvm/) how to setup. The test configuration is here: [ansible-role-wireguard/molecule/default](https://github.com/githubixx/ansible-role-wireguard/tree/master/molecule/default).
 
 Afterwards molecule can be executed:
 

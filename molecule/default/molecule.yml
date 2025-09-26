@@ -1,6 +1,6 @@
 ---
-# Copyright (C) 2020-2024 Robert Wimmer
-# Copyright (C) 2020-2024 Pierre Ozoux
+# Copyright (C) 2020-2025 Robert Wimmer
+# Copyright (C) 2020-2025 Pierre Ozoux
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 dependency:
@@ -13,20 +13,8 @@ driver:
     type: libvirt
 
 platforms:
-  - name: test-wg-ubuntu2004
-    box: alvistack/ubuntu-20.04
-    memory: 1536
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 172.16.10.10
-    groups:
-      - vpn
-      - ubuntu
-  - name: test-wg-fedora39
-    box: generic/fedora39
+  - name: test-wg-debian13
+    box:  alvistack/debian-13
     memory: 1536
     cpus: 2
     interfaces:
@@ -36,9 +24,9 @@ platforms:
         ip: 172.16.10.20
     groups:
       - vpn
-      - fedora
-  - name: test-wg-fedora40
-    box: alvistack/fedora-40
+      - debian
+  - name: test-wg-fedora42
+    box: alvistack/fedora-42
     memory: 1536
     cpus: 2
     interfaces:
@@ -121,18 +109,6 @@ platforms:
     groups:
       - vpn
       - ubuntu
-  - name: test-wg-opensuse-leap-15-5
-    box: opensuse/Leap-15.5.x86_64
-    memory: 1536
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: static
-        ip: 172.16.10.130
-    groups:
-      - vpn
-      - opensuse
   - name: test-wg-rocky9
     box: bento/rockylinux-9
     memory: 1536
@@ -180,18 +156,13 @@ provisioner:
     name: ansible-lint
   inventory:
     host_vars:
-      test-wg-ubuntu2004:
-        wireguard_address: "10.10.10.10/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "172.16.10.10"
-      test-wg-fedora39:
+      test-wg-debian13:
         wireguard_address: "10.10.10.20/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.20"
         wireguard_interface_restart: true
-      test-wg-fedora40:
+      test-wg-fedora42:
         wireguard_address: "10.10.10.30/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
@@ -234,12 +205,6 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.120"
-      test-wg-opensuse-leap-15-5:
-        wireguard_address: "10.10.10.130/24"
-        wireguard_port: 51820
-        wireguard_persistent_keepalive: "30"
-        wireguard_endpoint: "172.16.10.130"
-        ansible_python_interpreter: "/usr/bin/python3.9"
       test-wg-rocky9:
         wireguard_address: "10.10.10.140/24"
         wireguard_port: 51820
