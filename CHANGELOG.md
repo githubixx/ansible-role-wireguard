@@ -5,6 +5,24 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 18.0.0
+
+- **BREAKING**
+  - removed support for `CentOS 7` (reached end of life)
+  - removed support for `Ubuntu 20.04` (reached end of life)
+  - removed support for `Fedora 39/40` (reached end of life)
+  - removed support for `openSUSE Leap 15.5` (reached end of life)
+
+- **FEATURE**
+  - add support for `Debian 13` (Trixie)
+  - add support for `Fedora 42`
+
+- **OTHER**
+  - remove unneeded task for `Ubuntu 19.10`
+  - `defaults/main.yml`: add `noqa jinja[spacing]` to ignore `ansible-lint` warning
+  - replace `ansible.builtin.yum` with `ansible.builtin.dnf`
+  - update `.gitignore`
+
 ## 17.1.0
 
 - **FIXES**

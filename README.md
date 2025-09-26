@@ -21,6 +21,7 @@ This role should work with:
 - Archlinux
 - Debian 11 (Bullseye)
 - Debian 12 (Bookworm)
+- Debian 13 (Trixie)
 - Fedora 42
 - AlmaLinux 9
 - Rocky Linux 9
@@ -67,35 +68,23 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
-## 17.1.0
-
-- **FIXES**
-  - add missing `wg-config` tag ([Issue #211](https://github.com/githubixx/ansible-role-wireguard/issues/211))
-  - hide peers with empty endpoints ([Issue #101](https://github.com/githubixx/ansible-role-wireguard/issues/101) - contribution by @Miroka96)
-
-- **FEATURE**
-  - add support for `Fedora 40`
-  - add [Netplan](https://netplan.io/) support for Ubuntu (contribution by @kbcz1989)
-
-- **OTHER**
-  - update `.yamllint`
-  - fix `ansible-lint` issues
-  - update `.gitignore`
-
-## 17.0.0
+## 18.0.0
 
 - **BREAKING**
-  - removed support for `openSUSE 15.4` (reached end of life)
+  - removed support for `CentOS 7` (reached end of life)
+  - removed support for `Ubuntu 20.04` (reached end of life)
+  - removed support for `Fedora 39/40` (reached end of life)
+  - removed support for `openSUSE Leap 15.5` (reached end of life)
 
 - **FEATURE**
-  - add support for `Ubuntu 24.04`
-  - add support for `openSUSE 15.6`
+  - add support for `Debian 13` (Trixie)
+  - add support for `Fedora 42`
 
-- **MOLECULE**
-  - remove outdated `Proxmox` code
-  - replace Vagrant box `rockylinux/9` with `bento/rockylinux-9`
-  - use `ansible.builtin.package` for AlmaLinux
-  - remove `AlmaLinux 8`, `Rocky Linux 8` and `CentOS 7` (outdated Python makes it hard to test with Ansible)
+- **OTHER**
+  - remove unneeded task for `Ubuntu 19.10`
+  - `defaults/main.yml`: add `noqa jinja[spacing]` to ignore `ansible-lint` warning
+  - replace `ansible.builtin.yum` with `ansible.builtin.dnf`
+  - update `.gitignore`
 
 ## Installation
 
@@ -113,7 +102,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 roles:
   - name: githubixx.ansible_role_wireguard
     src: https://github.com/githubixx/ansible-role-wireguard.git
-    version: 17.0.0
+    version: 18.0.0
 ```
 
 ## Role Variables
