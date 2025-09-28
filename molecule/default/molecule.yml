@@ -14,7 +14,7 @@ driver:
 
 platforms:
   - name: test-wg-debian13
-    box:  alvistack/debian-13
+    box: alvistack/debian-13
     memory: 1536
     cpus: 2
     interfaces:
