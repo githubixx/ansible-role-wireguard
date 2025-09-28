@@ -162,6 +162,8 @@
   when: not wireguard_ubuntu_use_netplan
 
 - name: Generate WireGuard configuration file
+  vars:
+    wireguard__ansible_managed: "Ansible managed"
   ansible.builtin.template:
     src: "etc/{{ 'wireguard/wg.conf.j2' if not wireguard_ubuntu_use_netplan else 'netplan/wg.yaml.j2' }}"
     dest: "{{ wireguard_remote_directory }}/{{ wireguard_conf_filename }}"
