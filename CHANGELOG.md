@@ -5,6 +5,16 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 18.1.0
+
+- **OTHER**
+  - fix issues when running with ansible-core >= 2.19.0 ([Issue #219](https://github.com/githubixx/ansible-role-wireguard/issues/219) / [PR #220](https://github.com/githubixx/ansible-role-wireguard/pull/220/) - contribution by @jonathanplatzer)
+  - replace `ansible_managed` variable with internal `wireguard__ansible_managed` variable. Reason: `DEFAULT_MANAGED_STR` option is deprecated in Ansible 2.19. The `ansible_managed` variable can be set just like any other variable, or a different variable can be used. At the end for now nothing changes for the user of this role as the output string `Ansible managed` will stay the same.
+
+- **MOLECULE**
+  - Molecule: update `netplan` scenario
+  - Molecule: update `single-server` scenario
+
 ## 18.0.0
 
 - **BREAKING**
