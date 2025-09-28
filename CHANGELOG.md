@@ -5,6 +5,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 18.1.0
+
+- **OTHER**
+  - Fix issues when running with ansible-core >= 2.19.0 ([Issue #219](https://github.com/githubixx/ansible-role-wireguard/issues/219) / [PR #220](https://github.com/githubixx/ansible-role-wireguard/pull/220/) - contribution by @jonathanplatzer)
+
 ## 18.0.0
 
 - **BREAKING**
