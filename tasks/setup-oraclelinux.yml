@@ -1,8 +1,8 @@
 ---
-# Copyright (C) 2022-2024 Masahiro Koga
+# Copyright (C) 2022-2025 Masahiro Koga
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: (OracleLinux) Install wireguard-tools package
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: wireguard-tools
     state: present

@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2023-2024 Robert Wimmer
+# Copyright (C) 2023-2025 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 dependency:
@@ -12,8 +12,8 @@ driver:
     type: libvirt
 
 platforms:
-  - name: test-wg-ubuntu2004
-    box: alvistack/ubuntu-20.04
+  - name: test-wg-ubuntu2404
+    box: alvistack/ubuntu-24.04
     memory: 1536
     cpus: 2
     interfaces:
@@ -59,7 +59,7 @@ provisioner:
     name: ansible-lint
   inventory:
     host_vars:
-      test-wg-ubuntu2004:
+      test-wg-ubuntu2404:
         wireguard_address: "10.10.10.10/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"

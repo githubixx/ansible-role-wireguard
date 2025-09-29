@@ -1,9 +1,37 @@
 <!--
-Copyright (C) 2018-2024 Robert Wimmer
+Copyright (C) 2018-2025 Robert Wimmer
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
 # Changelog
+
+## 18.1.0
+
+- **OTHER**
+  - fix issues when running with ansible-core >= 2.19.0 ([Issue #219](https://github.com/githubixx/ansible-role-wireguard/issues/219) / [PR #220](https://github.com/githubixx/ansible-role-wireguard/pull/220/) - contribution by @jonathanplatzer)
+  - replace `ansible_managed` variable with internal `wireguard__ansible_managed` variable. Reason: `DEFAULT_MANAGED_STR` option is deprecated in Ansible 2.19. The `ansible_managed` variable can be set just like any other variable, or a different variable can be used. At the end for now nothing changes for the user of this role as the output string `Ansible managed` will stay the same.
+
+- **MOLECULE**
+  - Molecule: update `netplan` scenario
+  - Molecule: update `single-server` scenario
+
+## 18.0.0
+
+- **BREAKING**
+  - removed support for `CentOS 7` (reached end of life)
+  - removed support for `Ubuntu 20.04` (reached end of life)
+  - removed support for `Fedora 39/40` (reached end of life)
+  - removed support for `openSUSE Leap 15.5` (reached end of life)
+
+- **FEATURE**
+  - add support for `Debian 13` (Trixie)
+  - add support for `Fedora 42`
+
+- **OTHER**
+  - remove unneeded task for `Ubuntu 19.10`
+  - `defaults/main.yml`: add `noqa jinja[spacing]` to ignore `ansible-lint` warning
+  - replace `ansible.builtin.yum` with `ansible.builtin.dnf`
+  - update `.gitignore`
 
 ## 17.1.0
 

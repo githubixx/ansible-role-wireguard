@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2018-2024 Robert Wimmer
+# Copyright (C) 2018-2025 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: Gather instance facts
@@ -38,12 +38,7 @@
 
 - name: Set default for WireGuard interface restart behavior
   ansible.builtin.set_fact:
-    wireguard__restart_interface: >-
-      {%- if wireguard_interface_restart -%}
-      true
-      {%- else -%}
-      false
-      {%- endif %}
+    wireguard__restart_interface: "{{ wireguard_interface_restart | bool }}"
   tags:
     - wg-config
     - skip_ansible_lint
@@ -167,6 +162,8 @@
   when: not wireguard_ubuntu_use_netplan
 
 - name: Generate WireGuard configuration file
+  vars:
+    wireguard__ansible_managed: "Ansible managed"
   ansible.builtin.template:
     src: "etc/{{ 'wireguard/wg.conf.j2' if not wireguard_ubuntu_use_netplan else 'netplan/wg.yaml.j2' }}"
     dest: "{{ wireguard_remote_directory }}/{{ wireguard_conf_filename }}"
