@@ -5,12 +5,12 @@ dependency:
 driver:
   name: vagrant
   provider:
-    name: virtualbox
-    type: virtualbox
+    name: libvirt
+    type: libvirt
 
 platforms:
   - name: test-wg-spokehub-hub
-    box: bento/ubuntu-22.04
+    box: alvistack/ubuntu-24.04
     memory: 1024
     cpus: 1
     interfaces:
@@ -22,7 +22,7 @@ platforms:
       - vpn
       - ubuntu
   - name: test-wg-spokehub-spoke01
-    box: bento/ubuntu-22.04
+    box: alvistack/ubuntu-22.04
     memory: 1024
     cpus: 1
     interfaces:
@@ -34,7 +34,7 @@ platforms:
       - vpn
       - ubuntu
   - name: test-wg-spokehub-spoke02
-    box: bento/ubuntu-22.04
+    box: alvistack/ubuntu-24.04
     memory: 1024
     cpus: 1
     interfaces:
