@@ -7,4 +7,4 @@
   tasks:
     - name: Include WireGuard role
       ansible.builtin.include_role:
-        name: "{{ playbook_dir }}/../.."
+        name: "githubixx.ansible_role_wireguard"
