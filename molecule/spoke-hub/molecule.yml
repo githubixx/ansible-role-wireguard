@@ -1,4 +1,7 @@
 ---
+# Copyright (C) 2025 Eyebrow Kang
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 dependency:
   name: galaxy
 

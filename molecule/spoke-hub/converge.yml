@@ -1,4 +1,7 @@
 ---
+# Copyright (C) 2025 Eyebrow Kang
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 - name: Setup WireGuard
   hosts: all
   remote_user: vagrant
