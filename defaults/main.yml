@@ -94,6 +94,10 @@ wireguard_update_cache: "true"
 # the wireguard module is available in the kernel!
 wireguard_install_kernel_module: true
 
+# Set to "true" to treat this node as a spoke that only peers with hubs.
+# Hubs (or nodes with this left at "false") still peer with every node.
+wireguard_as_spoke: false
+
 #######################################
 # Settings only relevant for:
 # - Ubuntu

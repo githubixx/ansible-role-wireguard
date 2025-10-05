@@ -206,6 +206,10 @@ wireguard_update_cache: "true"
 # unprivileged LXC guests.  If you set this to false you have to ensure
 # the wireguard module is available in the kernel!
 wireguard_install_kernel_module: true
+
+# Set to "true" to declare this host as a spoke in a hub-and-spoke layout.
+# Spokes only configure hub peers; hubs still include every peer.
+wireguard_as_spoke: false
 ```
 
 There are also a few Linux distribution specific settings:

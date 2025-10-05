@@ -1,0 +1,99 @@
+---
+# Copyright (C) 2025 Eyebrow Kang
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+dependency:
+  name: galaxy
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+    type: libvirt
+
+platforms:
+  - name: test-wg-spokehub-hub
+    box: alvistack/ubuntu-24.04
+    memory: 1024
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.20.10
+    groups:
+      - vpn
+      - ubuntu
+  - name: test-wg-spokehub-spoke01
+    box: alvistack/ubuntu-22.04
+    memory: 1024
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.20.20
+    groups:
+      - vpn
+      - ubuntu
+  - name: test-wg-spokehub-spoke02
+    box: alvistack/ubuntu-24.04
+    memory: 1024
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.20.30
+    groups:
+      - vpn
+      - ubuntu
+
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+  log: true
+  lint:
+    name: ansible-lint
+  inventory:
+    host_vars:
+      test-wg-spokehub-hub:
+        wireguard_address: "10.30.0.1/24"
+        wireguard_port: 51820
+        wireguard_endpoint: "172.16.20.10"
+        wireguard_persistent_keepalive: "30"
+        wireguard_interface_restart: true
+        wireguard_as_spoke: false
+        wireguard_expected_peer_count: 2
+        wireguard_expected_peers:
+          - test-wg-spokehub-spoke01
+          - test-wg-spokehub-spoke02
+      test-wg-spokehub-spoke01:
+        wireguard_address: "10.30.0.2/24"
+        wireguard_port: 51820
+        wireguard_endpoint: "172.16.20.20"
+        wireguard_persistent_keepalive: "30"
+        wireguard_as_spoke: true
+        wireguard_expected_peer_count: 1
+        wireguard_expected_peers:
+          - test-wg-spokehub-hub
+      test-wg-spokehub-spoke02:
+        wireguard_address: "10.30.0.3/24"
+        wireguard_port: 51820
+        wireguard_endpoint: "172.16.20.30"
+        wireguard_persistent_keepalive: "30"
+        wireguard_as_spoke: true
+        wireguard_expected_peer_count: 1
+        wireguard_expected_peers:
+          - test-wg-spokehub-hub
+
+scenario:
+  name: spoke-hub
+  test_sequence:
+    - prepare
+    - converge
+
+verifier:
+  name: ansible
