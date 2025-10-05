@@ -5,6 +5,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 18.2.0
+
+- **FEATURE**
+  - add a spoke mode for nodes that should only peer with the hub while keeping the default full-mesh behavior unchanged. See `wireguard_as_spoke` variable and Molecule [spoke-hub](https://github.com/githubixx/ansible-role-wireguard/tree/b85f5842831a02044bd45f0554b9e810688b9148/molecule/spoke-hub) example ([PR #222](https://github.com/githubixx/ansible-role-wireguard/pull/222) - contribution by @eyebrowkang).
+
 ## 18.1.0
 
 - **OTHER**
