@@ -7,17 +7,28 @@
 - name: (Proxmox) Add WireGuard repository
   ansible.builtin.apt_repository:
     repo: "deb http://deb.debian.org/debian buster-backports main"
-    state: "{{ 'present' if (ansible_distribution_version | int <= 10) else 'absent' }}"
+    state: present
     update_cache: "{{ wireguard_update_cache }}"
+  when: ansible_distribution_version | int <= 10
 
 - name: (Proxmox) Install kernel headers for the currently running kernel to compile WireGuard with DKMS
   ansible.builtin.apt:
     name:
       - "pve-headers-{{ ansible_kernel }}"
     state: present
+  when: ansible_distribution_version | int <= 10
 
 - name: (Proxmox) Install WireGuard packages
   ansible.builtin.apt:
     name:
       - "wireguard"
     state: present
+  when: ansible_distribution_version | int <= 10
+
+- name: (Proxmox) Install WireGuard tools
+  ansible.builtin.apt:
+    name:
+      - "wireguard-tools"
+    state: present
+    install_recommends: false
+  when: ansible_distribution_version | int > 10
