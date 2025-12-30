@@ -68,6 +68,11 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
+## 18.3.0
+
+- **OTHER**
+  - Fix for modern PVE installations ([PR #226](https://github.com/githubixx/ansible-role-wireguard/pull/226) - contribution by @pavlozt)
+
 ## 18.2.0
 
 - **FEATURE**
