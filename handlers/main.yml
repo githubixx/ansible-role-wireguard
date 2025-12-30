@@ -10,7 +10,7 @@
     - stopped
     - started
   when:
-    - wireguard__restart_interface
+    - wireguard__restart_interface != none
     - not ansible_os_family == 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
