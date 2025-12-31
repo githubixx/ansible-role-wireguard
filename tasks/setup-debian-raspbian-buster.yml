@@ -18,7 +18,7 @@
     keyserver: "keyserver.ubuntu.com"
     id: "{{ item }}"
     state: present
-  when: ansible_lsb.id == "Raspbian"
+  when: ansible_facts['lsb']['id'] == "Raspbian"
   with_items:
     - "04EE7237B7D453EC"
     - "648ACFD622F3D138"

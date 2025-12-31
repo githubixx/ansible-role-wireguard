@@ -12,11 +12,11 @@
       tags:
         - wg-install
   with_first_found:
-    - "setup-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
-    - "setup-{{ ansible_distribution | lower }}-{{ ansible_distribution_version }}.yml"
-    - "setup-{{ ansible_distribution | lower }}-{{ ansible_distribution_release }}.yml"
-    - "setup-{{ ansible_distribution | lower }}.yml"
-    - "setup-{{ ansible_os_family | lower }}.yml"
+    - "setup-{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yml"
+    - "setup-{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_version'] }}.yml"
+    - "setup-{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_release'] }}.yml"
+    - "setup-{{ ansible_facts['distribution'] | lower }}.yml"
+    - "setup-{{ ansible_facts['os_family'] | lower }}.yml"
   tags:
     - wg-install
 
@@ -33,7 +33,7 @@
     - wg-install
     - wg-install-kernel-module
   when:
-    - not ansible_os_family == 'Darwin'
+    - ansible_facts['os_family'] != 'Darwin'
     - wireguard_install_kernel_module
 
 - name: Set default for WireGuard interface restart behavior
@@ -190,7 +190,7 @@
     state: "{{ wireguard_service_state }}"
     enabled: "{{ wireguard_service_enabled }}"
   when:
-    - not ansible_os_family == 'Darwin'
+    - ansible_facts['os_family'] != 'Darwin'
     - not wireguard_ubuntu_use_netplan
 
 - name: Flush notified handlers at end of role

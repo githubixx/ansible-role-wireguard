@@ -11,7 +11,7 @@
     - started
   when:
     - wireguard__restart_interface
-    - not ansible_os_family == 'Darwin'
+    - ansible_facts['os_family'] != 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
 
@@ -30,7 +30,7 @@
     executable: "/bin/bash"
   when:
     - not wireguard__restart_interface
-    - not ansible_os_family == 'Darwin'
+    - ansible_facts['os_family'] != 'Darwin'
     - wireguard_service_enabled == "yes"
   listen: "reconfigure wireguard"
 

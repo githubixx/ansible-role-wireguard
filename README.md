@@ -72,6 +72,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 - **OTHER**
   - Fix for modern PVE installations ([PR #226](https://github.com/githubixx/ansible-role-wireguard/pull/226) - contribution by @pavlozt)
+  - replace injected `ansible_*` facts usage with `ansible_facts[...]` (prepares for ansible-core 2.24 where `INJECT_FACTS_AS_VARS` default changes)
 
 - **FEATURE**
   - optionally flush handlers at the end of the role via `wireguard_flush_handlers` ([Issue #124](https://github.com/githubixx/ansible-role-wireguard/issues/124))
@@ -141,7 +142,7 @@ These variables can be changed in `group_vars/` e.g.:
 wireguard_remote_directory: >-
   {%- if wireguard_ubuntu_use_netplan -%}
   /etc/netplan
-  {%- elif ansible_os_family == 'Darwin' -%}
+  {%- elif ansible_facts['os_family'] == 'Darwin' -%}
   /opt/local/etc/wireguard
   {%- else -%}
   /etc/wireguard
@@ -157,7 +158,7 @@ wireguard_interface: "wg0"
 wireguard_conf_owner: root
 
 # The default group of the wg.conf file
-wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'wheel' }}"
+wireguard_conf_group: "{{ 'root' if ansible_facts['os_family'] != 'Darwin' else 'wheel' }}"
 
 # The default mode of the wg.conf file
 wireguard_conf_mode: 0600

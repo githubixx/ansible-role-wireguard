@@ -11,7 +11,7 @@
 wireguard_remote_directory: >-
   {%- if wireguard_ubuntu_use_netplan -%}
   /etc/netplan
-  {%- elif ansible_os_family == 'Darwin' -%}
+  {%- elif ansible_facts['os_family'] == 'Darwin' -%}
   /opt/local/etc/wireguard
   {%- else -%}
   /etc/wireguard
@@ -33,7 +33,7 @@ wireguard_conf_owner: root
 wireguard_conf_filename: "{{ wireguard_interface }}.conf"
 
 # The default group of the wg.conf file
-wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'wheel' }}"
+wireguard_conf_group: "{{ 'root' if ansible_facts['os_family'] != 'Darwin' else 'wheel' }}"
 
 # The default mode of the wg.conf file
 wireguard_conf_mode: "0600"
