@@ -10,14 +10,14 @@
       tags:
         - wg-install
   when:
-    - ansible_lsb.id is defined
-    - ansible_lsb.id == "Raspbian"
-    - ansible_lsb.major_release is version('11', '<')
+    - ansible_facts['lsb'] is defined
+    - ansible_facts['lsb']['id'] == "Raspbian"
+    - ansible_facts['lsb']['major_release'] is version('11', '<')
   register: wireguard__register_raspbian_setup
 
 - name: Setup for Proxmox VE variants
   when:
-    - ansible_kernel.find("pve") != -1
+    - ansible_facts['kernel'].find("pve") != -1
   block:
     - name: Setup Proxmox VE host
       ansible.builtin.include_tasks:
@@ -26,7 +26,7 @@
           tags:
             - wg-install
       when:
-        - ansible_virtualization_role == "host"
+        - ansible_facts['virtualization_role'] == "host"
       register: wireguard__register_pve_host_variant_setup
 
     - name: Setup Proxmox VE guest
@@ -36,7 +36,7 @@
           tags:
             - wg-install
       when:
-        - ansible_virtualization_role == "guest"
+        - ansible_facts['virtualization_role'] == "guest"
       register: wireguard__register_pve_guest_variant_setup
 
 - name: Setup for Debian

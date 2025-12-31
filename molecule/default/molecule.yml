@@ -14,7 +14,7 @@ driver:
 
 platforms:
   - name: test-wg-debian13
-    box: alvistack/debian-13
+    box: cloud-image/debian-13
     memory: 1536
     cpus: 2
     interfaces:
@@ -74,7 +74,7 @@ platforms:
       - vpn
       - debian
   - name: test-wg-opensuse-leap-15-6
-    box: opensuse/Leap-15.6.x86_64
+    box: alvistack/opensuse-leap-15.6
     memory: 1536
     cpus: 2
     interfaces:

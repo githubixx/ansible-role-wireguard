@@ -5,6 +5,19 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 18.3.0
+
+- **OTHER**
+  - Fix for modern PVE installations ([PR #226](https://github.com/githubixx/ansible-role-wireguard/pull/226) - contribution by @pavlozt)
+  - replace injected `ansible_*` facts usage with `ansible_facts[...]` (prepares for ansible-core 2.24 where `INJECT_FACTS_AS_VARS` default changes)
+
+- **FEATURE**
+  - optionally flush handlers at the end of the role via `wireguard_flush_handlers` ([Issue #124](https://github.com/githubixx/ansible-role-wireguard/issues/124))
+
+- **MOLECULE**
+  - replace Vagrant box `alvistack/debian-13` -> `cloud-image/debian-13`
+  - replace Vagrant box `opensuse/Leap-15.6.x86_64` -> `alvistack/opensuse-leap-15.6`
+
 ## 18.2.0
 
 - **FEATURE**

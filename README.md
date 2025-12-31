@@ -68,6 +68,19 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
+## 18.3.0
+
+- **OTHER**
+  - Fix for modern PVE installations ([PR #226](https://github.com/githubixx/ansible-role-wireguard/pull/226) - contribution by @pavlozt)
+  - replace injected `ansible_*` facts usage with `ansible_facts[...]` (prepares for ansible-core 2.24 where `INJECT_FACTS_AS_VARS` default changes)
+
+- **FEATURE**
+  - optionally flush handlers at the end of the role via `wireguard_flush_handlers` ([Issue #124](https://github.com/githubixx/ansible-role-wireguard/issues/124))
+
+- **MOLECULE**
+  - replace Vagrant box `alvistack/debian-13` -> `cloud-image/debian-13`
+  - replace Vagrant box `opensuse/Leap-15.6.x86_64` -> `alvistack/opensuse-leap-15.6`
+
 ## 18.2.0
 
 - **FEATURE**
@@ -117,7 +130,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 roles:
   - name: githubixx.ansible_role_wireguard
     src: https://github.com/githubixx/ansible-role-wireguard.git
-    version: 18.0.0
+    version: 18.3.0
 ```
 
 ## Role Variables
@@ -129,7 +142,7 @@ These variables can be changed in `group_vars/` e.g.:
 wireguard_remote_directory: >-
   {%- if wireguard_ubuntu_use_netplan -%}
   /etc/netplan
-  {%- elif ansible_os_family == 'Darwin' -%}
+  {%- elif ansible_facts['os_family'] == 'Darwin' -%}
   /opt/local/etc/wireguard
   {%- else -%}
   /etc/wireguard
@@ -145,7 +158,7 @@ wireguard_interface: "wg0"
 wireguard_conf_owner: root
 
 # The default group of the wg.conf file
-wireguard_conf_group: "{{ 'root' if not ansible_os_family == 'Darwin' else 'wheel' }}"
+wireguard_conf_group: "{{ 'root' if ansible_facts['os_family'] != 'Darwin' else 'wheel' }}"
 
 # The default mode of the wg.conf file
 wireguard_conf_mode: 0600
@@ -194,6 +207,16 @@ wireguard_service_state: "started"
 # to "true" if netplan configuration should be applied, otherwise it will
 # just be generated.
 wireguard_interface_restart: false
+
+# By default Ansible handlers (like the role's WireGuard "reconfigure" handler)
+# are executed at the end of the whole play. Setting this to "true" will flush
+# notified handlers at the end of this role run, so changes are applied before
+# subsequent roles/tasks run.
+#
+# Possible options:
+# - false (default)
+# - true
+wireguard_flush_handlers: false
 
 # Normally the role automatically creates a private key the very first time
 # if there isn't already a WireGuard configuration. But this option allows
