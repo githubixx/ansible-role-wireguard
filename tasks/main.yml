@@ -192,3 +192,10 @@
   when:
     - not ansible_os_family == 'Darwin'
     - not wireguard_ubuntu_use_netplan
+
+- name: Flush notified handlers at end of role
+  ansible.builtin.meta: flush_handlers
+  when:
+    - wireguard_flush_handlers | bool
+  tags:
+    - wg-config

@@ -10,6 +10,13 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - **OTHER**
   - Fix for modern PVE installations ([PR #226](https://github.com/githubixx/ansible-role-wireguard/pull/226) - contribution by @pavlozt)
 
+- **FEATURE**
+  - optionally flush handlers at the end of the role via `wireguard_flush_handlers` ([Issue #124](https://github.com/githubixx/ansible-role-wireguard/issues/124))
+
+- **MOLECULE**
+  - replace Vagrant box `alvistack/debian-13` -> `cloud-image/debian-13`
+  - replace Vagrant box `opensuse/Leap-15.6.x86_64` -> `alvistack/opensuse-leap-15.6`
+
 ## 18.2.0
 
 - **FEATURE**

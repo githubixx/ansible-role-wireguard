@@ -73,6 +73,13 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 - **OTHER**
   - Fix for modern PVE installations ([PR #226](https://github.com/githubixx/ansible-role-wireguard/pull/226) - contribution by @pavlozt)
 
+- **FEATURE**
+  - optionally flush handlers at the end of the role via `wireguard_flush_handlers` ([Issue #124](https://github.com/githubixx/ansible-role-wireguard/issues/124))
+
+- **MOLECULE**
+  - replace Vagrant box `alvistack/debian-13` -> `cloud-image/debian-13`
+  - replace Vagrant box `opensuse/Leap-15.6.x86_64` -> `alvistack/opensuse-leap-15.6`
+
 ## 18.2.0
 
 - **FEATURE**
@@ -122,7 +129,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 roles:
   - name: githubixx.ansible_role_wireguard
     src: https://github.com/githubixx/ansible-role-wireguard.git
-    version: 18.0.0
+    version: 18.3.0
 ```
 
 ## Role Variables
@@ -199,6 +206,16 @@ wireguard_service_state: "started"
 # to "true" if netplan configuration should be applied, otherwise it will
 # just be generated.
 wireguard_interface_restart: false
+
+# By default Ansible handlers (like the role's WireGuard "reconfigure" handler)
+# are executed at the end of the whole play. Setting this to "true" will flush
+# notified handlers at the end of this role run, so changes are applied before
+# subsequent roles/tasks run.
+#
+# Possible options:
+# - false (default)
+# - true
+wireguard_flush_handlers: false
 
 # Normally the role automatically creates a private key the very first time
 # if there isn't already a WireGuard configuration. But this option allows

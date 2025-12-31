@@ -80,6 +80,16 @@ wireguard_service_state: "started"
 # hard to detect side effects this option should be considered.
 wireguard_interface_restart: false
 
+# By default Ansible handlers (like the role's WireGuard "reconfigure" handler)
+# are executed at the end of the whole play. Setting this to "true" will flush
+# notified handlers at the end of this role run, so changes are applied before
+# subsequent roles/tasks run.
+#
+# Possible options:
+# - false (default)
+# - true
+wireguard_flush_handlers: false
+
 # This is sensitive: encrypt it with a tool like Ansible Vault.
 # If not set, a new one is generated on a blank configuration.
 # wireguard_private_key:
