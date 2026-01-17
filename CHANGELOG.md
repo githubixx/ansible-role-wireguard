@@ -5,6 +5,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Unreleased
+
+- **FIXES**
+  - Netplan: treat empty `wireguard_endpoint` as “no endpoint” (no hostname fallback)
+
 ## 18.3.0
 
 - **OTHER**

@@ -62,18 +62,16 @@ network:
 {%     endif %}
 {%     if (hostvars[host].wireguard_dc is defined and wireguard_dc is defined and wireguard_dc['name'] != hostvars[host].wireguard_dc['name']) %}
           endpoint: {{ hostvars[host].wireguard_dc['endpoint'] }}:{{ hostvars[host].wireguard_dc['port'] }}
-{%     elif hostvars[host].wireguard_port is defined %}
-{%       if hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "" %}
+{%     elif hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "" %}
+{%       if hostvars[host].wireguard_port is defined %}
           endpoint: {{ hostvars[host].wireguard_endpoint }}:{{ hostvars[host].wireguard_port }}
 {%       else %}
-          endpoint: {{ host }}:{{ hostvars[host].wireguard_port }}
-{%       endif %}
-{%     elif hostvars[host].wireguard_endpoint is defined %}
-{%       if hostvars[host].wireguard_endpoint != "" %}
           endpoint: {{ hostvars[host].wireguard_endpoint }}:{{ wireguard_port }}
-{%       else %}
-          # No endpoint defined for this peer
 {%       endif %}
+{%     elif hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint == "" %}
+          # No endpoint defined for this peer (wireguard_endpoint is empty)
+{%     elif hostvars[host].wireguard_port is defined %}
+          endpoint: {{ host }}:{{ hostvars[host].wireguard_port }}
 {%     else %}
           endpoint: {{ host }}:{{ wireguard_port }}
 {%     endif %}
