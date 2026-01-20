@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2018-2025 Robert Wimmer
+Copyright (C) 2018-2026 Robert Wimmer
 Copyright (C) 2019 fbourqui
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
@@ -68,6 +68,14 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
+## 19.0.0
+
+- **POTENTIALLY BREAKING**
+  - treat empty `wireguard_endpoint` as "no endpoint" (no hostname fallback). New behavior: if a peer explicitly sets `wireguard_endpoint: ""`, the template will not fall back to `inventory_hostname` for `Endpoint = ...` anymore. Instead it emits a comment `no endpoint…`. This is a behavior change, but it aligns with the documented contract in `README`: "setting wireguard_endpoint to an empty string means 'this peer has no endpoint'". Practically, it fixes a real bug: because `wireguard_port` is always defined via role defaults, the old logic almost always took the `wireguard_port is defined` branch and would generate `Endpoint = <inventory_hostname>:51820` even when `wireguard_endpoint: ""`. That contradicts `README` and breaks setups where inventory hostnames aren’t resolvable from peers. Who is affected? Only users who were (intentionally or accidentally) relying on the old incorrect behavior where `wireguard_endpoint: ""` still produced an endpoint via hostname fallback. Those users should instead omit `wireguard_endpoint` (to get hostname fallback) or set it to a real hostname/IP. Implemented in [fix(template): prevent hostname fallback when wireguard_endpoint is empty](https://github.com/githubixx/ansible-role-wireguard/pull/228) (contribution by @madic-creates) and [Netplan: treat empty wireguard_endpoint as - no endpoint - (no hostname fallback)](https://github.com/githubixx/ansible-role-wireguard/pull/230)
+
+- **MOLECULE**
+  - add Molecule scenario for `wireguard_endpoint` is set to empty [#231](https://github.com/githubixx/ansible-role-wireguard/pull/231)
+
 ## 18.3.0
 
 - **OTHER**
@@ -130,7 +138,7 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 roles:
   - name: githubixx.ansible_role_wireguard
     src: https://github.com/githubixx/ansible-role-wireguard.git
-    version: 18.3.0
+    version: 19.0.0
 ```
 
 ## Role Variables
