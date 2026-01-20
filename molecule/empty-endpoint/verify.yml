@@ -1,0 +1,63 @@
+---
+# Copyright (C) 2026 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Verify setup
+  hosts: all
+  vars:
+    hosts_count: "{{ groups['vpn'] | length }}"
+    wg_conf_path: "/etc/wireguard/wg0.conf"
+  tasks:
+    - name: Count WireGuard peers
+      ansible.builtin.shell: |
+        set -o errexit
+        set -o pipefail
+        set -o nounset
+        wg | grep "peer: " | wc -l
+        exit 0
+      args:
+        executable: "/bin/bash"
+      register: wireguard__peers_count
+      changed_when: false
+
+    - name: Set expected WireGuard peer count
+      ansible.builtin.set_fact:
+        wireguard__expected_peers: "{{ 2 if inventory_hostname == 'test-wg-server' else 1 }}"
+
+    - name: Peer count should match expected topology
+      ansible.builtin.assert:
+        that:
+          - "wireguard__expected_peers|int == wireguard__peers_count.stdout|int"
+
+    - name: Read WireGuard config
+      ansible.builtin.slurp:
+        src: "{{ wg_conf_path }}"
+      register: wireguard__wg_conf
+
+    - name: Decode WireGuard config
+      ansible.builtin.set_fact:
+        wireguard__wg_conf_text: "{{ wireguard__wg_conf.content | b64decode }}"
+
+    - name: Server should not fall back to hostname when peer endpoint is empty
+      when: inventory_hostname == 'test-wg-server'
+      ansible.builtin.assert:
+        that:
+          - "'# Name = test-wg-client-1' in wireguard__wg_conf_text"
+          - "'# Name = test-wg-client-2' in wireguard__wg_conf_text"
+          - "'Endpoint = test-wg-client-1:' not in wireguard__wg_conf_text"
+          - "'Endpoint = test-wg-client-2:' not in wireguard__wg_conf_text"
+          - "'No endpoint defined for this peer' in wireguard__wg_conf_text"
+
+    - name: Client should still have an endpoint for the server
+      when: inventory_hostname == 'test-wg-client'
+      ansible.builtin.assert:
+        that:
+          - "'# Name = test-wg-server' in wireguard__wg_conf_text"
+          - "'Endpoint = 172.16.10.20:51820' in wireguard__wg_conf_text"
+
+    - name: Ubuntu client should still have an endpoint for the server
+      when: inventory_hostname == 'test-wg-client-2'
+      ansible.builtin.assert:
+        that:
+          - "'# Name = test-wg-server' in wireguard__wg_conf_text"
+          - "'Endpoint = 172.16.10.20:51820' in wireguard__wg_conf_text"

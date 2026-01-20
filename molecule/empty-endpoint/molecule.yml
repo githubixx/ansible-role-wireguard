@@ -1,0 +1,87 @@
+---
+# Copyright (C) 2026 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+dependency:
+  name: galaxy
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+    type: libvirt
+
+platforms:
+  - name: test-wg-server
+    box: cloud-image/debian-13
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.10.20
+    groups:
+      - vpn
+  - name: test-wg-client-1
+    box: generic/debian12
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.10.30
+    groups:
+      - vpn
+  - name: test-wg-client-2
+    box: alvistack/ubuntu-24.04
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.10.40
+    groups:
+      - vpn
+      - ubuntu
+
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+  log: true
+  lint:
+    name: ansible-lint
+  inventory:
+    host_vars:
+      test-wg-server:
+        wireguard_address: "10.10.10.20/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "172.16.10.20"
+        wireguard_interface_restart: true
+      test-wg-client-1:
+        wireguard_address: "10.10.10.30/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: ""
+        wireguard_interface_restart: true
+        ansible_python_interpreter: "/usr/bin/python3"
+      test-wg-client-2:
+        wireguard_address: "10.10.10.40/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: ""
+        wireguard_interface_restart: true
+
+scenario:
+  name: empty-endpoint
+  test_sequence:
+    - prepare
+    - converge
+
+verifier:
+  name: ansible

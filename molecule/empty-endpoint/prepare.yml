@@ -1,0 +1,14 @@
+---
+# Copyright (C) 2026 Robert Wimmer
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Prepare hosts
+  hosts: all
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Update APT package cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
