@@ -5,6 +5,16 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 19.1.0
+
+- **OTHER**
+  - update `meta/main.yml`:
+    - remove EL 7/8, Fedora 39/40, Ubuntu 20.04 (focal)
+    - add Debian 13 (trixie), Fedora 43
+
+- **MOLECULE**
+  - use own [githubixx Vagrant boxes](https://portal.cloud.hashicorp.com/vagrant/discover/githubixx) where possible
+
 ## 19.0.0
 
 - **POTENTIALLY BREAKING**

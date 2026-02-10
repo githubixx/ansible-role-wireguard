@@ -19,17 +19,21 @@ This role should work with:
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Ubuntu 24.04 (Noble Numbat)
 - Archlinux
-- Debian 11 (Bullseye)
 - Debian 12 (Bookworm)
 - Debian 13 (Trixie)
 - Fedora 42
+- Fedora 43
 - AlmaLinux 9
+- AlmaLinux 10
 - Rocky Linux 9
-- openSUSE Leap
+- Rocky Linux 10
+- openSUSE Leap 15.6
+- openSUSE Leap 16.0
 - Oracle Linux 9
 
 ### Linux - Best effort
 
+- Debian 11 (Bullseye)
 - AlmaLinux 8
 - Rocky Linux 8
 - elementary OS 6
@@ -68,6 +72,16 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 **Recent changes:**
 
+## 19.1.0
+
+- **OTHER**
+  - update `meta/main.yml`:
+    - remove EL 7/8, Fedora 39/40, Ubuntu 20.04 (focal)
+    - add Debian 13 (trixie), Fedora 43
+
+- **MOLECULE**
+  - use own [githubixx Vagrant boxes](https://portal.cloud.hashicorp.com/vagrant/discover/githubixx) where possible
+
 ## 19.0.0
 
 - **POTENTIALLY BREAKING**
@@ -75,52 +89,6 @@ See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob
 
 - **MOLECULE**
   - add Molecule scenario for `wireguard_endpoint` is set to empty [#231](https://github.com/githubixx/ansible-role-wireguard/pull/231)
-
-## 18.3.0
-
-- **OTHER**
-  - Fix for modern PVE installations ([PR #226](https://github.com/githubixx/ansible-role-wireguard/pull/226) - contribution by @pavlozt)
-  - replace injected `ansible_*` facts usage with `ansible_facts[...]` (prepares for ansible-core 2.24 where `INJECT_FACTS_AS_VARS` default changes)
-
-- **FEATURE**
-  - optionally flush handlers at the end of the role via `wireguard_flush_handlers` ([Issue #124](https://github.com/githubixx/ansible-role-wireguard/issues/124))
-
-- **MOLECULE**
-  - replace Vagrant box `alvistack/debian-13` -> `cloud-image/debian-13`
-  - replace Vagrant box `opensuse/Leap-15.6.x86_64` -> `alvistack/opensuse-leap-15.6`
-
-## 18.2.0
-
-- **FEATURE**
-  - add a spoke mode for nodes that should only peer with the hub while keeping the default full-mesh behavior unchanged. See `wireguard_as_spoke` variable and Molecule [spoke-hub](https://github.com/githubixx/ansible-role-wireguard/tree/b85f5842831a02044bd45f0554b9e810688b9148/molecule/spoke-hub) example ([PR #222](https://github.com/githubixx/ansible-role-wireguard/pull/222) - contribution by @eyebrowkang).
-
-## 18.1.0
-
-- **OTHER**
-  - fix issues when running with ansible-core >= 2.19.0 ([Issue #219](https://github.com/githubixx/ansible-role-wireguard/issues/219) / [PR #220](https://github.com/githubixx/ansible-role-wireguard/pull/220/) - contribution by @jonathanplatzer)
-  - replace `ansible_managed` variable with internal `wireguard__ansible_managed` variable. Reason: `DEFAULT_MANAGED_STR` option is deprecated in Ansible 2.19. The `ansible_managed` variable can be set just like any other variable, or a different variable can be used. At the end for now nothing changes for the user of this role as the output string `Ansible managed` will stay the same.
-
-- **MOLECULE**
-  - Molecule: update `netplan` scenario
-  - Molecule: update `single-server` scenario
-
-## 18.0.0
-
-- **BREAKING**
-  - removed support for `CentOS 7` (reached end of life)
-  - removed support for `Ubuntu 20.04` (reached end of life)
-  - removed support for `Fedora 39/40` (reached end of life)
-  - removed support for `openSUSE Leap 15.5` (reached end of life)
-
-- **FEATURE**
-  - add support for `Debian 13` (Trixie)
-  - add support for `Fedora 42`
-
-- **OTHER**
-  - remove unneeded task for `Ubuntu 19.10`
-  - `defaults/main.yml`: add `noqa jinja[spacing]` to ignore `ansible-lint` warning
-  - replace `ansible.builtin.yum` with `ansible.builtin.dnf`
-  - update `.gitignore`
 
 ## Installation
 
