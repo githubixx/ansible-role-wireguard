@@ -1,5 +1,5 @@
 ---
-# Copyright (C) 2018-2025 Robert Wimmer
+# Copyright (C) 2018-2026 Robert Wimmer
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 galaxy_info:
@@ -13,22 +13,21 @@ galaxy_info:
     - name: ArchLinux
     - name: Ubuntu
       versions:
-        - "focal"
         - "jammy"
         - "noble"
     - name: Debian
       versions:
         - "bullseye"
         - "bookworm"
+        - "trixie"
     - name: EL
       versions:
-        - "7"
-        - "8"
         - "9"
+        - "10"
     - name: Fedora
       versions:
-        - "39"
-        - "40"
+        - "42"
+        - "43"
     - name: opensuse
       versions:
         - "all"
