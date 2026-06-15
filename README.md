@@ -18,6 +18,7 @@ This role should work with:
 
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Ubuntu 24.04 (Noble Numbat)
+- Ubuntu 26.04 (Resolute Raccoon)
 - Archlinux
 - Debian 12 (Bookworm)
 - Debian 13 (Trixie)
@@ -71,6 +72,14 @@ Nevertheless the `PreUp`, `PreDown`, `PostUp` and `PostDown` hooks may be a good
 See full [CHANGELOG.md](https://github.com/githubixx/ansible-role-wireguard/blob/master/CHANGELOG.md)
 
 **Recent changes:**
+
+## 19.2.0
+
+- **FEATURE**
+  - add support for Ubuntu 26.04
+
+- **MOLECULE**
+  - add Ubuntu 26.04 test VMs to the Molecule scenarios
 
 ## 19.1.0
 

@@ -46,6 +46,18 @@ platforms:
     groups:
       - vpn
       - ubuntu
+  - name: test-wg-client-3
+    box: githubixx/ubuntu-26.04
+    memory: 1536
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.10.50
+    groups:
+      - vpn
+      - ubuntu
 
 provisioner:
   name: ansible
@@ -72,6 +84,12 @@ provisioner:
         ansible_python_interpreter: "/usr/bin/python3"
       test-wg-client-2:
         wireguard_address: "10.10.10.40/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: ""
+        wireguard_interface_restart: true
+      test-wg-client-3:
+        wireguard_address: "10.10.10.50/24"
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: ""

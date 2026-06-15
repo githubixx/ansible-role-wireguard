@@ -22,7 +22,7 @@
 
     - name: Set expected WireGuard peer count
       ansible.builtin.set_fact:
-        wireguard__expected_peers: "{{ 2 if inventory_hostname == 'test-wg-server' else 1 }}"
+        wireguard__expected_peers: "{{ 3 if inventory_hostname == 'test-wg-server' else 1 }}"
 
     - name: Peer count should match expected topology
       ansible.builtin.assert:
@@ -44,8 +44,10 @@
         that:
           - "'# Name = test-wg-client-1' in wireguard__wg_conf_text"
           - "'# Name = test-wg-client-2' in wireguard__wg_conf_text"
+          - "'# Name = test-wg-client-3' in wireguard__wg_conf_text"
           - "'Endpoint = test-wg-client-1:' not in wireguard__wg_conf_text"
           - "'Endpoint = test-wg-client-2:' not in wireguard__wg_conf_text"
+          - "'Endpoint = test-wg-client-3:' not in wireguard__wg_conf_text"
           - "'No endpoint defined for this peer' in wireguard__wg_conf_text"
 
     - name: Client should still have an endpoint for the server
@@ -57,6 +59,13 @@
 
     - name: Ubuntu client should still have an endpoint for the server
       when: inventory_hostname == 'test-wg-client-2'
+      ansible.builtin.assert:
+        that:
+          - "'# Name = test-wg-server' in wireguard__wg_conf_text"
+          - "'Endpoint = 172.16.10.20:51820' in wireguard__wg_conf_text"
+
+    - name: Ubuntu 26.04 client should still have an endpoint for the server
+      when: inventory_hostname == 'test-wg-client-3'
       ansible.builtin.assert:
         that:
           - "'# Name = test-wg-server' in wireguard__wg_conf_text"

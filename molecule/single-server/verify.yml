@@ -4,8 +4,6 @@
 
 - name: Verify setup
   hosts: all
-  vars:
-    hosts_count: "{{ groups['vpn'] | length }}"
   tasks:
     - name: Count WireGuard interfaces
       ansible.builtin.shell: |
@@ -23,11 +21,24 @@
       ansible.builtin.debug:
         var: wireguard__interfaces_count.stdout
 
-    - name: Print hosts count in vpn group
-      ansible.builtin.debug:
-        var: hosts_count
+    - name: Set expected WireGuard peer count
+      ansible.builtin.set_fact:
+        wireguard__expected_peers: 0
 
-    - name: There should be as much WireGuard interfaces as hosts in vpn group minus one
+    - name: Count expected WireGuard peers
+      ansible.builtin.set_fact:
+        wireguard__expected_peers: "{{ wireguard__expected_peers | int + 1 }}"
+      loop: "{{ groups['vpn'] }}"
+      when:
+        - item != inventory_hostname
+        - (wireguard_as_spoke | default(false)) != true or (hostvars[item].wireguard_as_spoke | default(false)) != true
+        - (hostvars[item].wireguard_endpoint is defined and hostvars[item].wireguard_endpoint != "") or (wireguard_endpoint is defined and wireguard_endpoint != "")
+
+    - name: Print expected WireGuard peer count
+      ansible.builtin.debug:
+        var: wireguard__expected_peers
+
+    - name: WireGuard peer count should match expected topology
       ansible.builtin.assert:
         that:
-          - "hosts_count|int -1 == wireguard__interfaces_count.stdout|int"
+          - "wireguard__expected_peers | int == wireguard__interfaces_count.stdout | int"

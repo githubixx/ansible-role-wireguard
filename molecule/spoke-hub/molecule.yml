@@ -48,6 +48,18 @@ platforms:
     groups:
       - vpn
       - ubuntu
+  - name: test-wg-spokehub-spoke03
+    box: githubixx/ubuntu-26.04
+    memory: 1024
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.20.40
+    groups:
+      - vpn
+      - ubuntu
 
 provisioner:
   name: ansible
@@ -66,10 +78,11 @@ provisioner:
         wireguard_persistent_keepalive: "30"
         wireguard_interface_restart: true
         wireguard_as_spoke: false
-        wireguard_expected_peer_count: 2
+        wireguard_expected_peer_count: 3
         wireguard_expected_peers:
           - test-wg-spokehub-spoke01
           - test-wg-spokehub-spoke02
+          - test-wg-spokehub-spoke03
       test-wg-spokehub-spoke01:
         wireguard_address: "10.30.0.2/24"
         wireguard_port: 51820
@@ -83,6 +96,15 @@ provisioner:
         wireguard_address: "10.30.0.3/24"
         wireguard_port: 51820
         wireguard_endpoint: "172.16.20.30"
+        wireguard_persistent_keepalive: "30"
+        wireguard_as_spoke: true
+        wireguard_expected_peer_count: 1
+        wireguard_expected_peers:
+          - test-wg-spokehub-hub
+      test-wg-spokehub-spoke03:
+        wireguard_address: "10.30.0.4/24"
+        wireguard_port: 51820
+        wireguard_endpoint: "172.16.20.40"
         wireguard_persistent_keepalive: "30"
         wireguard_as_spoke: true
         wireguard_expected_peer_count: 1

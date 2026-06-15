@@ -5,6 +5,14 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## 19.2.0
+
+- **FEATURE**
+  - add support for Ubuntu 26.04
+
+- **MOLECULE**
+  - add Ubuntu 26.04 test VMs to the Molecule scenarios
+
 ## 19.1.0
 
 - **OTHER**

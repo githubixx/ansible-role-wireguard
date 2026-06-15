@@ -133,6 +133,18 @@ platforms:
     groups:
       - vpn
       - ubuntu
+  - name: test-wg-ubuntu2604
+    box: githubixx/ubuntu-26.04
+    memory: 1228
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.10.25
+    groups:
+      - vpn
+      - ubuntu
   - name: test-wg-rocky9
     box: githubixx/rockylinux-9
     memory: 1228
@@ -266,6 +278,11 @@ provisioner:
         wireguard_port: 51820
         wireguard_persistent_keepalive: "30"
         wireguard_endpoint: "172.16.10.19"
+      test-wg-ubuntu2604:
+        wireguard_address: "10.10.10.25/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_endpoint: "172.16.10.25"
       test-wg-rocky9:
         wireguard_address: "10.10.10.20/24"
         wireguard_port: 51820
