@@ -31,8 +31,11 @@
       loop: "{{ groups['vpn'] }}"
       when:
         - item != inventory_hostname
-        - (wireguard_as_spoke | default(false)) != true or (hostvars[item].wireguard_as_spoke | default(false)) != true
-        - (hostvars[item].wireguard_endpoint is defined and hostvars[item].wireguard_endpoint != "") or (wireguard_endpoint is defined and wireguard_endpoint != "")
+        - not (wireguard_as_spoke | default(false)) or not (hostvars[item].wireguard_as_spoke | default(false))
+        - >-
+          (hostvars[item].wireguard_endpoint is defined and
+          hostvars[item].wireguard_endpoint != "") or
+          (wireguard_endpoint is defined and wireguard_endpoint != "")
 
     - name: Print expected WireGuard peer count
       ansible.builtin.debug:
