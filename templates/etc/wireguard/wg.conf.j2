@@ -15,7 +15,8 @@ Address = {{ wg_addr }}
 {%  endfor %}
 {% endif %}
 PrivateKey = {{ wireguard_private_key }}
-{% if wireguard_endpoint is defined and wireguard_endpoint != "" %}
+{% set always = wireguard_always_listen|default(false) %}
+{% if always or (wireguard_endpoint is defined and wireguard_endpoint != "") or (ansible_play_hosts|length <= 1) %}
 ListenPort = {{ wireguard_port }}
 {% endif %}
 {% if wireguard_dns is defined %}
