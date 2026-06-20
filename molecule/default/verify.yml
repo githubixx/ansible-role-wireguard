@@ -27,7 +27,11 @@
       ansible.builtin.debug:
         var: hosts_count
 
-    - name: There should be as much WireGuard interfaces as hosts in vpn group minus one
+    - name: There should be as many WireGuard interfaces as hosts in vpn group minus one or as defined peers
       ansible.builtin.assert:
         that:
-          - "hosts_count|int -1 == wireguard__interfaces_count.stdout|int"
+          - >
+            (wireguard_include_peers is defined and
+             wireguard__interfaces_count.stdout|int == wireguard_include_peers|length) or
+            (wireguard_include_peers is not defined and
+             hosts_count|int - 1 == wireguard__interfaces_count.stdout|int)
