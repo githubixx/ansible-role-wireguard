@@ -15,7 +15,7 @@ Address = {{ wg_addr }}
 {%  endfor %}
 {% endif %}
 PrivateKey = {{ wireguard_private_key }}
-{% if wireguard_endpoint is defined and wireguard_endpoint != "" %}
+{% if (wireguard_endpoint is defined and wireguard_endpoint != "") or (wireguard_networks is defined and wireguard_networks | length > 0) %}
 ListenPort = {{ wireguard_port }}
 {% endif %}
 {% if wireguard_dns is defined %}
@@ -54,7 +54,7 @@ PostDown = {{ wg_postdown }}
 SaveConfig = {{ wireguard_save_config }}
 {% endif %}
 {% for host in ansible_play_hosts %}
-{%   if host != inventory_hostname and ((wireguard_as_spoke | default(false)) != true or (hostvars[host].wireguard_as_spoke | default(false)) != true) and ((hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "") or (wireguard_endpoint is defined and wireguard_endpoint != "")) %}
+{%   if host != inventory_hostname and ((wireguard_as_spoke | default(false)) != true or (hostvars[host].wireguard_as_spoke | default(false)) != true) and ((hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "") or (hostvars[host].wireguard_networks is defined and hostvars[host].wireguard_networks | length > 0) or (wireguard_endpoint is defined and wireguard_endpoint != "") or (wireguard_networks is defined and wireguard_networks | length > 0)) %}
 
 [Peer]
 # Name = {{ host }}
@@ -75,10 +75,26 @@ AllowedIPs = {{ wg_addr.split('/')[0] }}/128
 {%      endfor %}
 {%      endif %}
 {%     endif %}
-{%     if hostvars[host].wireguard_persistent_keepalive is defined and hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "" %}
+{%     if hostvars[host].wireguard_persistent_keepalive is defined and ((hostvars[host].wireguard_endpoint is defined and hostvars[host].wireguard_endpoint != "") or (hostvars[host].wireguard_networks is defined and hostvars[host].wireguard_networks | length > 0)) %}
 PersistentKeepalive = {{hostvars[host].wireguard_persistent_keepalive}}
 {%     endif %}
-{%     if (
+{%     set wg_ep = namespace(value=none, port=hostvars[host].wireguard_port | default(wireguard_port)) %}
+{%     if wireguard_network_priority is defined and wireguard_networks is defined and hostvars[host].wireguard_networks is defined %}
+{%       for wg_net in wireguard_network_priority %}
+{%         if wg_ep.value is none and wg_net in wireguard_networks and wg_net in hostvars[host].wireguard_networks %}
+{%           set wg_net_def = hostvars[host].wireguard_networks[wg_net] %}
+{%           if wg_net_def is mapping %}
+{%             set wg_ep.value = wg_net_def['endpoint'] %}
+{%             set wg_ep.port = wg_net_def['port'] | default(hostvars[host].wireguard_port | default(wireguard_port)) %}
+{%           else %}
+{%             set wg_ep.value = wg_net_def %}
+{%           endif %}
+{%         endif %}
+{%       endfor %}
+{%     endif %}
+{%     if wg_ep.value is not none %}
+Endpoint = {{ wg_ep.value }}:{{ wg_ep.port }}
+{%     elif (
          hostvars[host].wireguard_dc is defined and
          wireguard_dc is defined and
          wireguard_dc['name'] != hostvars[host].wireguard_dc['name']

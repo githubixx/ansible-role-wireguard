@@ -1,0 +1,137 @@
+---
+# Copyright (C) 2026 Eyebrow Kang
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+dependency:
+  name: galaxy
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+    type: libvirt
+
+# node01 and node02 share an internal LAN (172.16.21.0/24) on top of the
+# "public" network (192.168.0.0/24) that all three hosts share. node03 only
+# has the "public" network. With "wireguard_network_priority: [lan, public]"
+# this proves per-pair endpoint selection:
+#   - node01 <-> node02 -> highest shared network "lan"    (172.16.21.x)
+#   - any    <-> node03 -> only shared network    "public" (192.168.0.x)
+platforms:
+  - name: test-wg-networks-node01
+    box: githubixx/ubuntu-24.04
+    memory: 1024
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.0.10
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.21.10
+    groups:
+      - vpn
+      - ubuntu
+  - name: test-wg-networks-node02
+    box: githubixx/ubuntu-24.04
+    memory: 1024
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.0.20
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 172.16.21.20
+    groups:
+      - vpn
+      - ubuntu
+  - name: test-wg-networks-node03
+    box: githubixx/ubuntu-24.04
+    memory: 1024
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.0.30
+    groups:
+      - vpn
+      - ubuntu
+
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+  log: true
+  lint:
+    name: ansible-lint
+  inventory:
+    group_vars:
+      vpn:
+        # Global, identical for every host. Highest preference first.
+        wireguard_network_priority:
+          - lan
+          - public
+    host_vars:
+      test-wg-networks-node01:
+        wireguard_addresses:
+          - "10.40.0.1/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_interface_restart: true
+        wireguard_networks:
+          lan: "172.16.21.10"
+          public: "192.168.0.10"
+        wireguard_expected_peer_count: 2
+        wireguard_expected_peers:
+          - test-wg-networks-node02
+          - test-wg-networks-node03
+        wireguard_expected_endpoints:
+          test-wg-networks-node02: "172.16.21.20:51820"
+          test-wg-networks-node03: "192.168.0.30:51820"
+      test-wg-networks-node02:
+        wireguard_addresses:
+          - "10.40.0.2/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_interface_restart: true
+        wireguard_networks:
+          lan: "172.16.21.20"
+          public: "192.168.0.20"
+        wireguard_expected_peer_count: 2
+        wireguard_expected_peers:
+          - test-wg-networks-node01
+          - test-wg-networks-node03
+        wireguard_expected_endpoints:
+          test-wg-networks-node01: "172.16.21.10:51820"
+          test-wg-networks-node03: "192.168.0.30:51820"
+      test-wg-networks-node03:
+        wireguard_addresses:
+          - "10.40.0.3/24"
+        wireguard_port: 51820
+        wireguard_persistent_keepalive: "30"
+        wireguard_interface_restart: true
+        wireguard_networks:
+          public: "192.168.0.30"
+        wireguard_expected_peer_count: 2
+        wireguard_expected_peers:
+          - test-wg-networks-node01
+          - test-wg-networks-node02
+        wireguard_expected_endpoints:
+          test-wg-networks-node01: "192.168.0.10:51820"
+          test-wg-networks-node02: "192.168.0.20:51820"
+
+scenario:
+  name: wireguard-networks
+  test_sequence:
+    - prepare
+    - converge
+
+verifier:
+  name: ansible

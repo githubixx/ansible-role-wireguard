@@ -347,6 +347,77 @@ wireguard_unmanaged_peers:
 
 One of `wireguard_address` (deprecated) or `wireguard_addresses` (recommended) is required as already mentioned. It's the IPs of the interface name defined with `wireguard_interface` variable (`wg0` by default). Every host needs at least one unique VPN IP of course. If you don't set `wireguard_endpoint` the playbook will use the hostname defined in the `vpn` hosts group (the Ansible inventory hostname). If you set `wireguard_endpoint` to `""` (empty string) that peer won't have a endpoint. That means that this host can only access hosts that have a `wireguard_endpoint`. That's useful for clients that don't expose any services to the VPN and only want to access services on other hosts. So if you only define one host with `wireguard_endpoint` set and all other hosts have `wireguard_endpoint` set to `""` (empty string) that basically means you've only clients besides one which in that case is the WireGuard server. The third possibility is to set `wireguard_endpoint` to some hostname. E.g. if you have different hostnames for the private and public DNS of that host and need different DNS entries for that case setting `wireguard_endpoint` becomes handy. Take for example the IP above: `wireguard_address: "10.8.0.101"`. That's a private IP and I've created a DNS entry for that private IP like `host01.i.domain.tld` (`i` for internal in that case). For the public IP I've created a DNS entry like `host01.p.domain.tld` (`p` for public). The `wireguard_endpoint` needs to be a interface that the other members in the `vpn` group can connect to. So in that case I would set `wireguard_endpoint` to `host01.p.domain.tld` because WireGuard normally needs to be able to connect to the public IP of the other host(s).
 
+## Per-pair endpoint selection (`wireguard_networks`)
+
+With `wireguard_endpoint` a host has exactly one endpoint and *every* other peer connects to it via that same address. Sometimes you want the endpoint to depend on *which* peer is connecting: hosts that share an internal LAN should talk over that LAN, hosts in different locations should talk over their public IPv4, and a peer that only has IPv6 must be reached over IPv6. `wireguard_networks` lets you express exactly that, without giving up the single flat VPN subnet (the `AllowedIPs` / VPN IPs are unaffected — only the underlay transport changes).
+
+It uses two variables:
+
+- `wireguard_network_priority` — an ordered list of network names, highest preference first. Set it **once and identically for every host** (e.g. in `group_vars/vpn`), because it has to be global for the selection to stay symmetric.
+- `wireguard_networks` — set per host in `host_vars/`. A mapping of network name to the endpoint this host can be reached at on that network. The value is either a plain string (just the endpoint host/IP; this host's own `wireguard_port` is used) or a mapping `{endpoint: ..., port: ...}` when NAT maps an external port to a different `ListenPort`. IPv6 endpoints must be bracketed (`[...]`) and, because of YAML, quoted.
+
+For a link between host A and host B the role uses the peer's endpoint on the **highest-priority network that both A and B list**. Because `wireguard_network_priority` is global, A and B always arrive at the same network, so `A -> B` and `B -> A` use the same path. If two peers share no listed network, selection falls back to the regular `wireguard_endpoint` behaviour described above.
+
+A small example: `host01` and `host02` sit in the same location and share an internal LAN, both also have public IPv4/IPv6, and `host03` is reachable over IPv6 only.
+
+```yaml
+# group_vars/vpn — global, identical on every host, highest preference first
+wireguard_network_priority:
+  - lan
+  - ipv4
+  - ipv6
+```
+
+```yaml
+# host_vars/host01
+wireguard_addresses:
+  - "10.8.0.101/24"
+wireguard_networks:
+  lan: "10.0.0.101"
+  ipv4: "host01.p.domain.tld"
+  ipv6: "[2001:db8::101]"
+```
+
+```yaml
+# host_vars/host02
+wireguard_addresses:
+  - "10.8.0.102/24"
+wireguard_networks:
+  lan: "10.0.0.102"
+  ipv4: "host02.p.domain.tld"
+  ipv6: "[2001:db8::102]"
+```
+
+```yaml
+# host_vars/host03 (IPv6 only)
+wireguard_addresses:
+  - "10.8.0.103/24"
+wireguard_networks:
+  ipv6: "[2001:db8::103]"
+```
+
+`host01` and `host02` both list `lan` (the highest network they share), so they reach each other over the internal LAN; both reach `host03` over IPv6 because that is the only network they share with it. The resulting peer section on `host01` looks like this:
+
+```ini
+[Peer]
+# Name = host02
+PublicKey = ....
+AllowedIPs = 10.8.0.102/32
+Endpoint = 10.0.0.102:51820
+
+[Peer]
+# Name = host03
+PublicKey = ....
+AllowedIPs = 10.8.0.103/32
+Endpoint = [2001:db8::103]:51820
+```
+
+A few things to keep in mind:
+
+- A network name must refer to a transport that all of its members can actually reach each other on. Declaring membership does not create connectivity — if you list two hosts on `ipv4` but there is no IPv4 path between them, that link will be selected and then fail.
+- Only network names listed in `wireguard_network_priority` are considered. A network present in `wireguard_networks` but missing from the priority list is ignored.
+- A host with no `wireguard_networks` (and no `wireguard_endpoint`) is treated as a client with no endpoint, exactly as before.
+
 ## Example
 
 Here is a little example for what I use the playbook: I use WireGuard to setup a fully meshed VPN (every host can directly connect to every other host) and run my Kubernetes (K8s) cluster at Hetzner Cloud (but you should be able to use any hoster you want). So the important components like the K8s controller and worker nodes (which includes the pods) only communicate via encrypted WireGuard VPN. Also (as already mentioned) I've two clients. Both have `kubectl` installed and are able to talk to the internal Kubernetes API server by using WireGuard VPN. One of the two clients also exposes a WireGuard endpoint because the Postfix mailserver in the cloud and my internal Postfix needs to be able to talk to each other. I guess that's maybe a not so common use case for WireGuard :D But it shows what's possible. So let me explain the setup which might help you to use this Ansible role.
