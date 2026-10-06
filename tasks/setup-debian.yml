@@ -11,6 +11,7 @@
         - wg-install
   when:
     - ansible_facts['lsb'] is defined
+    - ansible_facts['lsb']['id'] is defined
     - ansible_facts['lsb']['id'] == "Raspbian"
     - ansible_facts['lsb']['major_release'] is version('11', '<')
   register: wireguard__register_raspbian_setup
