@@ -1,0 +1,44 @@
+---
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Internal variables derived from "wireguard_backend". Don't override them.
+wireguard__amneziawg: "{{ wireguard_backend == 'amneziawg' }}"
+wireguard__cmd: "{{ 'awg' if wireguard__amneziawg else 'wg' }}"
+wireguard__quick_cmd: "{{ 'awg-quick' if wireguard__amneziawg else 'wg-quick' }}"
+wireguard__service_name: "{{ wireguard__quick_cmd }}@{{ wireguard_interface }}"
+wireguard__kernel_module: "{{ 'amneziawg' if wireguard__amneziawg else 'wireguard' }}"
+
+# Controller-side layout below "wireguard_local_directory"
+wireguard__local_state_dir: "{{ wireguard_local_directory }}/state"
+wireguard__local_psk_dir: "{{ wireguard__local_state_dir }}/psk"
+wireguard__local_client_keys_dir: "{{ wireguard__local_state_dir }}/clients/{{ inventory_hostname }}"
+wireguard__local_clients_dir: "{{ wireguard_local_directory }}/clients/{{ inventory_hostname }}"
+wireguard__local_awg_params_file: "{{ wireguard__local_state_dir }}/amneziawg-params.json"
+
+# AmneziaWG obfuscation parameters in the order they're written to the
+# configuration file (lowercase key in "wireguard_amneziawg_params" -> config key).
+# S1/S2/S3/S4 and H1-H4 must be identical on both ends of a tunnel.
+# S3, S4 and I1-I5 are AmneziaWG 2.0 parameters and only rendered if set.
+wireguard__amneziawg_param_names:
+  jc: Jc
+  jmin: Jmin
+  jmax: Jmax
+  s1: S1
+  s2: S2
+  s3: S3
+  s4: S4
+  h1: H1
+  h2: H2
+  h3: H3
+  h4: H4
+  i1: I1
+  i2: I2
+  i3: I3
+  i4: I4
+  i5: I5
+
+# Ubuntu PPA suite used for Debian releases (picked by glibc compatibility)
+wireguard__amneziawg_debian_suites:
+  bullseye: focal
+  bookworm: jammy
+  trixie: noble

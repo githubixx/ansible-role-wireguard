@@ -5,6 +5,23 @@
 - name: Gather instance facts
   ansible.builtin.setup:
 
+- name: Set backend facts (used by other hosts via hostvars)
+  ansible.builtin.set_fact:
+    wireguard__fact_amneziawg: "{{ wireguard__amneziawg | bool }}"
+    wireguard__fact_preshared_keys: "{{ wireguard_preshared_keys | bool }}"
+  tags:
+    - always
+
+- name: Include AmneziaWG installation tasks
+  ansible.builtin.include_tasks:
+    file: setup-amneziawg.yml
+    apply:
+      tags:
+        - wg-install
+  when: wireguard__amneziawg | bool
+  tags:
+    - wg-install
+
 - name: Include tasks depending on OS
   ansible.builtin.include_tasks:
     file: "{{ item }}"
@@ -17,12 +34,13 @@
     - "setup-{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_release'] }}.yml"
     - "setup-{{ ansible_facts['distribution'] | lower }}.yml"
     - "setup-{{ ansible_facts['os_family'] | lower }}.yml"
+  when: not (wireguard__amneziawg | bool)
   tags:
     - wg-install
 
 - name: Enable WireGuard kernel module
   community.general.modprobe:
-    name: wireguard
+    name: "{{ wireguard__kernel_module }}"
     state: present
   register: wireguard__register_module_enabled
   until: wireguard__register_module_enabled is succeeded
@@ -51,7 +69,7 @@
     - wg-config
   block:
     - name: Get available wg subcommands
-      ansible.builtin.command: "wg --help"
+      ansible.builtin.command: "{{ wireguard__cmd }} --help"
       register: wireguard__register_subcommands
       changed_when: false
       check_mode: false
@@ -96,7 +114,7 @@
     - wireguard_private_key is not defined
   block:
     - name: Generate WireGuard private key
-      ansible.builtin.command: "wg genkey"
+      ansible.builtin.command: "{{ wireguard__cmd }} genkey"
       register: wireguard__register_private_key
       changed_when: false
       no_log: '{{ ansible_verbosity < 3 }}'
@@ -136,7 +154,7 @@
         - wg-config
 
 - name: Derive WireGuard public key
-  ansible.builtin.command: "wg pubkey"
+  ansible.builtin.command: "{{ wireguard__cmd }} pubkey"
   args:
     stdin: "{{ wireguard_private_key }}"
   register: wireguard__register_public_key
@@ -149,6 +167,44 @@
 - name: Set public key fact
   ansible.builtin.set_fact:
     wireguard__fact_public_key: "{{ wireguard__register_public_key.stdout }}"
+  tags:
+    - wg-config
+
+- name: Include controller-side secrets tasks (PSKs, AmneziaWG parameters)
+  ansible.builtin.include_tasks:
+    file: local-secrets.yml
+    apply:
+      tags:
+        - wg-config
+        - wg-generate-keys
+  tags:
+    - wg-config
+    - wg-generate-keys
+
+- name: Include tasks for clients without SSH
+  ansible.builtin.include_tasks:
+    file: clients.yml
+    apply:
+      tags:
+        - wg-config
+  tags:
+    - wg-config
+
+- name: Enable IP forwarding
+  ansible.builtin.copy:
+    dest: /etc/sysctl.d/90-wireguard-ip-forward.conf
+    content: |
+      # Ansible managed
+      net.ipv4.ip_forward = 1
+      net.ipv6.conf.all.forwarding = 1
+    owner: root
+    group: root
+    mode: "0644"
+  when:
+    - wireguard_ip_forward | bool
+    - ansible_facts['os_family'] != 'Darwin'
+  notify:
+    - apply sysctl
   tags:
     - wg-config
 
@@ -186,12 +242,24 @@
 
 - name: Start and enable WireGuard service
   ansible.builtin.service:
-    name: "wg-quick@{{ wireguard_interface }}"
+    name: "{{ wireguard__service_name }}"
     state: "{{ wireguard_service_state }}"
     enabled: "{{ wireguard_service_enabled }}"
   when:
     - ansible_facts['os_family'] != 'Darwin'
     - not wireguard_ubuntu_use_netplan
+  tags:
+    - wg-service
+
+- name: Include tasks writing client configurations on the controller
+  ansible.builtin.include_tasks:
+    file: clients-export.yml
+    apply:
+      tags:
+        - wg-config
+  when: wireguard_clients | length > 0
+  tags:
+    - wg-config
 
 - name: Flush notified handlers at end of role
   ansible.builtin.meta: flush_handlers

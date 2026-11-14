@@ -6,6 +6,16 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # ansible-role-wireguard
 
+> **Fork notice.** This fork adds on top of upstream:
+>
+> - an **AmneziaWG** backend (`wireguard_backend: amneziawg`), a WireGuard fork with traffic obfuscation for networks that block WireGuard (Debian/Ubuntu);
+> - **client configs for devices without SSH** (`wireguard_clients`), written to the Ansible controller, optionally with QR codes;
+> - idempotent, controller-side key storage (no key regeneration on re-runs);
+> - **pre-shared keys** for all tunnels (`wireguard_preshared_keys`);
+> - routing for clients via host/group vars and `wireguard_ip_forward`.
+>
+> All new features are off by default. Documentation (Russian, Markdown with Astro/Starlight frontmatter) is in [`docs/`](docs/index.md). The upstream documentation below is still valid.
+
 This Ansible role is used in my blog series [Kubernetes the not so hard way with Ansible](https://www.tauceti.blog/post/kubernetes-the-not-so-hard-way-with-ansible-wireguard/) but can be used standalone of course. I use WireGuard and this Ansible role to setup a fully meshed VPN between all nodes of my little Kubernetes cluster.
 
 In general WireGuard is a network tunnel (VPN) for IPv4 and IPv6 that uses UDP. If you need more information about [WireGuard](https://www.wireguard.io/) you can find a good introduction here: [Installing WireGuard, the Modern VPN](https://research.kudelskisecurity.com/2017/06/07/installing-wireguard-the-modern-vpn/).

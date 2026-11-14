@@ -1,0 +1,32 @@
+#jinja2: lstrip_blocks:True,trim_blocks:True
+{# SPDX-License-Identifier: GPL-3.0-or-later #}
+# {{ wireguard__ansible_managed }}
+# Client "{{ wireguard__client_name }}" of {{ inventory_hostname }}
+
+[Interface]
+PrivateKey = {{ lookup('ansible.builtin.file', wireguard__local_client_keys_dir ~ '/' ~ wireguard__client_name ~ '.key') }}
+Address = {{ wireguard__client.addresses | join(', ') }}
+{% if wireguard__client.dns %}
+DNS = {{ wireguard__client.dns if wireguard__client.dns is string else wireguard__client.dns | join(', ') }}
+{% endif %}
+{% if wireguard__client.mtu %}
+MTU = {{ wireguard__client.mtu }}
+{% endif %}
+{% if wireguard__amneziawg | bool %}
+{%   set awg_params = wireguard__fact_amneziawg_params | combine(wireguard__client.amneziawg_params) %}
+{%   for key, name in wireguard__amneziawg_param_names.items() if awg_params[key] is defined %}
+{{ name }} = {{ awg_params[key] }}
+{%   endfor %}
+{% endif %}
+
+[Peer]
+# {{ inventory_hostname }}
+PublicKey = {{ wireguard__fact_public_key }}
+{% if wireguard__client.preshared_key %}
+PresharedKey = {{ lookup('ansible.builtin.file', wireguard__local_client_keys_dir ~ '/' ~ wireguard__client_name ~ '.psk') }}
+{% endif %}
+AllowedIPs = {{ wireguard__client.allowed_ips | join(', ') }}
+Endpoint = {{ wireguard__client.endpoint }}
+{% if wireguard__client.persistent_keepalive %}
+PersistentKeepalive = {{ wireguard__client.persistent_keepalive }}
+{% endif %}

@@ -1,0 +1,57 @@
+---
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: (AmneziaWG) Check if the platform is supported
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['os_family'] == "Debian"
+      - not wireguard_ubuntu_use_netplan
+    fail_msg: >-
+      AmneziaWG is only supported on Debian and Ubuntu and can't be combined
+      with "wireguard_ubuntu_use_netplan".
+    quiet: true
+
+- name: (AmneziaWG) Install repository prerequisites
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - gnupg
+    state: present
+    update_cache: "{{ wireguard_update_cache }}"
+    cache_valid_time: "{{ wireguard_ubuntu_cache_valid_time }}"
+
+- name: (AmneziaWG) Create APT keyrings directory
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: (AmneziaWG) Download Amnezia PPA signing key
+  ansible.builtin.get_url:
+    url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x75C9DD72C799870E310542E24166F2C257290828"
+    dest: /etc/apt/keyrings/amnezia.asc
+    mode: "0644"
+    force: false
+
+- name: (AmneziaWG) Add Amnezia PPA
+  ansible.builtin.apt_repository:
+    repo: >-
+      deb [signed-by=/etc/apt/keyrings/amnezia.asc]
+      https://ppa.launchpadcontent.net/amnezia/ppa/ubuntu
+      {{ wireguard_amneziawg_ppa_suite }} main
+    filename: amnezia
+    state: present
+    update_cache: true
+
+- name: (AmneziaWG) Install kernel headers for DKMS
+  ansible.builtin.apt:
+    name: "linux-headers-{{ ansible_facts['kernel'] }}"
+    state: present
+  when:
+    - wireguard_install_kernel_module
+    - wireguard_amneziawg_install_kernel_headers
+
+- name: (AmneziaWG) Install packages
+  ansible.builtin.apt:
+    name: "{{ ['amneziawg-tools'] + (['amneziawg'] if wireguard_install_kernel_module else []) }}"
+    state: present

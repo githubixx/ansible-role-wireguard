@@ -1,0 +1,98 @@
+---
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Clients from "wireguard_clients" are devices without SSH. Their keys live
+# only on the Ansible controller; this host gets them as peers.
+
+- name: Normalize client definitions
+  vars:
+    wireguard__server_networks: >-
+      {%- set nets = [] -%}
+      {%- for addr in ([wireguard_address] if wireguard_address is defined else []) + (wireguard_addresses | default([])) -%}
+      {%-   set _ = nets.append(addr | ansible.utils.ipaddr('network/prefix')) -%}
+      {%- endfor -%}
+      {{ nets }}
+    wireguard__server_endpoint: >-
+      {{ wireguard_endpoint if (wireguard_endpoint is defined and wireguard_endpoint != '') else inventory_hostname }}
+  ansible.builtin.set_fact:
+    wireguard__fact_clients: >-
+      {%- set out = {} -%}
+      {%- for name, cfg in wireguard_clients.items() -%}
+      {%-   set c = wireguard_clients_defaults | combine(cfg | default({}, true)) -%}
+      {%-   if c.state | default('present') == 'present' -%}
+      {%-     set addresses = ([c.address] if c.address is defined else []) + (c.addresses | default([])) -%}
+      {%-     set host_routes = [] -%}
+      {%-     for addr in addresses -%}
+      {%-       set _ = host_routes.append(addr.split('/')[0] ~ ('/128' if ':' in addr else '/32')) -%}
+      {%-     endfor -%}
+      {%-     set _ = out.update({name: {
+                'addresses': addresses,
+                'peer_allowed_ips': host_routes + (c.networks | default([])),
+                'allowed_ips': c.allowed_ips if c.allowed_ips is defined else wireguard__server_networks,
+                'endpoint': c.endpoint | default(wireguard__server_endpoint) ~ ':' ~ (c.port | default(wireguard_port)),
+                'dns': c.dns | default(none),
+                'mtu': c.mtu | default(none),
+                'persistent_keepalive': c.persistent_keepalive | default(none),
+                'preshared_key': c.use_preshared_key | default(wireguard_preshared_keys) | bool,
+                'amneziawg_params': c.amneziawg_params | default({}),
+              }}) -%}
+      {%-   endif -%}
+      {%- endfor -%}
+      {{ out }}
+    wireguard__fact_clients_absent: >-
+      {{ wireguard_clients | dict2items
+         | selectattr('value.state', 'defined') | selectattr('value.state', 'equalto', 'absent')
+         | map(attribute='key') | list }}
+
+- name: Validate client definitions
+  ansible.builtin.assert:
+    that:
+      - item.value.addresses | length > 0
+    fail_msg: "Client '{{ item.key }}' needs 'address' or 'addresses'"
+    quiet: true
+  loop: "{{ wireguard__fact_clients | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+- name: Generate client private keys and pre-shared keys on the controller
+  ansible.builtin.command:
+    argv: "{{ [ansible_playbook_python, role_path ~ '/files/wg_keystore.py', item.kind] + item.paths }}"
+  loop:
+    - kind: key
+      paths: >-
+        {%- set paths = [] -%}
+        {%- for name in wireguard__fact_clients -%}
+        {%-   set _ = paths.append(wireguard__local_client_keys_dir ~ '/' ~ name ~ '.key') -%}
+        {%- endfor -%}
+        {{ paths }}
+    - kind: psk
+      paths: >-
+        {%- set paths = [] -%}
+        {%- for name, client in wireguard__fact_clients.items() if client.preshared_key -%}
+        {%-   set _ = paths.append(wireguard__local_client_keys_dir ~ '/' ~ name ~ '.psk') -%}
+        {%- endfor -%}
+        {{ paths }}
+  loop_control:
+    label: "{{ item.kind }}"
+  register: wireguard__register_client_keys
+  changed_when: "'created' in wireguard__register_client_keys.stdout_lines"
+  check_mode: false
+  delegate_to: localhost
+  become: false
+  when: item.paths | length > 0
+
+- name: Derive client public keys
+  ansible.builtin.command: "{{ wireguard__cmd }} pubkey"
+  args:
+    stdin: "{{ lookup('ansible.builtin.file', wireguard__local_client_keys_dir ~ '/' ~ item ~ '.key') }}"
+  loop: "{{ wireguard__fact_clients.keys() | list }}"
+  register: wireguard__register_client_public_keys
+  changed_when: false
+  check_mode: false
+  no_log: '{{ ansible_verbosity < 3 }}'
+
+- name: Set client public keys fact
+  ansible.builtin.set_fact:
+    wireguard__fact_client_public_keys: >-
+      {{ dict(wireguard__register_client_public_keys.results | map(attribute='item')
+         | zip(wireguard__register_client_public_keys.results | map(attribute='stdout'))) }}

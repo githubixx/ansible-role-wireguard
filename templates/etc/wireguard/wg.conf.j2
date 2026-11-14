@@ -30,6 +30,11 @@ MTU = {{ wireguard_mtu }}
 {% if wireguard_table is defined %}
 Table = {{ wireguard_table }}
 {% endif %}
+{% if wireguard__amneziawg | bool %}
+{%   for key, name in wireguard__amneziawg_param_names.items() if wireguard__fact_amneziawg_params[key] is defined %}
+{{ name }} = {{ wireguard__fact_amneziawg_params[key] }}
+{%   endfor %}
+{% endif %}
 {% if wireguard_preup is defined %}
 {% for wg_preup in wireguard_preup %}
 PreUp = {{ wg_preup }}
@@ -59,6 +64,9 @@ SaveConfig = {{ wireguard_save_config }}
 [Peer]
 # Name = {{ host }}
 PublicKey = {{hostvars[host].wireguard__fact_public_key}}
+{%     if wireguard__fact_preshared_keys | bool or hostvars[host].wireguard__fact_preshared_keys | default(false) | bool %}
+PresharedKey = {{ lookup('ansible.builtin.file', wireguard__local_psk_dir ~ '/' ~ ([inventory_hostname, host] | sort | join('--')) ~ '.psk') }}
+{%     endif %}
 {%     if hostvars[host].wireguard_allowed_ips is defined %}
 AllowedIPs = {{hostvars[host].wireguard_allowed_ips}}
 {%     else %}
@@ -100,6 +108,22 @@ Endpoint = {{host}}:{{wireguard_port}}
 {%     endif %}
 {%   endif %}
 {% endfor %}
+{% if wireguard__fact_clients | default({}) | length > 0 %}
+
+# Clients without SSH from "wireguard_clients" variable
+{%   for name, client in wireguard__fact_clients.items() %}
+[Peer]
+# Client = {{ name }}
+PublicKey = {{ wireguard__fact_client_public_keys[name] }}
+{%     if client.preshared_key %}
+PresharedKey = {{ lookup('ansible.builtin.file', wireguard__local_client_keys_dir ~ '/' ~ name ~ '.psk') }}
+{%     endif %}
+{%     for allowed_ip in client.peer_allowed_ips %}
+AllowedIPs = {{ allowed_ip }}
+{%     endfor %}
+
+{%   endfor %}
+{% endif %}
 {% if wireguard_unmanaged_peers is defined %}
 
 # Peers not managed by Ansible from "wireguard_unmanaged_peers" variable

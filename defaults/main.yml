@@ -6,11 +6,20 @@
 # General settings
 #######################################
 
+# VPN implementation to install and configure:
+# - "wireguard" (default): plain WireGuard
+# - "amneziawg": AmneziaWG, a WireGuard fork with traffic obfuscation that
+#   survives DPI-based WireGuard blocking. Supported on Debian and Ubuntu.
+#   All hosts of one mesh must use the same backend.
+wireguard_backend: "wireguard"
+
 # Directory to store WireGuard configuration on the remote hosts
 # noqa jinja[spacing]
 wireguard_remote_directory: >-
   {%- if wireguard_ubuntu_use_netplan -%}
   /etc/netplan
+  {%- elif wireguard_backend == 'amneziawg' -%}
+  /etc/amnezia/amneziawg
   {%- elif ansible_facts['os_family'] == 'Darwin' -%}
   /opt/local/etc/wireguard
   {%- else -%}
@@ -21,7 +30,7 @@ wireguard_remote_directory: >-
 wireguard_port: "51820"
 
 # The default interface name that WireGuard should use if not specified otherwise.
-wireguard_interface: "wg0"
+wireguard_interface: "{{ 'awg0' if wireguard_backend == 'amneziawg' else 'wg0' }}"
 
 # The default owner of the wg.conf file
 wireguard_conf_owner: root
@@ -107,6 +116,92 @@ wireguard_install_kernel_module: true
 # Set to "true" to treat this node as a spoke that only peers with hubs.
 # Hubs (or nodes with this left at "false") still peer with every node.
 wireguard_as_spoke: false
+
+# Enable IPv4/IPv6 forwarding (via /etc/sysctl.d) so that peers can reach
+# networks behind this host (e.g. your infrastructure behind a VPN server).
+wireguard_ip_forward: false
+
+#######################################
+# Controller-side files
+#######################################
+
+# Directory on the Ansible controller (where ansible-playbook runs) used for
+# - generated client configuration files ("clients/<server>/<client>.conf")
+# - generated secrets ("state/"): client private keys, pre-shared keys and
+#   AmneziaWG obfuscation parameters
+# Files are only created if a feature needs them. Keep this directory: it is
+# what makes repeated runs idempotent. It contains secrets, so don't commit it
+# unencrypted (git-crypt, SOPS, ...).
+wireguard_local_directory: "{{ playbook_dir }}/wireguard-artifacts"
+
+#######################################
+# Pre-shared keys
+#######################################
+
+# Add a pre-shared key (PSK) to every tunnel between hosts managed by this
+# role and to every client from "wireguard_clients". A PSK adds a symmetric
+# encryption layer on top of the Curve25519 handshake (post-quantum
+# resistance). One PSK per host pair is generated once and stored below
+# "wireguard_local_directory". If only one side of a pair enables this the PSK
+# is still used on both sides.
+wireguard_preshared_keys: false
+
+#######################################
+# Clients without SSH (phones, laptops, ...)
+#######################################
+
+# Devices that connect to this host but aren't managed via SSH. For every
+# client the role generates (once) a key pair and optionally a PSK, adds the
+# client as peer to this host and writes a ready-to-import configuration to
+# "<wireguard_local_directory>/clients/<inventory_hostname>/<client>.conf".
+#
+# wireguard_clients:
+#   phone:
+#     address: "10.8.0.10/32"          # or "addresses: [...]" (IPv4 and/or IPv6)
+#     allowed_ips:                     # what the client routes into the tunnel
+#       - "10.8.0.0/24"
+#       - "192.168.10.0/24"
+#     dns: "10.8.0.1"                  # optional
+#     persistent_keepalive: 25         # optional
+#     mtu: 1380                        # optional
+#     endpoint: "vpn.example.com"      # optional, default: wireguard_endpoint
+#     networks: []                     # optional, networks behind the client
+#     amneziawg_params: {}             # optional, e.g. own jc/jmin/jmax
+#     state: present                   # "absent" removes peer and local files
+wireguard_clients: {}
+
+# Defaults merged into every entry of "wireguard_clients" (e.g. allowed_ips
+# and dns for all clients of a group).
+wireguard_clients_defaults: {}
+
+# Additionally write "<client>.png" QR codes next to the client configs (for
+# mobile apps). Requires "qrencode" on the Ansible controller.
+wireguard_clients_qrcode: false
+
+#######################################
+# Settings only relevant for AmneziaWG
+#######################################
+
+# Obfuscation parameters (lowercase keys: jc, jmin, jmax, s1, s2, h1-h4 and
+# the AmneziaWG 2.0 parameters s3, s4, i1-i5). If not set, random values are
+# generated once and stored in
+# "<wireguard_local_directory>/state/amneziawg-params.json". Values set here
+# are merged on top of the generated ones. s1-s4 and h1-h4 must be the same
+# on all hosts and clients, so set them in group_vars if you set them at all.
+# wireguard_amneziawg_params:
+#   jc: 5
+#   jmin: 50
+#   jmax: 1000
+
+# Ubuntu PPA (ppa:amnezia/ppa) suite. Ubuntu uses its own release; Debian
+# releases are mapped to a compatible Ubuntu release.
+wireguard_amneziawg_ppa_suite: >-
+  {{ ansible_facts['distribution_release'] if ansible_facts['distribution'] == 'Ubuntu'
+     else wireguard__amneziawg_debian_suites[ansible_facts['distribution_release']] | default('focal') }}
+
+# Install "linux-headers-<running kernel>" so DKMS can build the AmneziaWG
+# kernel module. Set to "false" if headers come from somewhere else.
+wireguard_amneziawg_install_kernel_headers: true
 
 #######################################
 # Settings only relevant for:

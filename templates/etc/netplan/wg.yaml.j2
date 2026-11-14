@@ -35,7 +35,9 @@ network:
         - # Name = {{ host }}
           keys:
             public: {{ hostvars[host].wireguard__fact_public_key }}
-{%     if hostvars[host].wireguard_preshared_key is defined %}
+{%     if wireguard__fact_preshared_keys | bool or hostvars[host].wireguard__fact_preshared_keys | default(false) | bool %}
+            shared: {{ lookup('ansible.builtin.file', wireguard__local_psk_dir ~ '/' ~ ([inventory_hostname, host] | sort | join('--')) ~ '.psk') }}
+{%     elif hostvars[host].wireguard_preshared_key is defined %}
             shared: {{ hostvars[host].wireguard_preshared_key }}
 {%     endif %}
 {%     if hostvars[host].wireguard_allowed_ips is defined %}
@@ -77,6 +79,21 @@ network:
 {%     endif %}
 {%   endif %}
 {% endfor %}
+{% if wireguard__fact_clients | default({}) | length > 0 %}
+        # Clients without SSH from "wireguard_clients" variable
+{%   for name, client in wireguard__fact_clients.items() %}
+        - # Client = {{ name }}
+          keys:
+            public: {{ wireguard__fact_client_public_keys[name] }}
+{%     if client.preshared_key %}
+            shared: {{ lookup('ansible.builtin.file', wireguard__local_client_keys_dir ~ '/' ~ name ~ '.psk') }}
+{%     endif %}
+          allowed-ips:
+{%     for allowed_ip in client.peer_allowed_ips %}
+            - {{ allowed_ip }}
+{%     endfor %}
+{%   endfor %}
+{% endif %}
 {% if wireguard_unmanaged_peers is defined %}
         # Peers not managed by Ansible from "wireguard_unmanaged_peers" variable
 {%   for peer in wireguard_unmanaged_peers.keys() %}

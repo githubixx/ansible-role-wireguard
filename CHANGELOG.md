@@ -5,6 +5,19 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # Changelog
 
+## Unreleased (fork)
+
+- **FEATURE**
+  - AmneziaWG backend: `wireguard_backend: amneziawg` installs `amneziawg-tools`/`amneziawg` from `ppa:amnezia/ppa` (Debian and Ubuntu) and renders obfuscation parameters. Random parameters are generated once on the controller unless `wireguard_amneziawg_params` is set
+  - `wireguard_clients`: key generation, server peers and ready-to-import configuration files on the controller for devices without SSH (optional QR codes via `wireguard_clients_qrcode`)
+  - `wireguard_preshared_keys`: pre-shared keys for every host pair and client
+  - `wireguard_ip_forward`: enable IPv4/IPv6 forwarding via sysctl
+  - new `wg-service` tag for the service task
+  - Markdown documentation in `docs/`
+
+- **FIX**
+  - `wg syncconf` handler now uses `wireguard_remote_directory` and `wireguard_conf_filename` instead of a hard-coded `/etc/wireguard/<interface>.conf`
+
 ## 19.2.0
 
 - **FEATURE**

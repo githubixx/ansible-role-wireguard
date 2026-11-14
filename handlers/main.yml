@@ -4,7 +4,7 @@
 
 - name: Restart wireguard
   ansible.builtin.service:
-    name: "wg-quick@{{ wireguard_interface }}"
+    name: "{{ wireguard__service_name }}"
     state: "{{ item }}"
   loop:
     - stopped
@@ -20,8 +20,9 @@
     set -o errexit
     set -o pipefail
     set -o nounset
-    systemctl is-active wg-quick@{{ wireguard_interface | quote }} || systemctl start wg-quick@{{ wireguard_interface | quote }}
-    wg syncconf {{ wireguard_interface | quote }} <(wg-quick strip /etc/wireguard/{{ wireguard_interface | quote }}.conf)
+    systemctl is-active {{ wireguard__service_name | quote }} || systemctl start {{ wireguard__service_name | quote }}
+    {{ wireguard__cmd }} syncconf {{ wireguard_interface | quote }} \
+      <({{ wireguard__quick_cmd }} strip {{ (wireguard_remote_directory ~ '/' ~ wireguard_conf_filename) | quote }})
     exit 0
   register: wireguard__syncconf_out
   changed_when: false
@@ -62,3 +63,8 @@
   when:
     - wireguard_ubuntu_use_netplan
     - wireguard_interface_restart
+
+- name: Apply sysctl settings
+  ansible.builtin.command: sysctl --system
+  listen: apply sysctl
+  changed_when: true

@@ -1,0 +1,62 @@
+---
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Create local client configuration directory
+  ansible.builtin.file:
+    path: "{{ wireguard__local_clients_dir }}"
+    state: directory
+    mode: "0700"
+  delegate_to: localhost
+  become: false
+
+- name: Write client configurations to the controller
+  vars:
+    wireguard__ansible_managed: "Ansible managed"
+    wireguard__client_name: "{{ item.key }}"
+    wireguard__client: "{{ item.value }}"
+  ansible.builtin.template:
+    src: client.conf.j2
+    dest: "{{ wireguard__local_clients_dir }}/{{ item.key }}.conf"
+    mode: "0600"
+  loop: "{{ wireguard__fact_clients | dict2items }}"
+  loop_control:
+    label: "{{ wireguard__local_clients_dir }}/{{ item.key }}.conf"
+  no_log: '{{ ansible_verbosity < 3 }}'
+  delegate_to: localhost
+  become: false
+
+- name: Write client QR codes to the controller
+  ansible.builtin.shell: |
+    set -o errexit
+    if [ ! -f "$PNG" ] || [ "$CONF" -nt "$PNG" ]; then
+      qrencode --type=PNG --output="$PNG" --read-from="$CONF"
+      chmod 0600 "$PNG"
+      echo created
+    fi
+  environment:
+    CONF: "{{ wireguard__local_clients_dir }}/{{ item }}.conf"
+    PNG: "{{ wireguard__local_clients_dir }}/{{ item }}.png"
+  loop: "{{ wireguard__fact_clients.keys() | list }}"
+  register: wireguard__register_client_qrcodes
+  changed_when: "'created' in wireguard__register_client_qrcodes.stdout"
+  delegate_to: localhost
+  become: false
+  when: wireguard_clients_qrcode | bool
+
+- name: Remove local files of absent clients
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: >-
+    {%- set paths = [] -%}
+    {%- for name in wireguard__fact_clients_absent -%}
+    {%-   set _ = paths.extend([
+            wireguard__local_clients_dir ~ '/' ~ name ~ '.conf',
+            wireguard__local_clients_dir ~ '/' ~ name ~ '.png',
+            wireguard__local_client_keys_dir ~ '/' ~ name ~ '.key',
+            wireguard__local_client_keys_dir ~ '/' ~ name ~ '.psk',
+          ]) -%}
+    {%- endfor -%}
+    {{ paths }}
+  delegate_to: localhost
+  become: false
